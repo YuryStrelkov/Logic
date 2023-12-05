@@ -1,7 +1,7 @@
 
 class Transform2d
 {
-    #parent=null;
+	#parent=null;
 	#children;
 	#position;
 	#scale;
@@ -22,7 +22,7 @@ class Transform2d
 		this.#inv_local_transform_m = Matrix3d.build_inv_transform_2d(this.position, this.scale, this.#angle);
 		this.#raw_transform_m = false;
 	}
-    static remove_from_transform_layers(t)
+	static remove_from_transform_layers(t)
 	{
 		if(!Transform2d._transforms_layers.has(t.transform_layer))return;
 		    Transform2d._transforms_layers.get(t.transform_layer).delete(t);
@@ -141,7 +141,7 @@ class Transform2d
 	inv_world_transform_point    (point) { return this.inv_world_tm.multiply_by_point    (point);}
 	inv_world_transform_direction(point) { return this.inv_world_tm.multiply_by_direction(point);}
 
-    apply_to_context(ctx)
+	apply_to_context(ctx)
 	{
 		if(this.parent == null)
 		{

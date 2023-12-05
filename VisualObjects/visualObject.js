@@ -17,7 +17,6 @@ const draw_circ = (ctx, x_c, y_c, radius, color, stroke_w = 3, stroke_color = "#
 
 const draw_text = (ctx, x_c, y_c, text_value, text_size = 20, text_font = 'consolas', text_color = "#FFFFFF") =>
 {
-	//
 	ctx.font = `${text_size}pt ${text_font}`;
 	ctx.fillStyle = text_color;
 	ctx.textBaseline = 'middle';
@@ -103,8 +102,8 @@ class VisualObject
 	{
 		if (!MouseInfo.instance.is_left_down){this.state.on_down = false; return false;}
 		if (!this.state.on_down) this.#delta_drag_position = Vector2d.sub(MouseInfo.instance.position, this.transform.position);
-		 this.state.on_down = true;
-		 return true;
+		this.state.on_down = true;
+		return true;
 	}
 	#move_update ()
 	{
