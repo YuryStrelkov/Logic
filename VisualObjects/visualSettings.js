@@ -26,7 +26,8 @@ class Color
 	}
 	#update_color_code()
 	{
-		if (!this.#_raw)return;
+		if (!this.#_raw) return;
+		this.#_raw = false;
 		this.#color_code = `rgba(${this.r},${this.g},${this.b},${this.a})`;
 	}
 	get color_code() {this.#update_color_code(); return this.#color_code;}
@@ -35,10 +36,10 @@ class Color
 	get g(){return this.#_g;}
 	get b(){return this.#_b;}
 	get a(){return this.#_a;}
-	set r(value){this.#_r = (!isNaN(value))? value & 255 : this.#_r; this.#_raw =true;}
-	set g(value){this.#_g = (!isNaN(value))? value & 255 : this.#_g; this.#_raw =true;}
-	set b(value){this.#_b = (!isNaN(value))? value & 255 : this.#_b; this.#_raw =true;}
-	set a(value){this.#_a = (!isNaN(value))? value & 255 : this.#_a; this.#_raw =true;}
+	set r(value){this.#_r = value & 255; this.#_raw = true;}
+	set g(value){this.#_g = value & 255; this.#_raw = true;}
+	set b(value){this.#_b = value & 255; this.#_raw = true;}
+	set a(value){this.#_a = value & 255; this.#_raw = true;}
 }
 
 class VisualSettings
