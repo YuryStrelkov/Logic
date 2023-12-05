@@ -25,12 +25,12 @@ class Transform2d
 	static remove_from_transform_layers(t)
 	{
 		if(!Transform2d._transforms_layers.has(t.transform_layer))return;
-		    Transform2d._transforms_layers.get(t.transform_layer).delete(t);
+			Transform2d._transforms_layers.get(t.transform_layer).delete(t);
 	}
 	static append_to_transform_layers(t)
 	{
 		if(!Transform2d._transforms_layers.has(t.transform_layer)) Transform2d._transforms_layers.set(t.transform_layer, new Set());
-		Transform2d._transforms_layers.get(t.transform_layer).add(t);
+			Transform2d._transforms_layers.get(t.transform_layer).add(t);
 	}
 	static sync_transforms()
 	{
@@ -73,11 +73,10 @@ class Transform2d
 	get parent(){return this.#parent;}
 	set parent(value)
 	{
-		if(!(value instanceof Transform2d))return;
+		// if(!(value instanceof Transform2d))return;
 		if(this.parent != null) this.parent.remove_child(this);
 		this.#parent = value;
 		this.#transform_layer = value.transform_layer + 1;
-		// console.log(this.#transform_layer)
 		if(this.parent != null) this.parent.append_child(this);
 	}
 	get local_tm()
@@ -103,13 +102,13 @@ class Transform2d
 	get angle   (){return this.#angle * RAD_TO_DEG;}
 	set position(value)
 	{
-		if(!(value instanceof Vector2d))return; 
+		// if(!(value instanceof Vector2d))return; 
 		this.#position = value;
 		this.#raw_transform_m = true;
 	}
 	set scale   (value)
 	{
-		if(!(value instanceof Vector2d))return;
+		// if(!(value instanceof Vector2d))return;
 		this.#scale  = value;
 		this.#raw_transform_m = true;
 	}
@@ -121,13 +120,13 @@ class Transform2d
 	}
 	append_child(child_transform)
 	{
-		if(!(child_transform instanceof Transform2d))return; 
+		// if(!(child_transform instanceof Transform2d))return; 
 		Transform2d.append_to_transform_layers(child_transform);
 		this.#children.add(child_transform);
 	}
 	remove_child(child_transform)
 	{
-		if(!(child_transform instanceof Transform2d))return; 
+		// if(!(child_transform instanceof Transform2d))return; 
 		Transform2d.remove_from_transform_layers(child_transform);
 		this.#children.delete(child_transform);
 	}

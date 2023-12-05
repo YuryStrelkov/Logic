@@ -92,11 +92,7 @@ class VisualObject
 				[points[2], points[3]],
 				[points[3], points[0]]];
 	}
-	contains(point)
-	{
-		if(!(point instanceof Vector2d))return false;
-		return this.bounds.contains(this.transform.inv_world_transform_point(point));
-	}
+	contains(point) { return this.bounds.contains(this.transform.inv_world_transform_point(point)); }
 	#focus_update() { this.state.on_focus = this.contains(MouseInfo.instance.position); return this.state.on_focus;}
 	#press_update() 
 	{
@@ -116,14 +112,13 @@ class VisualObject
 
 	_evaluate_color()
 	{
-		if(this.state.on_down)return this.visual.click_color;
-		if(this.state.on_focus)  return this.visual.focus_color;
+		if(this.state.on_down)  return this.visual.click_color;
+		if(this.state.on_focus) return this.visual.focus_color;
 		return this.visual.color;
 	}
 	
 	render(ctx)
 	{
-        if(!(ctx instanceof CanvasRenderingContext2D))return;
 		this.transform.apply_to_context(ctx);
 		const width        = this.bounds.width ;// * 0.5;
 		const height       = this.bounds.height;// * 0.5;
@@ -154,12 +149,8 @@ class CircleObject    extends VisualObject
     #radius;
     constructor(center, radius=1.0)
     {
-        const [min, max] = (center instanceof Vector2d)
-        ?[new Vector2d(-radius + center.x, -radius + center.y),
-          new Vector2d( radius + center.x,  radius + center.y)]
-        :[new Vector2d(-radius, -radius),
-          new Vector2d( radius,  radius)];
-        super(min, max);
+        super(new Vector2d(-radius + center.x, -radius + center.y), 
+			  new Vector2d( radius + center.x,  radius + center.y));
         this.#radius = Math.abs(radius); 
     }
     get radius(){return this.#radius;}
@@ -174,7 +165,6 @@ class CircleObject    extends VisualObject
 
     render(ctx)
 	{
-        if(!(ctx instanceof CanvasRenderingContext2D))return;
 		this.transform.apply_to_context(ctx);
 		const color        = this._evaluate_color();
 		const stroke_color = this.visual.stroke_color;
@@ -208,7 +198,7 @@ class TextObject extends VisualObject
     get text(){return this.#_text;}
     render(ctx)
 	{
-        if(!(ctx instanceof CanvasRenderingContext2D))return;
+        // if(!(ctx instanceof CanvasRenderingContext2D))return;
         super.render(ctx);
         const center = this.bounds.center;
         draw_text(ctx, center.x, center.y, this.text);
