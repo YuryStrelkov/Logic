@@ -1,0 +1,4 @@
+class NotGate extends TextObject
+{
+    
+}

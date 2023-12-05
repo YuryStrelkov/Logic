@@ -1,0 +1,160 @@
+.common_visual
+{
+	background-color:#111111;
+	border-style: solid;
+	border-radius:8px;
+	border-color:#AAAAAA;
+	border-width: 4px;
+	font-family: "Varela Round";	
+    vertical-align: middle;
+	text-align: center;
+	font-size: 14pt;
+	color: #ffffff;
+	z-index: 2;
+}
+
+.io_pin_common
+{
+	width: 90px;
+	height: 35px;
+	background-color:#551111;
+	display: flex;
+	z-index: 3;
+}
+
+.input_pin
+{
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.output_pin
+{
+   align-items: center;
+   flex-direction: row;
+   justify-content: flex-start;
+}
+
+.two_in_one_out
+{
+	position:absolute;
+	display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+	width:120px;
+	height:70px;
+}
+.one_in_one_out
+{
+	position:absolute;
+	display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+	width:120px;
+	height:35px;
+}
+
+.multiple_input_pins
+{
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+	width:55px;
+}
+
+.gate
+{
+	position:absolute;
+	background-color:#111111;
+	border-style: solid;
+	border-radius:8px;
+	border-color:#AAAAAA;
+	border-width: 4px;
+	font-family: "Varela Round";	
+    vertical-align: middle;
+	text-align: center;
+	font-size: 14pt;
+	color: #ffffff;
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+button
+{
+  background-color: #AAAAAA; /* Green */
+  border: 1px solid #111111;
+  color: white;
+  float: left;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: "Varela Round";
+  font-size: 20px;
+  font-weight: bold;
+  transition-duration: 0.4s;
+  height: 45px;
+  width: 80px;
+}
+
+button:hover
+{
+  background-color: #888888; /* Green */
+}
+
+button:active {
+  border: none;
+  background-color: #3e8e41;
+}
+
+.buttonsContainer
+{
+	height: 45px;
+	width:980px;
+	background-color: #555555;
+}
+
+.gate:hover {
+  color: #EEEEFF;
+}
+
+.center_aligned_vertically
+{
+	line-height:100%;
+	text-align: center;
+}
+
+.single_input_single_utput
+{
+	width:  110px;
+	height: 45px;
+}
+
+.pin
+{
+	position:relative;
+	width:20px;
+	height:20px;
+	background-color:#555555;
+	border-style: solid;
+	border-radius:20px;
+	border-color:#AAAAAA;
+	border-width: 4px;
+}
+
+.pin:hover {
+  background-color: #AA1111;
+}
+
+.pin:active {
+  background-color: #FF1111;
+}
+
+.pin_active {
+  background-color: #FF0000;
+}
