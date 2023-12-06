@@ -119,10 +119,11 @@ class VisualObject
 	{
 		if(!this.state.is_focusable) return;
 		if(!this.#focus_update()) return;
+		if(!this.state.is_moveable) return;
 		if(!this.#press_update()) return;
 		this.transform.position = Vector2d.sub(MouseInfo.instance.position, this.#delta_drag_position)
 	}
-	update() { if(this.state.is_moveable)this.#move_update();}
+	update() { this.#move_update();}
 
 	_evaluate_color()
 	{
@@ -219,20 +220,49 @@ class TextObject extends VisualObject
 	}
 }
 
-
-const create_visual_objects = () =>
+const non_gate = (center) => 
 {
-	// const rectVisualObject  = new RectangleObject(new Vector2d(-100, -200), new Vector2d(100, 200));
-	const textVisualObject  = new TextObject     (new Vector2d(-75, -35), new Vector2d(75, 35), 'myText');
-	const circVisualObject1 = new CircleObject   (new Vector2d(-75, 0), 20);
-	const circVisualObject2 = new CircleObject   (new Vector2d( 75, 0), 20);
+	const textVisualObject  = new TextObject  (new Vector2d(center.x -75, center.y - 35),
+											   new Vector2d(center.x + 75, center.y + 35), 'NOT');
+	const circVisualObject1 = new CircleObject(new Vector2d(-75, 0), 20);
+	const circVisualObject2 = new CircleObject(new Vector2d( 75, 0), 20);
 	circVisualObject1.transform.parent = textVisualObject.transform
 	circVisualObject2.transform.parent = textVisualObject.transform
 	circVisualObject1.state.is_moveable = false;
 	circVisualObject2.state.is_moveable = false;
+	circVisualObject1.visual.focus_color = new Color(255, 0, 0, 255);
+	circVisualObject1.visual.click_color = new Color(255, 0,0,   255);
+	circVisualObject2.visual.focus_color = new Color(255, 0, 0, 255);
+	circVisualObject2.visual.click_color = new Color(255, 0,   0,   255);
+	const visualObjects = [textVisualObject, circVisualObject1, circVisualObject2];
+	return visualObjects;
+}
+
+const create_visual_objects = () =>
+{
+	// const rectVisualObject  = new RectangleObject(new Vector2d(-100, -200), new Vector2d(100, 200));
+	// const textVisualObject  = new TextObject     (new Vector2d(-75, -35), new Vector2d(75, 35), 'myText');
+	// const circVisualObject1 = new CircleObject   (new Vector2d(-75, 0), 20);
+	// const circVisualObject2 = new CircleObject   (new Vector2d( 75, 0), 20);
+	// circVisualObject1.transform.parent = textVisualObject.transform
+	// circVisualObject2.transform.parent = textVisualObject.transform
+	// circVisualObject1.state.is_moveable = false;
+	// circVisualObject2.state.is_moveable = false;
 	Transform2d.root_transform.position = new Vector2d(RenderCanvas.instance.height * 0.5, RenderCanvas.instance.width * 0.5);
 	// const visualObjects = [circVisualObject, rectVisualObject, textVisualObject];
-	const visualObjects = [textVisualObject, circVisualObject1, circVisualObject2];
+	const visualObjects = [];
+
+	for(var i = 0; i < 5; i++)
+	{
+		for(var j = 0; j < 5; j++)
+		{
+			const [a, b, c] = non_gate(new Vector2d((-2.5 + i) * 190 + 120, (-2.5 + j) * 80));
+			visualObjects.push(a);
+			visualObjects.push(b);
+			visualObjects.push(c);
+		}
+	}
+
 	return visualObjects;
 }
 
