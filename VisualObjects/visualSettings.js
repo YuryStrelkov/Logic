@@ -54,6 +54,12 @@ class VisualSettings
 	#_transition_color_id  ;
 	#_transition_time      ;
 	#_transition_time_start;
+	#_font_family  ;
+	#_font_color   ;
+	#_font_size    ;
+	#_text_baseline;
+	#_text_align   ;
+	#_corner_radius;
 	
 	constructor()
 	{
@@ -67,6 +73,12 @@ class VisualSettings
 		this.#_transition_time       = 200;// milli - seconds
 		this.#_transition_time_start = 0.0;
 		this.#_transition_color_id   = -1;
+		this.#_font_family   = 'consolas';
+		this.#_font_color    = new Color(250, 250, 250);
+		this.#_font_size     = 20;
+		this.#_text_baseline = 'middle';
+		this.#_text_align    = 'center';
+		this.#_corner_radius = 0.0
 	}
 	#evaluate_color(color)
 	{
@@ -99,6 +111,13 @@ class VisualSettings
 		this.#swap_color(2);
 		return this.#evaluate_color(this.#_main_color_focus);	
 	}
+	get font_family  (){return this.#_font_family  ;}
+	get font_color   (){return this.#_font_color   ;}
+	get font_size    (){return this.#_font_size    ;}
+	get text_baseline(){return this.#_text_baseline;}
+	get text_align   (){return this.#_text_align   ;}
+	get corner_radius(){return this.#_corner_radius;}
+
 	get stroke_color(){return this.#_stroke_color;}
 	get stroke_width(){return this.#_stroke_width;}
 	set color       (value){this.#_main_color         = (value instanceof Color)? value: this.#_main_color  ;}
@@ -106,4 +125,18 @@ class VisualSettings
 	set click_color (value){this.#_main_color_clicked = (value instanceof Color)? value: this.#_main_color_clicked  ;}
 	set focus_color (value){this.#_main_color_focus   = (value instanceof Color)? value: this.#_main_color_focus;}
 	set stroke_width(value){this.#_stroke_width       = (!isNaN(value))? value: this.#_stroke_width;}
+
+	set font_family  (value){this.#_font_family   = value;}
+	set font_color   (value){this.#_font_color    = value;}
+	set font_size    (value){this.#_font_size     = value;}
+	set text_baseline(value){this.#_text_baseline = value;}
+	set text_align   (value){this.#_text_align    = value;}
+	set corner_radius(value){this.#_corner_radius = value;}
+	apply_text_settings_to_context(ctx)
+	{
+		ctx.font         = `${this.font_size}pt ${this.font_family}`;
+		ctx.fillStyle    = this.font_color.color_code;
+		ctx.textBaseline = this.text_baseline;
+		ctx.textAlign    = this.text_align;
+	}
 }

@@ -57,7 +57,7 @@ class VisualObject
 	// блокировать движение мышью 
 	// блокировать отслеживание фокуса
 	// скрыть/показать
-
+	static #active = null;
 	#_bounds;
 	#_transform;
 	#_visual;
@@ -93,11 +93,25 @@ class VisualObject
 				[points[3], points[0]]];
 	}
 	contains(point) { return this.bounds.contains(this.transform.inv_world_transform_point(point)); }
-	#focus_update() { this.state.on_focus = this.contains(MouseInfo.instance.position); return this.state.on_focus;}
+	#focus_update()
+	{
+		if(VisualObject.#active != null) return VisualObject.#active == this;
+		 this.state.on_focus = this.contains(MouseInfo.instance.position);
+		 return this.state.on_focus;
+	}
 	#press_update() 
 	{
-		if (!MouseInfo.instance.is_left_down){this.state.on_down = false; return false;}
-		if (!this.state.on_down) this.#delta_drag_position = Vector2d.sub(MouseInfo.instance.position, this.transform.position);
+		if (!MouseInfo.instance.is_left_down)
+		{
+			VisualObject.#active = null; 
+			this.state.on_down = false;
+			return false;
+		}
+		if (!this.state.on_down)
+		{
+			VisualObject.#active = this; 
+			this.#delta_drag_position = Vector2d.sub(MouseInfo.instance.position, this.transform.position);
+		}
 		this.state.on_down = true;
 		return true;
 	}
@@ -198,34 +212,41 @@ class TextObject extends VisualObject
     get text(){return this.#_text;}
     render(ctx)
 	{
-        // if(!(ctx instanceof CanvasRenderingContext2D))return;
         super.render(ctx);
         const center = this.bounds.center;
-        draw_text(ctx, center.x, center.y, this.text);
+		this.visual.apply_text_settings_to_context(ctx);
+		ctx.fillText(this.text, center.x, center.y);
 	}
 }
-const rectVisualObject = new RectangleObject(new Vector2d(-100, -200), new Vector2d(100, 200));
-const circVisualObject = new CircleObject   (new Vector2d(450, 440), 100);
-const textVisualObject = new TextObject     (new Vector2d(250, 250), new Vector2d(400, 500), 'myText');
-rectVisualObject.transform.angle = 45;
 
-// circVisualObject.transform.parent = rectVisualObject.transform
-// textVisualObject.transform.parent = rectVisualObject.transform
-// Transform2d.root.angle = 30;
 
-const visualObjects = [circVisualObject, rectVisualObject, textVisualObject];
+const create_visual_objects = () =>
+{
+	// const rectVisualObject  = new RectangleObject(new Vector2d(-100, -200), new Vector2d(100, 200));
+	const textVisualObject  = new TextObject     (new Vector2d(-75, -35), new Vector2d(75, 35), 'myText');
+	const circVisualObject1 = new CircleObject   (new Vector2d(-75, 0), 20);
+	const circVisualObject2 = new CircleObject   (new Vector2d( 75, 0), 20);
+	circVisualObject1.transform.parent = textVisualObject.transform
+	circVisualObject2.transform.parent = textVisualObject.transform
+	circVisualObject1.state.is_moveable = false;
+	circVisualObject2.state.is_moveable = false;
+	Transform2d.root_transform.position = new Vector2d(RenderCanvas.instance.height * 0.5, RenderCanvas.instance.width * 0.5);
+	// const visualObjects = [circVisualObject, rectVisualObject, textVisualObject];
+	const visualObjects = [textVisualObject, circVisualObject1, circVisualObject2];
+	return visualObjects;
+}
 
-const render_all_objects = (ctx) => 
+const render_all_objects = (ctx, objects) => 
 {
 	t = current_time();
+	for(const obj of objects) obj.update();
 	Transform2d.sync_transforms();
-	for(const obj of visualObjects)
+	for(const obj of objects)
 	{
 		if(!obj.state.is_shown)continue;
 		ctx.save   ();
 		obj.render (ctx);
 		ctx.restore();
 	}
-	for(const obj of visualObjects) obj.update();
 	draw_text(ctx, 20, 20, `frame time: ${(current_time() - t) * 0.001}`, 14);
 }

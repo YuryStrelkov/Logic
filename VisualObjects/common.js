@@ -2,7 +2,6 @@ var startTime = Date.now();
 const DEG_TO_RAD = Math.PI / 180.0;
 const RAD_TO_DEG = 180.0 / Math.PI;
 const NUMERICAL_ACCURACY = 1e-6;
-const is_number = (value) => { return typeof value === 'number'; }
 
 const current_time = () => { return Date.now() - startTime;}
 

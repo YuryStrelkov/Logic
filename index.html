@@ -14,8 +14,8 @@
 		<script src="VisualObjects/transfrom2d.js"></script>
 		<script src="VisualObjects/visualSettings.js"></script>
 		<script src="VisualObjects/inputs.js"></script>
-		<script src="VisualObjects/visualObject.js"></script>
 		<script src="Rendering/renderCanvas.js"></script>
+		<script src="VisualObjects/visualObject.js"></script>
 	</head>
 	<body>
 		<div    class="buttonsContainer">
@@ -41,14 +41,17 @@
 								justify-content: center;
 								align-items: flex-start;">
 					</div>
-					<div id="mainContainer" style="height:600px; width:800px; background-color:#DDDDDD">
-					<canvas id="mainCanvas" height="600px" width="800px"></canvas>
+					<div id="mainContainer" style="height:960px; width:1024px; background-color:#DDDDDD">
+					<canvas id="mainCanvas" height="960px" width="1024px"></canvas>
 						<script>
 							rootElement = document.getElementById("mainContainer");
 							rootElement.style.zIndex = 0;
 							make_custom_gate(5, 5, 400 + 90, 300 - 90, "4-bit adder", rootElement);
 							const canvas     = RenderCanvas.instance;
 							canvas.clear();
+							const visual_objects = create_visual_objects();
+
+
 							var mouse_down = false;
 							var direction = 0;
 							var points = [];
@@ -134,7 +137,7 @@
 							function onCanvasRepaint()
 							{	
 								canvas.clear();
-								render_all_objects(canvas.canvas_ctx);
+								render_all_objects(canvas.canvas_ctx, visual_objects);
 								
 								if (mouse_point == null)return;
 								draw_circ(canvas.canvas_ctx, points[0].x, points[0].y, 5, "#00FF00", 0);
