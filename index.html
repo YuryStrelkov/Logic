@@ -46,11 +46,11 @@
 						<script>
 							rootElement = document.getElementById("mainContainer");
 							rootElement.style.zIndex = 0;
-							make_custom_gate(5, 5, 400 + 90, 300 - 90, "4-bit adder", rootElement);
+							// make_custom_gate(5, 5, 400 + 90, 300 - 90, "4-bit adder", rootElement);
 							const canvas     = RenderCanvas.instance;
 							canvas.clear();
 							const visual_objects = create_visual_objects();
-
+							/*
 
 							var mouse_down = false;
 							var direction = 0;
@@ -163,6 +163,11 @@
 								canvas.canvas_ctx.lineWidth = 2.5;
 								canvas.canvas_ctx.stroke();
 								canvas.canvas_ctx.restore();
+							}*/
+							function onCanvasRepaint()
+							{	
+								canvas.clear();
+								render_all_objects(canvas.canvas_ctx, visual_objects);
 							}
 							setInterval(function(){onCanvasRepaint()}, 16);
 							

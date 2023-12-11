@@ -63,12 +63,12 @@ class VisualSettings
 	
 	constructor()
 	{
-		this.#_stroke_color          = new Color(0.2 * 128, 0.2 * 138, 0.2 * 148, 255);
-		this.#_main_color            = new Color(128, 138, 148, 255);                   // 0
-		this.#_main_color_focus      = new Color(158, 168, 178, 255); // 1
-		this.#_main_color_clicked    = new Color(98, 108, 118, 255); // 2
-		this.#_curr_color            = new Color(128, 138, 148, 255);
-		this.#_prev_color            = new Color(128, 138, 148, 255);
+		this.#_stroke_color          = new Color(128, 138, 148, 255);
+		this.#_main_color            = new Color(0, 0, 0, 255);                   // 0
+		this.#_main_color_focus      = new Color(10, 10, 10, 255); // 1
+		this.#_main_color_clicked    = new Color(40, 40, 40, 255); // 2
+		this.#_curr_color            = new Color(0, 0, 0, 255);
+		this.#_prev_color            = new Color(0, 0, 0, 255);
 		this.#_stroke_width          = 5;
 		this.#_transition_time       = 200;// milli - seconds
 		this.#_transition_time_start = 0.0;
