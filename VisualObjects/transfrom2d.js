@@ -1,4 +1,4 @@
-const RAW_TRANSFORM_BIT = 0
+const RAW_TRANSFORM_BIT  = 0
 const SYNC_TRANSFORM_BIT = 1
 class Transform2d
 {
@@ -56,7 +56,7 @@ class Transform2d
 	}
 	get raw_transform()      { return is_bit_set(this.#transform_status, RAW_TRANSFORM_BIT); }
 	set raw_transform(value) { this.#transform_status = value ? set_bit(this.#transform_status, RAW_TRANSFORM_BIT)
-	 															:clear_bit(this.#transform_status, RAW_TRANSFORM_BIT); }
+	 														  :clear_bit(this.#transform_status, RAW_TRANSFORM_BIT); }
 	get sync_required()      { return this.#children_sync_count != this.children_count; }
 	set sync_required(value) { this.#children_sync_count = value ? 0 : this.#children_sync_count; }
 
@@ -95,8 +95,8 @@ class Transform2d
 	get children_count () { return this.#children.size;}
 	get has_children   () { return this.children_count != 0;}
 	get children       () { return this.#children.values();}
-	get parent(){return this.#parent;}
-	set parent(value)
+	get parent         () { return this.#parent;}
+	set parent         (value)
 	{
 		if(this.has_parent) this.parent.remove_child(this);
 		this.#parent = value;
@@ -106,14 +106,14 @@ class Transform2d
 			this.parent.append_child(this);
 		}
 	}
-	get local_tm    () { return this.#local_transform_m; }
-	get inv_local_tm() { return this.#inv_local_transform_m;}
-	get world_tm    () { return this.#world_transform_m; }
-	get inv_world_tm() { return this.#inv_world_transform_m; }
-	get position    () {return this.#position;}
-	get scale       () {return this.#scale;}
-	get angle       () {return this.#angle * RAD_TO_DEG;}
-	set position(value)
+	get local_tm    ()     { return this.#local_transform_m; }
+	get inv_local_tm()     { return this.#inv_local_transform_m;}
+	get world_tm    ()     { return this.#world_transform_m; }
+	get inv_world_tm()     { return this.#inv_world_transform_m; }
+	get position    ()     {return this.#position;}
+	get scale       ()     {return this.#scale;}
+	get angle       ()     {return this.#angle * RAD_TO_DEG;}
+	set position	(value)
 	{
 		this.#position = value;
 		this.raw_transform = true;

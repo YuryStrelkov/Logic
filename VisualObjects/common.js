@@ -2,12 +2,17 @@ var startTime = Date.now();
 const DEG_TO_RAD = Math.PI / 180.0;
 const RAD_TO_DEG = 180.0 / Math.PI;
 const NUMERICAL_ACCURACY = 1e-6;
-
-const current_time = () => { return Date.now() - startTime;}
+const msec = 0.001;
+const current_time = () => { return msec * (Date.now() - startTime);}
 
 const set_bit = (bytes, bit) => 
 {
     bytes |= (1 << bit);
+    return bytes;
+}
+const set_bits = (bytes, bits) => 
+{
+    for(const bit of bits) bytes |= (1 << bit);
     return bytes;
 }
 const is_bit_set = (bytes, bit) =>

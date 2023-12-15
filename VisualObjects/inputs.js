@@ -14,12 +14,12 @@ const MOUSE_MOVE   = 0;
 const MOUSE_DRAG   = 1;
 const MOUSE_SCROLL = 2;
 
-const NO_BUTTON      = 0;
-const LEFT_BUTTON    = 1;
-const RIGHT_BUTTON   = 2;
-const MIDDLE_BUTTON  = 4;
-const BACK_BUTTON    = 8;
-const FORWARD_BUTTON = 16;
+const NO_BUTTON          = 0;
+const LEFT_BUTTON_BIT    = 0;
+const RIGHT_BUTTON_BIT   = 1;
+const MIDDLE_BUTTON_BIT  = 2;
+const BACK_BUTTON_BIT    = 3;
+const FORWARD_BUTTON_BIT = 4;
 
 class KeyState
 {
@@ -76,9 +76,9 @@ class MouseInfo
         if(this.is_middle_down)return true;
         return false;
     }
-    get is_left_down  (){return (this.keys && LEFT_BUTTON)   == LEFT_BUTTON;  }
-    get is_right_down (){return (this.keys && RIGHT_BUTTON)  == RIGHT_BUTTON; }
-    get is_middle_down(){return (this.keys && MIDDLE_BUTTON) == MIDDLE_BUTTON;}
+    get is_left_down  (){return is_bit_set(this.keys, LEFT_BUTTON_BIT);  }
+    get is_right_down (){return is_bit_set(this.keys, RIGHT_BUTTON_BIT) ;}
+    get is_middle_down(){return is_bit_set(this.keys, MIDDLE_BUTTON_BIT);}
     get is_left_up    (){return !this.is_left_down;  }
     get is_right_up   (){return !this.is_right_down; }
     get is_middle_up  (){return !this.is_middle_down;}
