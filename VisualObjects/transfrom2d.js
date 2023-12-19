@@ -1,5 +1,6 @@
 const RAW_TRANSFORM_BIT  = 0
 const SYNC_TRANSFORM_BIT = 1
+const FREEZE_TRANSFORM_BIT = 2
 class Transform2d
 {
 	static #transforms_layers = null;
@@ -58,6 +59,10 @@ class Transform2d
 	set raw_transform(value) { this.#transform_status = value ? set_bit(this.#transform_status, RAW_TRANSFORM_BIT)
 	 														  :clear_bit(this.#transform_status, RAW_TRANSFORM_BIT); }
 	get sync_required()      { return this.#children_sync_count != this.children_count; }
+	get freeze()     		 { return is_bit_set(this.#transform_status, FREEZE_TRANSFORM_BIT); }
+	set freeze(value)     	 { this.#transform_status = value ? set_bit(this.#transform_status, FREEZE_TRANSFORM_BIT)
+																:clear_bit(this.#transform_status, FREEZE_TRANSFORM_BIT);}
+	get sync_required()      { return this.#children_sync_count != this.children_count; }
 	set sync_required(value) { this.#children_sync_count = value ? 0 : this.#children_sync_count; }
 
 	sync_transform()
@@ -85,9 +90,11 @@ class Transform2d
 	{
 		if(!this.has_parent) return;
 		if(!this.parent.sync_required) return;
+		if(this.freeze){this.parent.#children_sync_count += 1; return;}
 		this.#world_transform_m     = Matrix3d.mat_mul(this.parent.world_tm, this.local_tm);
 		this.#inv_world_transform_m = Matrix3d.mat_mul(this.inv_local_tm, this.parent.inv_world_tm);
 		this.parent.#children_sync_count += 1;
+		this.sync_required = true
 		// console.log("sync transform at layer" + this.transform_layer);
 	}
 	get transform_layer() { return this.#transform_layer;}

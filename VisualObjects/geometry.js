@@ -10,6 +10,8 @@ class Vector2d
 	static angle(a, b) { return Math.acos(Vector2d.dot(a, b) * a.inv_length * b.inv_length);}
 	static sub  (a, b) { return new Vector2d(a.x - b.x, a.y - b.y); }
 	static sum  (a, b) { return new Vector2d(a.x + b.x, a.y + b.y); }
+	static mul  (a, b) { return new Vector2d(a.x * b.x, a.y * b.y); }
+	static div  (a, b) { return new Vector2d(a.x / b.x, a.y / b.y); }
 	static dist (a, b)
 	{
 		const x = b.x - a.x;
@@ -52,6 +54,8 @@ class Vector3d
 	static angle(a, b) { return Math.acos(Vector3d.dot(a, b) * a.inv_length * b.inv_length); }
 	static sub  (a, b) { return new Vector3d(a.x - b.x, a.y - b.y, a.z - b.z); }
 	static sum  (a, b) { return new Vector3d(a.x + b.x, a.y + b.y, a.z + b.z); }
+	static mul  (a, b) { return new Vector3d(a.x * b.x, a.y * b.y, a.z * b.z); }
+	static div  (a, b) { return new Vector3d(a.x / b.x, a.y / b.y, a.z / b.z); }
 	static dist (a, b)
 	{
 		const x = b.x - a.x;

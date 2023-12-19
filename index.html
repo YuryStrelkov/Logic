@@ -32,155 +32,25 @@
 				    justify-content: flex-start;
 				    width:100%;
 				    position: unset;">
-					<div id="input_pins_container"
-						 style="width:90px;
-								height:600px;
-								background-color:#DDDDDD;
-								display: flex; 
-								flex-direction: column;
-								justify-content: center;
-								align-items: flex-start;">
-					</div>
-					<div id="mainContainer" style="height:960px; width:1024px; background-color:#DDDDDD">
-					<canvas id="mainCanvas" height="960px" width="1024px"></canvas>
+					<div id="mainContainer" style="height:900px; width:1600px; background-color:#dddddd85">
+					<canvas id="mainCanvas" height="900px" width="1600px"></canvas>
 						<script>
 							rootElement = document.getElementById("mainContainer");
 							rootElement.style.zIndex = 0;
-							// make_custom_gate(5, 5, 400 + 90, 300 - 90, "4-bit adder", rootElement);
-							const canvas     = RenderCanvas.instance;
-							canvas.clear();
+							const scene_canvas  = RenderCanvas.instance;
+							scene_canvas.clear();
+							Transform2d.root_transform.position = new Vector2d(RenderCanvas.instance.width * 0.5, RenderCanvas.instance.height * 0.5);
+
 							const visual_objects = create_visual_objects();
-							/*
-
-							var mouse_down = false;
-							var direction = 0;
-							var points = [];
-							var mouse_point = null;
-							function canvasCliqueCoord(evt)
-							{
-								return {x: evt.clientX - canvas.canvas.offsetLeft,
-										y: evt.clientY - canvas.canvas.offsetTop}
-							}
-							function ptDistance(p1, p2)
-							{
-								return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
-							}
-							
-							canvas.canvas.onmousedown = function(evt)
-							{
-								// console.log(evt);
-								mouse_down = true;
-								direction = 0;
-								//console.clear();
-								points.push(canvasCliqueCoord(evt));
-							};
-
-							canvas.canvas.onmouseup = function(evt)
-							{
-								mouse_down = false;
-								mouse_point = null;
-								points = [];
-							};
-							
-							function evaluateDirection(p_curr, dist_thresshold = 25.0, default_dir = 0)
-							{	
-								const p_prev = points[points.length - 1];
-								const dx = p_curr.x - p_prev.x;
-								const dy = p_curr.y - p_prev.y;
-								const dist = Math.sqrt(dx * dx + dy * dy);
-								if (dist < dist_thresshold)
-								{	
-									if (points.length == 2)
-									{	
-										const _dx = p_curr.x - points[0].x;
-										const _dy = p_curr.y - points[0].y;
-										// console.log(Math.sqrt(_dx * _dx + _dy * _dy));
-										direction = Math.abs(_dx) < Math.abs(_dy)? 1 : 0;
-									}
-									
-									if (points.length >= 2)
-									{	
-										points.pop();
-									}
-									
-									if(direction == 0)
-									{
-										points.push({x: p_curr.x, y: p_prev.y});
-									}
-									if(direction == 1)
-									{
-										points.push({x: p_prev.x, y: p_curr.y});
-									}
-									return;
-								}
-								
-								if (Math.abs(dx) < Math.abs(dy))
-								{
-									if(direction == 1)return;
-									direction = 1;
-									points.push({x: p_prev.x, y: p_curr.y});
-								}
-								else
-								{
-									if(direction == 0)return;
-									direction = 0;
-									points.push({x: p_curr.x, y: p_prev.y});
-								}
-							}
-							
-							canvas.canvas.onmousemove = function(evt)
-							{
-								if(!mouse_down) return;
-								curr_coords = mouse_point = canvasCliqueCoord(evt);
-								evaluateDirection(curr_coords);
-							}
+							init_statistics();
 							function onCanvasRepaint()
 							{	
-								canvas.clear();
-								render_all_objects(canvas.canvas_ctx, visual_objects);
-								
-								if (mouse_point == null)return;
-								draw_circ(canvas.canvas_ctx, points[0].x, points[0].y, 5, "#00FF00", 0);
-								draw_circ(canvas.canvas_ctx, points[points.length - 1].x,
-											   points[points.length - 1].y, 5, "#FF0000", 0);
-								if(direction == 0)
-								{
-									draw_circ(canvas.canvas_ctx, mouse_point.x,
-												   mouse_point.y, 5, "#0000FF", 0);
-								}
-								if(direction == 1)
-								{
-									draw_circ(canvas.canvas_ctx, points[points.length - 1].x,
-												   mouse_point.y, 5, "#0000FF", 0);
-								}			   
-								
-								canvas.canvas_ctx.save();
-								canvas.canvas_ctx.beginPath();
-								for(var pt_index = 0; pt_index < points.length; pt_index++)
-								{
-									canvas.canvas_ctx.lineTo(points[pt_index].x, points[pt_index].y);
-								}
-								canvas.canvas_ctx.lineWidth = 2.5;
-								canvas.canvas_ctx.stroke();
-								canvas.canvas_ctx.restore();
-							}*/
-							function onCanvasRepaint()
-							{	
-								canvas.clear();
-								render_all_objects(canvas.canvas_ctx);
+								scene_canvas.clear();
+								render_all_objects(scene_canvas.canvas_ctx);
 							}
 							setInterval(function(){onCanvasRepaint()}, 16);
 							
 						</script>
-					</div>
-					<div id="output_pins_container"
-						 style="width:90px;
-								height:600px;
-								background-color:#DDDDDD;
-								display: flex; 
-								flex-direction: column;
-								justify-content: center;
-								align-items: flex-start;">
 					</div>
 		</div>
 	</body>
