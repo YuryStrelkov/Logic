@@ -26,7 +26,7 @@ class KeyState
 	#_state = KEY_UP;
 	constructor() {}
     
-    #validate_state_change(state){ return KEY_STATE_MACHINE[state + this.state * KEY_STATES] == 1; }
+    #validate_state_change(state){ return KEY_STATE_MACHINE[state + this.state * KEY_STATES] === 1; }
 
     update(state)
     {
@@ -35,10 +35,10 @@ class KeyState
     }
     reset         (){this.#_state = KEY_UP; }
 	get state     (){return this.#_state;}
-	get on_press  (){return this.state == KEY_PRESS  ;}
-	get on_hold   (){return this.state == KEY_HOLD   ;}
-	get on_up     (){return this.state == KEY_UP     ;}
-	get on_release(){return this.state == KEY_RELEASE;}
+	get on_press  (){return this.state === KEY_PRESS  ;}
+	get on_hold   (){return this.state === KEY_HOLD   ;}
+	get on_up     (){return this.state === KEY_UP     ;}
+	get on_release(){return this.state === KEY_RELEASE;}
 }
 
 const canvas_clique_coord = (evt) => { return new Vector2d(evt.clientX - RenderCanvas.instance.canvas.offsetLeft,

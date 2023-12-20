@@ -1,4 +1,7 @@
 var startTime = Date.now();
+const SCALE_STEP = 0.1;
+const MAX_SCALE = 10.0;
+const MOVEMENT_STEP = 10.0;
 const DEG_TO_RAD = Math.PI / 180.0;
 const RAD_TO_DEG = 180.0 / Math.PI;
 const NUMERICAL_ACCURACY = 1e-6;

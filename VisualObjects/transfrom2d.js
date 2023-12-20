@@ -53,7 +53,7 @@ class Transform2d
 		this.#inv_local_transform_m = Matrix3d.identity();
 		this.#inv_world_transform_m = Matrix3d.identity();
 		this.#transform_status		= 0;
-		this.parent 				= parent == null ? Transform2d.root_transform : parent;
+		this.parent 				= parent === null ? Transform2d.root_transform : parent;
 	}
 	get raw_transform()      { return is_bit_set(this.#transform_status, RAW_TRANSFORM_BIT); }
 	set raw_transform(value) { this.#transform_status = value ? set_bit(this.#transform_status, RAW_TRANSFORM_BIT)
@@ -64,7 +64,12 @@ class Transform2d
 																:clear_bit(this.#transform_status, FREEZE_TRANSFORM_BIT);}
 	get sync_required()      { return this.#children_sync_count != this.children_count; }
 	set sync_required(value) { this.#children_sync_count = value ? 0 : this.#children_sync_count; }
-
+	reset()
+	{
+		this.angle = 0.0;
+		this.position = new Vector2d(0.0, 0.0);
+		this.scale = new Vector2d(1.0, 1.0);
+	}
 	sync_transform()
 	{
 		this.#sync_transform_matrices();
@@ -122,7 +127,7 @@ class Transform2d
 	get angle       ()     {return this.#angle * RAD_TO_DEG;}
 	set position	(value)
 	{
-		this.#position = value;
+		this.#position = value; //this.has_parent?this.parent.inv_world_transform_point(value):value;
 		this.raw_transform = true;
 	}
 	set scale   (value)
@@ -157,7 +162,7 @@ class Transform2d
 
 	apply_to_context(ctx)
 	{
-		if(this.parent == null)
+		if(this.parent === null)
 		{
 			ctx.transform(this.local_tm.m00, this.local_tm.m10,  // ex
 						  this.local_tm.m01, this.local_tm.m11,  // ey

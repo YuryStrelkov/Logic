@@ -35,13 +35,13 @@ class VisualObjectState
 	}
 	set on_focus     (value) 
 	{	
-		 if(this.on_focus == value)return;
+		 if(this.on_focus === value)return;
 		 this.#_state_change_time = current_time();
 		 this.#setup(value, FOCUS_BIT);
 	}
 	set on_down     (value) 
 	{
-		if(this.on_down == value)return;
+		if(this.on_down === value)return;
 		this.#_state_change_time = current_time();
 		this.#setup(value, DOWN_BIT);
 	}
@@ -163,10 +163,10 @@ class VisualSettings
 	get text_baseline     (){return this.#_text_baseline;}
 	get text_align        (){return this.#_text_align   ;}
 	get corners_radiuses  (){return this.#_corners_radiuses;}
-	get up_left_radius    (){return this.#_corners_radiuses[0];}
-	get down_left_radius  (){return this.#_corners_radiuses[1];}
-	get down_right_radius (){return this.#_corners_radiuses[2];}
-	get up_right_radius   (){return this.#_corners_radiuses[3];}
+	get up_left_radius    (){return this.#_corners_radiuses[3];}
+	get down_left_radius  (){return this.#_corners_radiuses[0];}
+	get down_right_radius (){return this.#_corners_radiuses[1];}
+	get up_right_radius   (){return this.#_corners_radiuses[2];}
 
 	get stroke_color(){return this.#_stroke_color;}
 	get stroke_width(){return this.#_stroke_width;}
@@ -196,14 +196,14 @@ class VisualSettings
 	set font_size    (value){this.#_font_size     = value;}
 	set text_baseline(value){this.#_text_baseline = value;}
 	set text_align   (value){this.#_text_align    = value;}
-	set up_left_radius   (value){this.#_corners_radiuses[0] = Math.max(0.0, value);}
-	set down_left_radius (value){this.#_corners_radiuses[1] = Math.max(0.0, value);}
-	set down_right_radius(value){this.#_corners_radiuses[2] = Math.max(0.0, value);}
-	set up_right_radius  (value){this.#_corners_radiuses[3] = Math.max(0.0, value);}
+	set up_left_radius   (value){this.#_corners_radiuses[3] = Math.max(0.0, value);}
+	set down_left_radius (value){this.#_corners_radiuses[0] = Math.max(0.0, value);}
+	set down_right_radius(value){this.#_corners_radiuses[1] = Math.max(0.0, value);}
+	set up_right_radius  (value){this.#_corners_radiuses[2] = Math.max(0.0, value);}
 
 	apply_to_context(ctx)
 	{
-		if(VisualSettings.#active_settings == this)return;
+		if(VisualSettings.#active_settings === this)return;
 		VisualSettings.#active_settings = this;
 		ctx.font         = `${this.font_size}pt ${this.font_family}`;
 		ctx.textBaseline = this.text_baseline;

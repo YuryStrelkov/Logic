@@ -320,8 +320,8 @@ class Matrix3d
 	}
 	multiply_by_direction(point)
 	{
-		return Vector2d(this.m00 * point.x + this.m01 * point.y,
-						this.m10 * point.x + this.m11 * point.y);
+		return new Vector2d(this.m00 * point.x + this.m01 * point.y,
+						    this.m10 * point.x + this.m11 * point.y);
 	}
 }
 class RectBounds

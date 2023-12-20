@@ -16,16 +16,9 @@
 		<script src="VisualObjects/inputs.js"></script>
 		<script src="Rendering/renderCanvas.js"></script>
 		<script src="VisualObjects/visualObject.js"></script>
+		<script src="VisualObjects/visualObjects.js"></script>
 	</head>
 	<body>
-		<div    class="buttonsContainer">
-		<button onclick="load_asset('/assets/and.html',         400, 300);">AND</button>
-		<button onclick="load_asset('/assets/xor.html',         400, 300);">XOR</button>
-		<button onclick="load_asset('/assets/or.html',          400, 300);"> OR </button>
-		<button onclick="load_asset('/assets/not.html',         400, 300);">NOT</button>
-		<button onclick="load_asset('/assets/general_pin.html', 400, 300, document.getElementById('input_pins_container'));">P_IN</button>
-		<button onclick="load_asset('/assets/output_pin.html',  400, 300, document.getElementById('output_pins_container'));">P_OUT</button>
-		</div>
 		<div style="display: flex; 
 				    flex-direction: row;
 				    align-items: center;
@@ -40,9 +33,10 @@
 							const scene_canvas  = RenderCanvas.instance;
 							scene_canvas.clear();
 							Transform2d.root_transform.position = new Vector2d(RenderCanvas.instance.width * 0.5, RenderCanvas.instance.height * 0.5);
-
+							init_common_styles();
 							const visual_objects = create_visual_objects();
 							init_statistics();
+							main_menu_init();
 							function onCanvasRepaint()
 							{	
 								scene_canvas.clear();

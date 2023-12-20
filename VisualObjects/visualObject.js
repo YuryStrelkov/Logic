@@ -1,26 +1,6 @@
 
-const draw_text = (ctx, x_c, y_c, text_value, text_size = 20, text_font = 'consolas', text_color = "#FFFFFF") =>
-{
-	ctx.font = `${text_size}pt ${text_font}`;
-	ctx.fillStyle = text_color;
-	old_text_color = ctx.fillStyle;
-	ctx.fillStyle = old_text_color;
-	ctx.textBaseline = 'middle';
-	old = ctx.textAlign;
-	ctx.textAlign = "left";
-	ctx.fillText(text_value, x_c,  y_c);
-	ctx.textAlign = old;
-	ctx.fillStyle = old_text_color;
-}
-
 class VisualObject
 {
-	static destroy(visual_object) 
-	{
-		VisualObject.#delete_request.push(visual_object);
-		if(!visual_object.has_children)return;
-		for(const child of visual_object.children)VisualObject.destroy(child);
-	}
 	static #eval_objects_destroy()
 	{
 		while(VisualObject.#delete_request.length != 0)
@@ -41,19 +21,42 @@ class VisualObject
 	static #press_update() 
 	{
 		if (VisualObject.pressed_object  != null) return;
-		if (VisualObject.on_focus_object == null) return;
+		if (VisualObject.on_focus_object === null) return;
 		if (!MouseInfo.instance.is_any_down) return;
 		VisualObject.#pressed_object = VisualObject.on_focus_object; 
 		VisualObject.pressed_object.state.on_down = true;
-		VisualObject.#obj_press_delta_position = Vector2d.sub(MouseInfo.instance.position, VisualObject.pressed_object.transform.position);
+		const scale = Transform2d.root_transform.scale;
+		VisualObject.#obj_press_delta_position = Vector2d.sub(MouseInfo.instance.position, Vector2d.mul(VisualObject.pressed_object.transform.position, scale));
+		/// VisualObject.#obj_press_delta_position = Transform2d.root_transform.world_transform_direction(VisualObject.#obj_press_delta_position);
+	}
+	static #limit_movement(obj)
+	{
+		const position = obj.transform.position;
+		const w        = obj.bounds.width * 0.5;
+		const h        = obj.bounds.height * 0.5;
+		const cw       = RenderCanvas.instance.width * 0.5;
+		const ch       = RenderCanvas.instance.height * 0.5;
+		position.x     = position.x < w - cw ? w - cw: position.x;
+		position.x     = position.x > cw - w ? cw - w: position.x;
+		position.y     = position.y < h - ch ? h - ch: position.y;
+		position.y     = position.y > ch - h ? ch - h: position.y;
+		obj.transform.position = position;
 	}
 	static #move_update()
 	{
-		if ( VisualObject.pressed_object == null) return;
+		if ( VisualObject.pressed_object === null) return;
 		if (!VisualObject.pressed_object.state.is_moveable) return;
 		if (!VisualObject.pressed_object.state.on_down) return;
-		VisualObject.pressed_object.transform.position = Vector2d.sub(MouseInfo.instance.position, 
-														 Vector2d.div(VisualObject.obj_press_delta_position, Transform2d.root_transform.scale))
+		if (!MouseInfo.instance.is_left_down)return;
+		const scale    = Transform2d.root_transform.scale;
+		VisualObject.pressed_object.transform.position = Vector2d.div(Vector2d.sub(MouseInfo.instance.position, VisualObject.obj_press_delta_position), scale);
+		VisualObject.#limit_movement(VisualObject.pressed_object);
+	}
+	static destroy(visual_object) 
+	{
+		VisualObject.#delete_request.push(visual_object);
+		if(!visual_object.has_children)return;
+		for(const child of visual_object.children)VisualObject.destroy(child);
 	}
 	static update()
 	{
@@ -69,6 +72,7 @@ class VisualObject
 		for(const obj of VisualObject.#visual_objects)
 		{
 			if(!obj.state.is_shown)continue;
+			if(obj.cast_by_view)continue;
 			ctx.beginPath();
 			obj.render (ctx);
 			ctx.setTransform(1,0,0,1,0,0)
@@ -77,11 +81,12 @@ class VisualObject
 	static get pressed_object          (){return VisualObject.#pressed_object;          }
 	static get on_focus_object         (){return VisualObject.#on_focus_object;         }
 	static get obj_press_delta_position(){return VisualObject.#obj_press_delta_position;}
-	static #visual_objects            = new Set();
-	static #delete_request            = [];
-	static #pressed_object            = null;
-	static #on_focus_object           = null;
+	static #delete_request           = [];
+	static #visual_objects           = new Set();
+	static #pressed_object           = null;
+	static #on_focus_object          = null;
 	static #obj_press_delta_position = new Vector2d();
+
 	#_parent;
 	#_children;
 	#_bounds;
@@ -100,33 +105,26 @@ class VisualObject
 	  this.bounds.center      = new Vector2d(0, 0);
 	  VisualObject.#visual_objects.add(this);
 	}
+	get cast_by_view() {return RenderCanvas.instance.cast_by(this.bounds, this.transform);}
+	get intersect_by_view() {return RenderCanvas.instance.intersect_by(this.bounds, this.transform);}
 	get parent      () {return this.#_parent;}
 	get has_parent  () {return this.#_parent != null;}
 	get children    () {return this.#_children;}
 	get has_children() {return this.#_children.length != 0;}
-	set visual    (value){this.#_visual = value;}
-	set parent    (v_object)
-	{
-		if(this.has_parent) this.parent.#_children.delete(this);
-		this.#_parent = v_object;
-		v_object.#_children.add(this);
-		this.transform.parent = v_object.transform
-		return;
-	}
-	get layer    ()   {return this.transform.transform_layer;}
-	get bounds   ()   {return this.#_bounds;}
-	get transform()   {return this.#_transform;}
-	get visual   ()   {return this.#_visual;}
-	get state    ()   {return this.#_state;}
+	get layer       () {return this.transform.transform_layer;}
+	get bounds   () {return this.#_bounds;}
+	get transform() {return this.#_transform;}
+	get visual   () {return this.#_visual;}
+	get state    () {return this.#_state;}
 	get points   ()
 	{
 		const points = this.bounds.points;
-		return [this.transform.transform_point(points[0]),
-				this.transform.transform_point(points[1]),
-				this.transform.transform_point(points[2]),
-				this.transform.transform_point(points[3])];
+		return [this.transform.world_transform_point(points[0]),
+				this.transform.world_transform_point(points[1]),
+				this.transform.world_transform_point(points[2]),
+				this.transform.world_transform_point(points[3])];
 	}
-	get edges   ()
+	get edges  ()
 	{
 		const points = this.points;
 	    return [[points[0], points[1]],
@@ -134,27 +132,37 @@ class VisualObject
 				[points[2], points[3]],
 				[points[3], points[0]]];
 	}
+	set visual (value){this.#_visual = value;}
+	set parent (value)
+	{
+		if(this.has_parent) this.parent.#_children.delete(this);
+		this.#_parent = value;
+		value.#_children.add(this);
+		this.transform.parent = value.transform
+		return;
+	}
+
 	contains(point) { return this.bounds.contains(this.transform.inv_world_transform_point(point)); }
+	
 	#focus_update()
 	{
 		if (!this.state.is_focusable) return;
 		
-		if (this == VisualObject.on_focus_object)
+		if (this === VisualObject.on_focus_object)
 		{
 			this.state.on_focus = this.contains(MouseInfo.instance.position);
 			VisualObject.#on_focus_object = this.state.on_focus? this : null;
 			return;
 		}
 
-		if (VisualObject.on_focus_object == null) 
+		if (VisualObject.on_focus_object === null) 
 		{
 			this.state.on_focus = this.contains(MouseInfo.instance.position);
 			if(!this.state.on_focus) return;
 			VisualObject.#on_focus_object = this;
 			return;
 		}
-		
-		/// Сортировка по слоям. Предпочтение отдаётся слою с большим значением
+	   /// Сортировка по слоям. Предпочтение отдаётся слою с большим значением
 		if (this.layer < VisualObject.on_focus_object.layer) return;
 		this.state.on_focus = this.contains(MouseInfo.instance.position);
 		if (!this.state.on_focus) return;
@@ -175,11 +183,12 @@ class VisualObject
 		ctx.fillStyle   = this.visual.eval_object_color(this.state).color_code;
 		ctx.roundRect(x0, y0, width, height, this.visual.corners_radiuses);
 		ctx.fill();	
-		if(this.visual.stroke_width == 0)return;
+		if(this.visual.stroke_width === 0)return;
 		ctx.roundRect(x0, y0, width, height, this.visual.corners_radiuses);
 		ctx.stroke();
 	}
 }
+/*
 
 class RectangleObject extends VisualObject
 {
@@ -204,8 +213,14 @@ class TextObject extends VisualObject
 	{
         super.render(ctx);
 		const center  = this.bounds.center;
+		const width   = this.bounds.width;
 		ctx.fillStyle = this.visual.font_color.color_code;
-		ctx.fillText(this.text, center.x, center.y);
+		switch(this.visual.text_align)
+		{
+			case 'center': ctx.fillText(this.text, center.x, center.y);break;
+			case 'left':   ctx.fillText(this.text, center.x - width * 0.5, center.y);break;
+			case 'right':  ctx.fillText(this.text, center.x + width * 0.5, center.y);break;
+		}
 	}
 }
 
@@ -224,12 +239,11 @@ text_settings.down_left_radius  = 12.0;
 text_settings.down_right_radius = 12.0;
 text_settings.up_right_radius   = 12.0;
 
-
 text_info_settings = new VisualSettings();
 text_info_settings.color = new Color(125, 125, 125, 0.5);
 text_info_settings.font_color = new Color(225, 225, 225, 255);
 text_info_settings.stroke_width = 0.0;
-text_info_settings.text_align  = 'middle';
+text_info_settings.text_align  = 'left';
 
 
 const non_gate = (center) => 
@@ -291,7 +305,7 @@ fps_count_info     = null;
 const init_statistics = () =>
 {
 	up_left = new Vector2d(-800, -450);
-	line_size = new Vector2d(260, 33);
+	line_size = new Vector2d(300, 33);
 	
 	root_position_info = new TextObject(new Vector2d(up_left.x, up_left.y                  ), new Vector2d(up_left.x + line_size.x, up_left.y +     line_size.y));
 	root_scaling_info  = new TextObject(new Vector2d(up_left.x, up_left.y +     line_size.y), new Vector2d(up_left.x + line_size.x, up_left.y + 2 * line_size.y));
@@ -322,9 +336,9 @@ const render_all_objects = (ctx) =>
 	t    = current_time();
 	VisualObject.update();
 	VisualObject.render(ctx);
-	root_position_info.text = `origin: {${Transform2d.root_transform.position.x};${Transform2d.root_transform.position.y}}`;
-	root_scaling_info .text = `scale: {${Transform2d.root_transform.scale.x};${Transform2d.root_transform.scale.y}}`;
-	root_rotation_info.text	= `angle: ${Transform2d.root_transform.angle}`;
-	fps_count_info.text =  `fps: ${Math.round(1.0 / Math.max(0.001, (current_time() - t)))}`;
-	// draw_text(ctx, 20, 20, `frames per sec: ${Math.round(1.0 / Math.max(0.001, (current_time() - t)))}`, 14);
+	root_position_info.text = ` origin: {${Transform2d.root_transform.position.x};${Transform2d.root_transform.position.y}}`;
+	root_scaling_info .text = ` scale:  {${Transform2d.root_transform.scale.x};${Transform2d.root_transform.scale.y}}`;
+	root_rotation_info.text	= ` angle:  ${Transform2d.root_transform.angle}`;
+	fps_count_info.text     = ` fps:    ${Math.round(1.0 / Math.max(0.001, (current_time() - t)))}`;
 }
+*/
