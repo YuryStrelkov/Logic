@@ -27,13 +27,3 @@ const clear_bit = (bytes, bit) =>
     bytes &= ~(1 << bit);
     return bytes;
 }
-
-// const MOUSE_L_HOLD    = 2;
-// const MOUSE_L_PRESS   = 3;
-// const MOUSE_L_RELEASE = 4;
-// const MOUSE_R_HOLD    = 5;
-// const MOUSE_R_PRESS   = 6;
-// const MOUSE_R_RELEASE = 7;
-// const MOUSE_M_HOLD    = 8;
-// const MOUSE_M_PRESS   = 9;
-// const MOUSE_M_RELEASE = 10;

@@ -1,24 +1,93 @@
+/**
+ * Двумерный вектор.
+ */
 class Vector2d
 {
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @param {Number} t 
+	 * @returns {Vector2d}  
+	 */
 	static lerp(a, b, t)
 	{
 		const _t = Math.min(Math.max(0.0, t), 1.0);
 		return new Vector2d(a.x + (b.x - a.x) * _t, a.y + (b.y - a.y) * _t);
 	}
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Number}  
+	 */
 	static dot  (a, b) { return a.x * b.x + a.y * b.y;}
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Number}  
+	 */
 	static cross(a, b) { return a.x * b.y - a.y * b.x;}
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Number}  
+	 */
 	static angle(a, b) { return Math.acos(Vector2d.dot(a, b) * a.inv_length * b.inv_length);}
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Vector2d}  
+	 */
 	static sub  (a, b) { return new Vector2d(a.x - b.x, a.y - b.y); }
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Vector2d}  
+	 */
 	static sum  (a, b) { return new Vector2d(a.x + b.x, a.y + b.y); }
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Vector2d}  
+	 */
 	static mul  (a, b) { return new Vector2d(a.x * b.x, a.y * b.y); }
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Vector2d}  
+	 */
 	static div  (a, b) { return new Vector2d(a.x / b.x, a.y / b.y); }
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Number}  
+	 */
 	static dist (a, b)
 	{
 		const x = b.x - a.x;
 		const y = b.y - a.y;
 		return Math.sqrt(x * x + y * y);
 	}
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Number}  
+	 */
 	static manhattan_dist(a, b) { return Math.abs(b.x - a.x) + Math.abs(b.y - a.y);	}
+	/**
+	 * 
+	 * @param {Number} x 
+	 * @param {Number} y 
+	 */
 	constructor(x = 0.0, y = 0.0)
 	{
 		this.x = x;
@@ -41,6 +110,13 @@ class Vector2d
 }
 class Vector3d
 {
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @param {Number} t 
+	 * @returns {Vector3d}  
+	 */
 	static lerp(a, b, t)
 	{
 		const _t = Math.min(Math.max(0.0, t), 1.0);
@@ -48,14 +124,61 @@ class Vector3d
 		                    a.y + (b.y - a.y) * _t,
 		                    a.z + (b.z - a.z) * _t);
 	}
-	
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Number}  
+	 */
 	static dot  (a, b) { return a.x * b.x + a.y * b.y + a.z * b.z; }
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Vector3d}  
+	 */
 	static cross(a, b) { return new Vector3d(a.z * b.y - a.y * b.z, a.x * b.z - a.z * b.x, a.y * b.x - a.x * b.y); }
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Number}  
+	 */
 	static angle(a, b) { return Math.acos(Vector3d.dot(a, b) * a.inv_length * b.inv_length); }
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Vector3d}  
+	 */
 	static sub  (a, b) { return new Vector3d(a.x - b.x, a.y - b.y, a.z - b.z); }
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Vector3d}  
+	 */
 	static sum  (a, b) { return new Vector3d(a.x + b.x, a.y + b.y, a.z + b.z); }
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Vector3d}  
+	 */
 	static mul  (a, b) { return new Vector3d(a.x * b.x, a.y * b.y, a.z * b.z); }
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Vector3d}  
+	 */
 	static div  (a, b) { return new Vector3d(a.x / b.x, a.y / b.y, a.z / b.z); }
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Number}  
+	 */
 	static dist (a, b)
 	{
 		const x = b.x - a.x;
@@ -63,7 +186,19 @@ class Vector3d
 		const z = b.z - a.z;
 		return Math.sqrt(x * x + y * y + z * z);
 	}
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Number}  
+	 */
 	static manhattan_dist(a, b) { return Math.abs(b.x - a.x) + Math.abs(b.y - a.y) + Math.abs(b.z - a.z); }
+	/**
+	 * 
+	 * @param {Number} x 
+	 * @param {Number} y 
+	 * @param {Number} z 
+	 */
 	constructor(x = 0.0, y = 0.0, z = 0.0)
 	{
 		this.x = x;

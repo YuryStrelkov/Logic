@@ -14,9 +14,11 @@
 		<script src="VisualObjects/transfrom2d.js"></script>
 		<script src="VisualObjects/visualSettings.js"></script>
 		<script src="VisualObjects/inputs.js"></script>
+		<script src="Rendering/patternCanvas.js"></script>
 		<script src="Rendering/renderCanvas.js"></script>
 		<script src="VisualObjects/visualObject.js"></script>
 		<script src="VisualObjects/visualObjects.js"></script>
+		<script src="application.js"></script>
 	</head>
 	<body>
 		<div style="display: flex; 
@@ -28,22 +30,8 @@
 					<div id="mainContainer" style="height:900px; width:1600px; background-color:#dddddd85">
 					<canvas id="mainCanvas" height="900px" width="1600px"></canvas>
 						<script>
-							rootElement = document.getElementById("mainContainer");
-							rootElement.style.zIndex = 0;
-							const scene_canvas  = RenderCanvas.instance;
-							scene_canvas.clear();
-							Transform2d.root_transform.position = new Vector2d(RenderCanvas.instance.width * 0.5, RenderCanvas.instance.height * 0.5);
-							init_common_styles();
-							const visual_objects = create_visual_objects();
-							init_statistics();
-							main_menu_init();
-							function onCanvasRepaint()
-							{	
-								scene_canvas.clear();
-								render_all_objects(scene_canvas.canvas_ctx);
-							}
-							setInterval(function(){onCanvasRepaint()}, 16);
-							
+							init_app();
+							setInterval(repaint_app, 16);
 						</script>
 					</div>
 		</div>

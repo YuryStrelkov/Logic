@@ -1,3 +1,5 @@
+// import {VisualObject} from "visualObject.js";
+
 class RectangleObject extends VisualObject
 {
 	static from_center_and_size(center, size)
@@ -211,7 +213,7 @@ const render_all_objects = (ctx) =>
 	t    = current_time();
 	VisualObject.update();
 	VisualObject.render(ctx);
-	ROOT_POSITION_INFO.text = `| Center: {${Transform2d.root_transform.position.x}; ${Transform2d.root_transform.position.y}}`;
+	ROOT_POSITION_INFO.text = `| Center: {${Transform2d.root_transform.position.x.toFixed(2)}; ${Transform2d.root_transform.position.y.toFixed(2)}}`;
 	ROOT_SCALING_INFO .text = `| Scale: {${Math.round(Transform2d.root_transform.scale.x / SCALE_STEP) * 10}%;  ${Math.round(Transform2d.root_transform.scale.y / SCALE_STEP) * 10}%}`;
 	ROOT_ROTATION_INFO.text	= `| Angle: ${Math.round(Transform2d.root_transform.angle)} deg`;
 	FPS_COUNT_INFO    .text = `| FPS: ${Math.round(1.0 / Math.max(0.001, (current_time() - t)))}, Sync FPS: ${Math.round(1.0 / Math.max(0.001, current_time() - FRAME_TIME))}`;
