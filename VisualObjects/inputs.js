@@ -54,8 +54,8 @@ class MouseInfo
     {
         if(MouseInfo.instance != null) return MouseInfo.instance;
         this.#keys           = 0;
-        this.#position       = new Vector2d();
-        this.#press_position = new Vector2d();
+        this.#position       = new Vector2d(1e32, 1e32);
+        this.#press_position = new Vector2d(1e32, 1e32);
     }
     on_down(evt)
     {

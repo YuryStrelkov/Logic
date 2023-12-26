@@ -14,13 +14,13 @@ const key_on_down_event = (evt) =>
     {
         case 'Escape':
         {
-            Transform2d.root_transform.reset();
-            Transform2d.root_transform.position = new Vector2d(RenderCanvas.instance.width * 0.5,
-                                                               RenderCanvas.instance.height * 0.5);
-            PatternCanvas.instance.lines_frequency = Transform2d.root_transform.scale; // ??                     
+            Transform2d.root.reset();
+            Transform2d.root.position = new Vector2d(RenderCanvas.instance.width * 0.5,
+                                                     RenderCanvas.instance.height * 0.5);
+            PatternCanvas.instance.lines_frequency = Transform2d.root.scale; // ??                     
         }break;
-        // case 'q':Transform2d.root_transform.angle = Transform2d.root_transform.angle + 15; break;
-        // case 'e':Transform2d.root_transform.angle = Transform2d.root_transform.angle - 15; break;
+        case 'q':Transform2d.root.angle = Transform2d.root.angle + 15; break;
+        case 'e':Transform2d.root.angle = Transform2d.root.angle - 15; break;
         
         case 's':RenderCanvas.instance.position = new Vector2d( 0,-MOVEMENT_STEP); break;
         case 'a':RenderCanvas.instance.position = new Vector2d( MOVEMENT_STEP, 0); break;
@@ -51,7 +51,6 @@ const key_on_down_event = (evt) =>
 const init_app = () =>
 {
     rootElement = document.getElementById("mainContainer");
-	RenderCanvas.instance.clear();
     window.addEventListener("mouseup",   mouse_on_up      );
     window.addEventListener("mousedown", mouse_on_down    );
     window.addEventListener("mousemove", mouse_on_move    );
@@ -61,6 +60,7 @@ const init_app = () =>
 	create_visual_objects();
 	init_statistics();
 	main_menu_init();
+	RenderCanvas.instance.clear();
 }
 
 const repaint_app = () =>

@@ -2,15 +2,15 @@ class RenderCanvas
 {
     #limit_movement()
 	{
-		const position = Transform2d.root_transform.position;
-		const scale    = Transform2d.root_transform.scale;
+		const position = Transform2d.root.position;
+		const scale    = Transform2d.root.scale;
 		const cw       = this.width  * 0.5;
 		const ch       = this.height * 0.5;
         const actual_w = cw / scale.x;
         const actual_h = ch / scale.y;
 		position.x     = Math.min(Math.max(actual_w, position.x), 2.0 * cw - actual_w);
 		position.y     = Math.min(Math.max(actual_h, position.y), 2.0 * ch - actual_h);
-		Transform2d.root_transform.position.position = position;
+		Transform2d.root.position.position = position;
 	}
 
     #update_background_pattern()
@@ -29,22 +29,23 @@ class RenderCanvas
         if(RenderCanvas.#instance === null) RenderCanvas.#instance = new RenderCanvas();
         return RenderCanvas.#instance;
     }
-    get scale()     {return Transform2d.root_transform.scale.x;}
+    get scale()     {return Transform2d.root.scale.x;}
     set scale(value)
     {
-        Transform2d.root_transform.scale       = new Vector2d(value, value);
-        Transform2d.root_transform.scale.x     =  Math.max(Math.min(Transform2d.root_transform.scale.x, MAX_SCALE), 1.0);
-        Transform2d.root_transform.scale.y     =  Math.max(Math.min(Transform2d.root_transform.scale.y, MAX_SCALE), 1.0);
-        PatternCanvas.instance.lines_frequency = Transform2d.root_transform.scale; // ??
+        Transform2d.root.scale       = new Vector2d(value, value);
+        Transform2d.root.scale.x     = Math.max(Math.min(Transform2d.root.scale.x, MAX_SCALE), 1.0);
+        Transform2d.root.scale.y     = Math.max(Math.min(Transform2d.root.scale.y, MAX_SCALE), 1.0);
+        PatternCanvas.instance.lines_frequency = Transform2d.root.scale; // ??
     }
-    get position(){return  Transform2d.root_transform.position;}
+    get position(){return  Transform2d.root.position;}
     set position(value){this.change_view_position(value);}
     zoom_in () { this.scale = this.scale + SCALE_STEP;}
     zoom_out() { this.scale = this.scale - SCALE_STEP;}
     change_view_position(position)
     {
-        Transform2d.root_transform.position = Vector2d.sum(position, Transform2d.root_transform.position);
+        Transform2d.root.position = Vector2d.sum(position, Transform2d.root.position);
         this.#limit_movement();
+        PatternCanvas.instance.lines_shift = Transform2d.root.position; // ??
     }
     constructor()
     {
@@ -54,16 +55,16 @@ class RenderCanvas
         this.#canvas_ctx     = this.#canvas.getContext('2d');
         this.#pattern        = this.canvas_ctx.createPattern(PatternCanvas.instance.canvas, "repeat");
         this.#border         = new RectBounds(new Vector2d(), new Vector2d(this.width, this.height));
-        Transform2d.root_transform.position = new Vector2d(this.width * 0.5, this.height * 0.5);
+        Transform2d.root.position = new Vector2d(this.width * 0.5, this.height * 0.5);
         RenderCanvas.#instance = this;
     }
     get border_points_local(){return this.#border.points;}
     get border_points_world(){
         const points = this.bounds.points;
-		return [Transform2d.root_transform.transform_point(points[0]),
-				Transform2d.root_transform.transform_point(points[1]),
-				Transform2d.root_transform.transform_point(points[2]),
-				Transform2d.root_transform.transform_point(points[3])];
+		return [Transform2d.root.transform_point(points[0]),
+				Transform2d.root.transform_point(points[1]),
+				Transform2d.root.transform_point(points[2]),
+				Transform2d.root.transform_point(points[3])];
     }
     get canvas      (){return this.#canvas;}
     get canvas_ctx  (){return this.#canvas_ctx;}

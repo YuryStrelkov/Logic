@@ -1,55 +1,14 @@
-
-const FOCUS_BIT       = 0;
-const DOWN_BIT        = 1;
-const SHOW_BIT        = 2;
-const MOVEABLE_BIT    = 3;
-const FOCUSABLE_BIT   = 4;
-const VIEWPORT_CAST   = 5;
-const COLOR_INFO_MASK = set_bits(0, [FOCUS_BIT, DOWN_BIT]);
-
-class VisualObjectState
+class VisualObjectState extends ObjectState
 {
-	#_state = 0;
-	#_prev_state = 0;
-	#_state_change_time = 0;
-	constructor     (value=0)
-	{
-		 this.#_state = value;
-		 this.#_state_change_time = 0.0;
-	}
-	get state        () { return this.#_state;}
-	get prev_state   () { return this.#_prev_state;}
-	get on_focus     () { return is_bit_set(this.state, FOCUS_BIT    );}
-	get on_down      () { return is_bit_set(this.state, DOWN_BIT     );}
-	get on_up        () { return !this.on_down;}
-	get is_shown     () { return is_bit_set(this.state, SHOW_BIT      );}
-	get viewport_cast() { return is_bit_set(this.state, VIEWPORT_CAST );}
-	get is_moveable  () { return is_bit_set(this.state, MOVEABLE_BIT  );}
-	get is_focusable () { return is_bit_set(this.state, FOCUSABLE_BIT );}
-	get state_time   () { return current_time() - this.#_state_change_time;}
-	#setup(state, key) 
-	{
-		this.#_prev_state = this.#_state;
-		this.#_state = state ? set_bit(this.state, key): clear_bit(this.state, key); 
-		// console.log('was ' + (this.#_prev_state & COLOR_INFO_MASK) + ' | become ' + (this.#_state & COLOR_INFO_MASK))
-	}
-	set on_focus     (value) 
-	{	
-		 if(this.on_focus === value)return;
-		 this.#_state_change_time = current_time();
-		 this.#setup(value, FOCUS_BIT);
-	}
-	set on_down     (value) 
-	{
-		if(this.on_down === value)return;
-		this.#_state_change_time = current_time();
-		this.#setup(value, DOWN_BIT);
-	}
-	set on_up        (value) { this.on_down != value; }
-	set is_shown     (value) { this.#setup(value, SHOW_BIT); }
-	set is_moveable  (value) { this.#setup(value, MOVEABLE_BIT); }
-	set is_focusable (value) { this.#setup(value, FOCUSABLE_BIT); }
-	set viewport_cast(value) { this.#setup(value, VIEWPORT_CAST); }
+	constructor      (value=0){ super(value); }
+	get is_shown     ()       { return is_bit_set(this.curr_state, OBJECT_SHOW_BIT      );}
+	get is_moveable  ()       { return is_bit_set(this.curr_state, OBJECT_MOVEABLE_BIT  );}
+	get is_focusable ()       { return is_bit_set(this.curr_state, OBJECT_FOCUSABLE_BIT );}
+	get viewport_cast()       { return is_bit_set(this.curr_state, OBJECT_VIEWPORT_CAST );}
+	set is_shown     (value)  { this._setup(value, OBJECT_SHOW_BIT); }
+	set is_moveable  (value)  { this._setup(value, OBJECT_MOVEABLE_BIT); }
+	set is_focusable (value)  { this._setup(value, OBJECT_FOCUSABLE_BIT); }
+	set viewport_cast(value)  { this._setup(value, OBJECT_VIEWPORT_CAST); }
 }
 
 class Color
@@ -114,7 +73,6 @@ class VisualSettings
 	#_text_align   ;
 	#_corners_radiuses;
 	#_colors;
-	
 	constructor()
 	{
 		this.#_main_color_focus      = new Color(70, 70, 70, 255); // 1
@@ -122,7 +80,7 @@ class VisualSettings
 		this.#_main_color            = new Color(40, 40, 40, 255);                   // 0
 		this.#_colors                = [this.#_main_color, this.#_main_color_focus, this.#_main_color_clicked];
 		this.#_stroke_color          = new Color(128, 138, 148, 255);
-		this.#_stroke_width          = 5;
+		this.#_stroke_width          = 2.5;
 		this.#_transition_time       = 0.50;// milli - seconds
 		this.#_transition_time_start = 0.0;
 		this.#_font_family           = 'consolas';
@@ -147,11 +105,15 @@ class VisualSettings
 		}
 		return 0;
 	}
-
+	/**
+	 * Определяет цвет объекта в соотвествии с его состоянием.
+	 * @param {VisualObjectState} v_object_state 
+	 * @returns {Color}
+	 */
 	eval_object_color(v_object_state)
 	{
-		const old_state  = VisualSettings.#eval_state(v_object_state.prev_state & COLOR_INFO_MASK);
-		const now_state  = VisualSettings.#eval_state(v_object_state.state      & COLOR_INFO_MASK);
+		const old_state  = VisualSettings.#eval_state(v_object_state.prev_absolute_state & OBJECT_COLOR_INFO_MASK);
+		const now_state  = VisualSettings.#eval_state(v_object_state.curr_absolute_state & OBJECT_COLOR_INFO_MASK);
 		const color_prev = this.#_colors[old_state];
 		const color_curr = this.#_colors[now_state];
 		const t = (v_object_state.state_time - this.#_transition_time_start) / this.#_transition_time;
@@ -167,10 +129,9 @@ class VisualSettings
 	get down_left_radius  (){return this.#_corners_radiuses[0];}
 	get down_right_radius (){return this.#_corners_radiuses[1];}
 	get up_right_radius   (){return this.#_corners_radiuses[2];}
-
-	get stroke_color(){return this.#_stroke_color;}
-	get stroke_width(){return this.#_stroke_width;}
-	set color       (value)
+	get stroke_color	  (){return this.#_stroke_color;}
+	get stroke_width	  (){return this.#_stroke_width;}
+	set color       	  (value)
 	{
 		this.#_main_color = (value instanceof Color)? value: this.#_main_color  ;
 		this.#_colors[0] = this.#_main_color;
@@ -191,11 +152,11 @@ class VisualSettings
 	}
 	set stroke_color(value){this.#_stroke_color       = (value instanceof Color)? value: this.#_stroke_color;}
 
-	set font_family  (value){this.#_font_family   = value;}
-	set font_color   (value){this.#_font_color    = value;}
-	set font_size    (value){this.#_font_size     = value;}
-	set text_baseline(value){this.#_text_baseline = value;}
-	set text_align   (value){this.#_text_align    = value;}
+	set font_family      (value){this.#_font_family   = value;}
+	set font_color       (value){this.#_font_color    = value;}
+	set font_size        (value){this.#_font_size     = value;}
+	set text_baseline    (value){this.#_text_baseline = value;}
+	set text_align       (value){this.#_text_align    = value;}
 	set up_left_radius   (value){this.#_corners_radiuses[3] = Math.max(0.0, value);}
 	set down_left_radius (value){this.#_corners_radiuses[0] = Math.max(0.0, value);}
 	set down_right_radius(value){this.#_corners_radiuses[1] = Math.max(0.0, value);}

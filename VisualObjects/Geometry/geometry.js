@@ -463,11 +463,13 @@ class RectBounds
 {
 	#min_pt;
 	#max_pt;	
-	constructor(min, max)
+	constructor(min=null, max=null)
 	{
-		this.#min_pt = new Vector2d(Math.min(min.x, max.x), Math.min(min.y, max.y));
-		this.#max_pt = new Vector2d(Math.max(min.x, max.x), Math.max(min.y, max.y));
+		this.#min_pt = min == null ? new Vector2d(0, 0) : new Vector2d(Math.min(min.x, max.x), Math.min(min.y, max.y));
+		this.#max_pt = max == null ? new Vector2d(Math.max(this.#min_pt.x, 1.0), Math.max(this.#min_pt.y, 1.0)) :
+									 new Vector2d(Math.max(min.x, max.x), Math.max(min.y, max.y));
 	}
+	get shape (){ return new Vector2d(this.width, this.height);}
 	get width (){ return this.max.x - this.min.x; }
 	get height(){ return this.max.y - this.min.y; }
 	get min   (){ return this.#min_pt; }

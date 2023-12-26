@@ -10,13 +10,17 @@
 		<script src="wiring.js"></script>
 		
 		<script src="VisualObjects/common.js"></script>
-		<script src="VisualObjects/geometry.js"></script>
-		<script src="VisualObjects/transfrom2d.js"></script>
+		<script src="VisualObjects/Geometry/geometry.js"></script>
+		<script src="VisualObjects/Geometry/transfrom2d.js"></script>
 		<script src="VisualObjects/visualSettings.js"></script>
 		<script src="VisualObjects/inputs.js"></script>
 		<script src="Rendering/patternCanvas.js"></script>
 		<script src="Rendering/renderCanvas.js"></script>
 		<script src="VisualObjects/visualObject.js"></script>
+		<script src="VisualObjects/Interaction/visualObjectsMovement.js"></script>
+		<script src="VisualObjects/Interaction/infoPannel.js"></script>
+		<script src="VisualObjects/Interaction/dropDownPanel.js"></script>
+		<script src="VisualObjects/Interaction/mainMenu.js"></script>
 		<script src="VisualObjects/visualObjects.js"></script>
 		<script src="application.js"></script>
 	</head>
@@ -32,6 +36,7 @@
 						<script>
 							init_app();
 							setInterval(repaint_app, 16);
+							//setInterval(repaint_app, 500);
 						</script>
 					</div>
 		</div>
