@@ -3,10 +3,10 @@ class VisualObject {
 	static #draw_queue = new Map();
 	static #delete_request = [];
 	static #visual_objects = new Set();
-	static #pressed_object = null;
-	static #focus_object = null;
-	static get pressed_object() { return VisualObject.#pressed_object; }
-	static get focus_object() { return VisualObject.#focus_object; }
+	static #on_press_object = null;
+	static #on_focus_object = null;
+	static get on_press_object() { return VisualObject.#on_press_object; }
+	static get on_focus_object() { return VisualObject.#on_focus_object; }
 	static get visual_objects() { return VisualObject.#visual_objects; }
 
 	static #eval_objects_destroy() {
@@ -17,17 +17,17 @@ class VisualObject {
 	}
 	static #before_mouse_input_update() {
 		if (MouseInfo.instance.is_any_down) return;
-		VisualObject.#focus_object = null;
-		if (VisualObject.#pressed_object != null) VisualObject.#pressed_object.state.on_press = false;
-		VisualObject.#pressed_object = null;
+		VisualObject.#on_focus_object = null;
+		if (VisualObject.on_press_object != null) VisualObject.on_press_object.state.on_press = false;
+		VisualObject.#on_press_object = null;
 	}
 
 	static #after_mouse_input_update() {
-		if (VisualObject.pressed_object !== null) return;
-		if (VisualObject.focus_object === null) return;
+		if (VisualObject.on_press_object !== null) return;
+		if (VisualObject.on_focus_object === null) return;
 		if (!MouseInfo.instance.is_any_down) return;
-		VisualObject.#pressed_object = VisualObject.focus_object;
-		VisualObject.#pressed_object.state.on_press = true;
+		VisualObject.#on_press_object = VisualObject.on_focus_object;
+		VisualObject.on_press_object.state.on_press = true;
 	}
 
 	static #mouse_input_update() {
@@ -62,7 +62,7 @@ class VisualObject {
 	#_name;
 	#_parent;
 	#_children;
-	#_bounds;
+	_bounds;
 	#_transform;
 	#_visual;
 	#_state;
@@ -72,10 +72,10 @@ class VisualObject {
 		this.#_parent = null;
 		this.#_children = new Set();
 		this.#_callbacks = new Map();
-		this.#_bounds = new RectBounds(min, max);
+		this._bounds = new RectBounds(min, max);
 		this.#_transform = new Transform2d();
 		this.#_visual = VisualSettings.default;
-		this.#_state = new VisualObjectState(set_bits(0, [OBJECT_SHOW_BIT, OBJECT_MOVEABLE_BIT, OBJECT_FOCUSABLE_BIT]));
+		this.#_state = new VisualObjectState(set_bits(0, [OBJECT_SHOW_BIT, OBJECT_FOCUSABLE_BIT]));
 		this.transform.position = this.bounds.center;
 		this.bounds.center = new Vector2d(0, 0);
 		VisualObject.#visual_objects.add(this);
@@ -150,7 +150,7 @@ class VisualObject {
 	/**
 	 * @returns {RectBounds}
 	 */
-	get bounds() { return this.#_bounds; }
+	get bounds() { return this._bounds; }
 	/**
 	 * @returns {Transform2d}
 	 */
@@ -165,7 +165,6 @@ class VisualObject {
 	get state() { return this.#_state; }
 	get name() { return this.#_name; }
 	set name(value) { this.#_name = value; }
-	set visual(value) { this.#_visual = value; }
 	get points() {
 		const points = this.bounds.points;
 		return [this.transform.world_transform_point(points[0]),
@@ -180,6 +179,15 @@ class VisualObject {
 		[points[2], points[3]],
 		[points[3], points[0]]];
 	}
+	set visual(value) { this.#_visual = value; }
+	set parent(value) {
+		if (this.has_parent) this.parent.#_children.delete(this);
+		this.#_parent = value;
+		if (!this.has_parent) return;
+		value.#_children.add(this);
+		this.transform.parent = value.transform
+		return;
+	}
 
 	remove_child(child_object) {
 		this.#_children.delete(child_object);
@@ -189,14 +197,6 @@ class VisualObject {
 		this.#_children.add(child_object);
 	}
 
-	set parent(value) {
-		if (this.has_parent) this.parent.#_children.delete(this);
-		this.#_parent = value;
-		if (!this.has_parent) return;
-		value.#_children.add(this);
-		this.transform.parent = value.transform
-		return;
-	}
 	/**
 	 * 
 	 * @returns {VisualObject}  
@@ -209,7 +209,6 @@ class VisualObject {
 		}
 		return null;
 	}
-
 
 	contains(point) { return this.bounds.contains(this.transform.inv_world_transform_point(point)); }
 
@@ -227,14 +226,14 @@ class VisualObject {
 		if (!this.state.is_shown) return;
 		this.state.on_focus = this.contains(MouseInfo.instance.position);
 		if (!this.state.on_focus) return;
-		if ((VisualObject.focus_object === null) || (this === VisualObject.focus_object)) {
-			VisualObject.#focus_object = this.state.on_focus ? this : null;
+		if ((VisualObject.on_focus_object === null) || (this === VisualObject.on_focus_object)) {
+			VisualObject.#on_focus_object = this.state.on_focus ? this : null;
 			return;
 		}
 		/// Сортировка по слоям. Предпочтение отдаётся слою с большим значением
-		if (this.layer < VisualObject.focus_object.layer) { this.state.on_focus = false; return; };
-		VisualObject.focus_object.state.on_focus = false;
-		VisualObject.#focus_object = this;
+		if (this.layer < VisualObject.on_focus_object.layer) { this.state.on_focus = false; return; };
+		VisualObject.on_focus_object.state.on_focus = false;
+		VisualObject.#on_focus_object = this;
 	}
 
 	_update_object() {
@@ -290,5 +289,120 @@ class TextObject extends VisualObject
 			case 'left':   ctx.fillText(this.text, center.x - width * 0.5, center.y);break;
 			case 'right':  ctx.fillText(this.text, center.x + width * 0.5, center.y);break;
 		}
+	}
+}
+
+class BezierObject extends VisualObject
+{
+	// f(t)=p_1 * (1−t)^3 + 3 * p_2 * t * (1 − t)^2 + 3_p * 3 * t^2 * (1 − t) + p4 * t^3
+	// f'(t)= p_1 * (1−t)^3 + 3 * p_2 * t * (1 − t)^2 + 3_p * 3 * t^2 * (1 − t) + p4 * t^3
+	#p1; // начало
+	#p2; // якорь - 1 
+	#p3; // якорь - 2
+	#p4; // конец
+
+	#bezier_x(t)
+	{
+		return this.p1.x * Math.pow((1.0 - t), 3.0) + 3.0 * this.p2.x * t * Math.pow((1.0 - t), 2.0) + this.p3.x * 3.0 * t * t * (1.0 - t) + this.p4.x * t * t * t;
+	}
+	
+	#bezier_y(t)
+	{
+		return this.p1.y * Math.pow((1.0 - t), 3.0) + 3.0 * this.p2.y * t * Math.pow((1.0 - t), 2.0) + this.p3.y * 3.0 * t * t * (1.0 - t) + this.p4.y * t * t * t;
+	}
+
+	#bounds_x_size()
+	{
+		const a =-3 * this.p1.x + 9  * this.p2.x - 9 * this.p3.x + 3 * this.p4.x;
+		const b = 6 * this.p1.x - 12 * this.p2.x + 6 * this.p3.x;
+		const c =-3 * this.p1.x + 3  * this.p2.x;
+		if(Math.abs(a) < 1e-3)
+		{
+			if(Math.abs(b) < 1e-3) return new Vector2d(Math.min(this.p1.x, this.p4.x), Math.max(this.p1.x, this.p4.x));
+			const x = this.#bezier_x(-c / b);
+			return Math.min(Math.min(x, this.p1.x), this.p4.x), Math.max(Math.max(x, this.p1.x), this.p4.x)
+		}
+		const d = b * b - a * c * 4.0;
+		if(d <= 0) return new Vector2d(Math.min(this.p1.x, this.p4.x), Math.max(this.p1.x, this.p4.x));
+		const sqd = Math.sqrt(d);
+		const x_0 = this.#bezier_x(Math.min(Math.max(0.0, (-sqd - b) / (2.0 * a)), 1.0));
+		const x_1 = this.#bezier_x(Math.min(Math.max(0.0, ( sqd - b) / (2.0 * a)), 1.0));
+		return new Vector2d(Math.min(Math.min(Math.min(this.p1.x, this.p4.x), x_0), x_1),
+						    Math.max(Math.max(Math.max(this.p1.x, this.p4.x), x_0), x_1));
+	}
+
+	#bounds_y_size()
+	{
+		const a =-3 * this.p1.y + 9  * this.p2.y - 9 * this.p3.y + 3 * this.p4.y;
+		const b = 6 * this.p1.y - 12 * this.p2.y + 6 * this.p3.y;
+		const c =-3 * this.p1.y + 3  * this.p2.y;
+		if(Math.abs(a) < 1e-3)
+		{
+			if(Math.abs(b) < 1e-3) return new Vector2d(Math.min(this.p1.y, this.p4.y), Math.max(this.p1.y, this.p4.y));
+			const y = this.#bezier_y(-c / b);
+			return Math.min(Math.min(y, this.p1.y), this.p4.y), Math.max(Math.max(y, this.p1.y), this.p4.y)
+		}
+		const d = b * b - a * c * 4.0
+		if(d <= 0) return new Vector2d(Math.min(this.p1.y, this.p4.y), Math.max(this.p1.y, this.p4.y));
+		const sqd = Math.sqrt(d);
+		const x_0 = this.#bezier_y(Math.min(Math.max(0.0, (-sqd - b) / (2.0 * a)), 1.0));
+		const x_1 = this.#bezier_y(Math.min(Math.max(0.0, ( sqd - b) / (2.0 * a)), 1.0));
+		return new Vector2d(Math.min(Math.min(Math.min(this.p1.y, this.p4.y), x_0), x_1),
+						    Math.max(Math.max(Math.max(this.p1.y, this.p4.y), x_0), x_1));
+	}
+
+	#update_bounds()
+	{
+		if(!this.state.is_focusable) return;
+		const min_max_x = this.#bounds_x_size();
+		const min_max_y = this.#bounds_y_size();
+		this._bounds = new RectBounds(new Vector2d(min_max_x.x, min_max_y.x), new Vector2d(min_max_x.y, min_max_y.y));
+	}
+
+	get p1(){return this.#p1;};
+	get p2(){return this.#p2;};
+	get p3(){return this.#p3;};
+	get p4(){return this.#p4;};
+	set p1(value){this.#p1 = value; this.#update_bounds();};
+	set p2(value){this.#p2 = value; this.#update_bounds();};
+	set p3(value){this.#p3 = value; this.#update_bounds();};
+	set p4(value){this.#p4 = value; this.#update_bounds();};
+	/**
+	 * 
+	 * @param {Vector2d} p1 
+	 * @param {Vector2d} an1 
+	 * @param {Vector2d} an2 
+	 * @param {Vector2d} p2 
+	 */
+	constructor(p1, an1, an2, p2)
+	{
+		super();
+		this.#p1 = p1;
+		this.#p2 = an1;
+		this.#p3 = an2;
+		this.#p4 = p2;
+		this.#update_bounds();
+	}
+	contains(point)
+	{
+		if(!super.contains(point))return false;
+		return true;
+	}
+	_render_object(ctx) {
+		this.transform.apply_to_context(ctx);
+		this.visual.apply_to_context(ctx);
+		// ctx.strokeStyle = this.visual.eval_object_color(this.state).color_code;
+		ctx.strokeStyle  = this.state.on_focus?'rgb(255, 0, 0, 0.5)': ctx.lineColor;
+		ctx.moveTo(this.p1.x, this.p1.y);
+		ctx.bezierCurveTo(this.p2.x, this.p2.y,
+						  this.p3.x, this.p3.y,
+						  this.p4.x, this.p4.y);
+		// ctx.stroke();
+		const width  = this.bounds.width;
+		const height = this.bounds.height;
+		const x0     = this.bounds.min.x;
+		const y0     = this.bounds.min.y;
+		ctx.roundRect(x0, y0, width, height,[5,5,5,5]);
+		ctx.stroke();
 	}
 }

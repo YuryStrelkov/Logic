@@ -63,7 +63,6 @@ class MainMenu extends VisualObject
         super(new Vector2d(-RenderCanvas.instance.width * 0.5, -RenderCanvas.instance.height * 0.5),
               new Vector2d( RenderCanvas.instance.width * 0.5, -RenderCanvas.instance.height * 0.5 + stroke_w + button_size.y));
         this.transform.freeze   = true;
-        this.state.is_moveable  = false;
         this.state.is_focusable = false;
         this.visual     = MAIN_MENU_VISUAL_SETTINGS;
         labels = labels == null ? ["File", "Edit", "Gates", "Settings", "Help"]:labels;
@@ -76,20 +75,6 @@ class MainMenu extends VisualObject
             const dorp_down = new DropDownMenu(position, button_size, this);
             dorp_down.name  = label;
             dorp_down.text  = label;
-            // dorp_down.add_button('One');
-            // dorp_down.add_button('Two');
-            // dorp_down.add_button('Three');
-            // dorp_down.add_button('Four');
-            // if(index === 0)
-            // {
-            //     dorp_down.visual = MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS;
-            //     continue;
-            // }
-            // if(index === labels.length - 1)
-            // {
-            //     dorp_down.visual = MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS;
-            //     continue;
-            // }
             dorp_down.visual = MAIN_MENU_BUTTON_VISUAL_SETTINGS;
         }
     }

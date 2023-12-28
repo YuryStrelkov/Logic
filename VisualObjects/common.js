@@ -61,11 +61,11 @@ const ON_PRESS_END_STATE_1   = 7;
 const ON_PRESS_END_STATE_2   = 2;
 const OBJECT_FOCUS_BIT       = 0;
 const OBJECT_PRESS_BIT       = 1;
-const OBJECT_SHOW_BIT        = 2;
-const OBJECT_MOVEABLE_BIT    = 3;
+const OBJECT_TOGGLE_BIT      = 2;
+const OBJECT_SHOW_BIT        = 3;
 const OBJECT_FOCUSABLE_BIT   = 4;
 const OBJECT_VIEWPORT_CAST   = 5;
-const OBJECT_COLOR_INFO_MASK = set_bits(0, [OBJECT_FOCUS_BIT, OBJECT_PRESS_BIT]);
+const OBJECT_COLOR_INFO_MASK = set_bits(0, [OBJECT_FOCUS_BIT, OBJECT_PRESS_BIT, OBJECT_TOGGLE_BIT]);
 class ObjectState
 {
 	#curr_absolute_state = 0;

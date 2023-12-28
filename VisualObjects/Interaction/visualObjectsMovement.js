@@ -40,7 +40,7 @@ const object_movement_begin_callback = (obj) =>
 {
 	if (!MouseInfo.instance.is_left_down) return;
 	const scale = Transform2d.root.scale;
-	obj_press_delta_position = Vector2d.sub(MouseInfo.instance.position, Vector2d.mul(VisualObject.pressed_object.transform.position, scale));
+	obj_press_delta_position = Vector2d.sub(MouseInfo.instance.position, Vector2d.mul(VisualObject.on_press_object.transform.position, scale));
 	/// VisualObject.#obj_press_delta_position = Transform2d.root_transform.world_transform_direction(VisualObject.#obj_press_delta_position);
 }
 /**

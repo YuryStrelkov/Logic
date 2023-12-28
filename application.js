@@ -47,7 +47,7 @@ const key_on_down_event = (evt) =>
     }
 }
 
-
+var bezier = null;
 const init_app = () =>
 {
     rootElement = document.getElementById("mainContainer");
@@ -61,6 +61,7 @@ const init_app = () =>
 	init_statistics();
 	main_menu_init();
 	RenderCanvas.instance.clear();
+    bezier = new BezierCurveObject(new Vector2d(50, 50), new Vector2d(50, 150), new Vector2d(150, 150), new Vector2d(150, 50));
 }
 
 const repaint_app = () =>

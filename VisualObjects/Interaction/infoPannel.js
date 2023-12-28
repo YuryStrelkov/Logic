@@ -43,7 +43,6 @@ class InfoPanel extends VisualObject
         for(const element of elements)
         {
            element.transform.freeze = true;
-           element.state.is_moveable = false;
            element.state.is_focusable = false;
            element.visual = INFO_PANEL_VISUAL_SETTINGS;
            element.transform.position = new Vector2d(element_size.x * (index + 0.5), -element_size.y * 0.5);

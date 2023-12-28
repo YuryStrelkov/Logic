@@ -2,11 +2,11 @@ class VisualObjectState extends ObjectState
 {
 	constructor      (value=0){ super(value); }
 	get is_shown     ()       { return is_bit_set(this.curr_state, OBJECT_SHOW_BIT      );}
-	get is_moveable  ()       { return is_bit_set(this.curr_state, OBJECT_MOVEABLE_BIT  );}
+	get is_toggle    ()       { return is_bit_set(this.curr_state, OBJECT_TOGGLE_BIT    );}
 	get is_focusable ()       { return is_bit_set(this.curr_state, OBJECT_FOCUSABLE_BIT );}
 	get viewport_cast()       { return is_bit_set(this.curr_state, OBJECT_VIEWPORT_CAST );}
 	set is_shown     (value)  { this._setup(value, OBJECT_SHOW_BIT); }
-	set is_moveable  (value)  { this._setup(value, OBJECT_MOVEABLE_BIT); }
+	set is_toggle    (value)  { this._setup(value, OBJECT_TOGGLE_BIT); }
 	set is_focusable (value)  { this._setup(value, OBJECT_FOCUSABLE_BIT); }
 	set viewport_cast(value)  { this._setup(value, OBJECT_VIEWPORT_CAST); }
 }
@@ -93,15 +93,25 @@ class VisualSettings
 	get color()		  { return this.#_main_color}
 	get click_color() { return this.#_main_color_clicked;}
 	get focus_color() { return this.#_main_color_focus;}
-
+	// F | P | T 
+	// 0   0   0
+	// 1   0   0
+	// 1   1   0
+	// 1   1   1
+	// 1   0   1
+	// 0   0   0
+	// 0   0   0
+	// 
 	static #eval_state(state) 
 	{
 		switch(state)
 		{
 			case 0: return 0;
 			case 1: return 1;
-			case 2: return 2;
 			case 3: return 2;
+			case 4: return 2;
+			case 5: return 2;
+			case 7: return 2;
 		}
 		return 0;
 	}
@@ -174,3 +184,74 @@ class VisualSettings
 	}
 }
 
+var ROUND_PIN_VISUAL_SETTINGS    = null;
+var TEXT_VISUAL_SETTINGS         = null;
+var STATISTICS_VISUAL_SETTINGS   = null;
+var BUTTON_VISUAL_SETTINGS       = null;
+var BUTTON_VISUAL_LEFT_SETTINGS  = null;
+var BUTTON_VISUAL_RIGHT_SETTINGS = null;
+var COMMON_VISUAL_SETTINGS       = null;
+
+const init_common_styles = () =>
+{
+	if(COMMON_VISUAL_SETTINGS === null)
+	{
+		COMMON_VISUAL_SETTINGS    = VisualSettings.default;
+		ROUND_PIN_VISUAL_SETTINGS = new VisualSettings();
+		ROUND_PIN_VISUAL_SETTINGS.up_left_radius    = 12.0;
+		ROUND_PIN_VISUAL_SETTINGS.down_left_radius  = 12.0;
+		ROUND_PIN_VISUAL_SETTINGS.down_right_radius = 12.0;
+		ROUND_PIN_VISUAL_SETTINGS.up_right_radius   = 12.0;
+		ROUND_PIN_VISUAL_SETTINGS.focus_color  = new Color(255, 55, 55, 255);
+		ROUND_PIN_VISUAL_SETTINGS.click_color  = new Color(255, 0,  0, 255);
+		ROUND_PIN_VISUAL_SETTINGS.color        = new Color(25,  25, 25, 255);
+	}
+
+	if(BUTTON_VISUAL_SETTINGS === null)
+	{
+		BUTTON_VISUAL_SETTINGS              = VisualSettings.default;
+		BUTTON_VISUAL_SETTINGS              = new VisualSettings();
+		BUTTON_VISUAL_SETTINGS.focus_color  = new Color(55, 55, 55, 255);
+		BUTTON_VISUAL_SETTINGS.click_color  = new Color(255, 0,  0, 255);
+		BUTTON_VISUAL_SETTINGS.color        = new Color(25,  25, 25, 255);
+	}
+
+	if(BUTTON_VISUAL_LEFT_SETTINGS == null )
+	{
+		BUTTON_VISUAL_LEFT_SETTINGS    = VisualSettings.default;
+		BUTTON_VISUAL_LEFT_SETTINGS = new VisualSettings();
+		BUTTON_VISUAL_LEFT_SETTINGS.up_left_radius    = 12.0;
+		BUTTON_VISUAL_LEFT_SETTINGS.down_left_radius  = 12.0;
+		BUTTON_VISUAL_LEFT_SETTINGS.focus_color  = new Color(55, 55, 55, 255);
+		BUTTON_VISUAL_LEFT_SETTINGS.click_color  = new Color(255, 0,  0, 255);
+		BUTTON_VISUAL_LEFT_SETTINGS.color        = new Color(25,  25, 25, 255);
+	}
+
+	if(BUTTON_VISUAL_RIGHT_SETTINGS === null)
+	{
+		BUTTON_VISUAL_RIGHT_SETTINGS = VisualSettings.default;
+		BUTTON_VISUAL_RIGHT_SETTINGS = new VisualSettings();
+		BUTTON_VISUAL_RIGHT_SETTINGS.down_right_radius = 12.0;
+		BUTTON_VISUAL_RIGHT_SETTINGS.up_right_radius   = 12.0;
+		BUTTON_VISUAL_RIGHT_SETTINGS.focus_color  = new Color(55, 55, 55, 255);
+		BUTTON_VISUAL_RIGHT_SETTINGS.click_color  = new Color(255, 0,  0, 255);
+		BUTTON_VISUAL_RIGHT_SETTINGS.color        = new Color(25,  25, 25, 255);
+	}
+	if(TEXT_VISUAL_SETTINGS === null)
+	{
+		TEXT_VISUAL_SETTINGS = new VisualSettings();
+		TEXT_VISUAL_SETTINGS.up_left_radius    = 12.0;
+		TEXT_VISUAL_SETTINGS.down_left_radius  = 12.0;
+		TEXT_VISUAL_SETTINGS.down_right_radius = 12.0;
+		TEXT_VISUAL_SETTINGS.up_right_radius   = 12.0;
+	}
+	if(STATISTICS_VISUAL_SETTINGS === null)
+	{
+		STATISTICS_VISUAL_SETTINGS              = new VisualSettings();
+		STATISTICS_VISUAL_SETTINGS.font_size    = 12;
+		STATISTICS_VISUAL_SETTINGS.color        = new Color(125, 125, 125, 0.5);
+		STATISTICS_VISUAL_SETTINGS.font_color   = new Color(225, 225, 225, 255);
+		STATISTICS_VISUAL_SETTINGS.stroke_width = 0.0;
+		STATISTICS_VISUAL_SETTINGS.text_align   = 'left';
+	}
+}
