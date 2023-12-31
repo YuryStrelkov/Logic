@@ -285,78 +285,39 @@ class TextObject extends VisualObject
 		ctx.fillStyle = this.visual.font_color.color_code;
 		switch(this.visual.text_align)
 		{
-			case 'center': ctx.fillText(this.text, center.x, center.y);break;
-			case 'left':   ctx.fillText(this.text, center.x - width * 0.5, center.y);break;
-			case 'right':  ctx.fillText(this.text, center.x + width * 0.5, center.y);break;
+			case 'center':ctx.fillText(this.text, center.x, center.y);break;
+			case 'left':  ctx.fillText(this.text, center.x - width * 0.5, center.y);break;
+			case 'right': ctx.fillText(this.text, center.x + width * 0.5, center.y);break;
 		}
 	}
 }
 
 class BezierObject extends VisualObject
 {
-	// f(t)=p_1 * (1−t)^3 + 3 * p_2 * t * (1 − t)^2 + 3_p * 3 * t^2 * (1 − t) + p4 * t^3
-	// f'(t)= p_1 * (1−t)^3 + 3 * p_2 * t * (1 − t)^2 + 3_p * 3 * t^2 * (1 − t) + p4 * t^3
+	static #bezier_preview_curve = null;
+    static get preview_curve()
+    {
+        if(BezierObject.#bezier_preview_curve == null)
+        {
+            BezierObject.#bezier_preview_curve = new BezierObject(new Vector2d(50, 50), 
+            new Vector2d(50, 150),
+            new Vector2d(150, 150),
+            new Vector2d(150, 50));
+            BezierObject.#bezier_preview_curve.state.is_focusable = false;
+            BezierObject.#bezier_preview_curve.state.is_shown     = false;
+			BezierObject.#bezier_preview_curve.visual = BEZIER_VISUAL_SETTINGS;
+        }
+        return BezierObject.#bezier_preview_curve;
+    }
 	#p1; // начало
 	#p2; // якорь - 1 
 	#p3; // якорь - 2
 	#p4; // конец
 
-	#bezier_x(t)
-	{
-		return this.p1.x * Math.pow((1.0 - t), 3.0) + 3.0 * this.p2.x * t * Math.pow((1.0 - t), 2.0) + this.p3.x * 3.0 * t * t * (1.0 - t) + this.p4.x * t * t * t;
-	}
-	
-	#bezier_y(t)
-	{
-		return this.p1.y * Math.pow((1.0 - t), 3.0) + 3.0 * this.p2.y * t * Math.pow((1.0 - t), 2.0) + this.p3.y * 3.0 * t * t * (1.0 - t) + this.p4.y * t * t * t;
-	}
-
-	#bounds_x_size()
-	{
-		const a =-3 * this.p1.x + 9  * this.p2.x - 9 * this.p3.x + 3 * this.p4.x;
-		const b = 6 * this.p1.x - 12 * this.p2.x + 6 * this.p3.x;
-		const c =-3 * this.p1.x + 3  * this.p2.x;
-		if(Math.abs(a) < 1e-3)
-		{
-			if(Math.abs(b) < 1e-3) return new Vector2d(Math.min(this.p1.x, this.p4.x), Math.max(this.p1.x, this.p4.x));
-			const x = this.#bezier_x(-c / b);
-			return Math.min(Math.min(x, this.p1.x), this.p4.x), Math.max(Math.max(x, this.p1.x), this.p4.x)
-		}
-		const d = b * b - a * c * 4.0;
-		if(d <= 0) return new Vector2d(Math.min(this.p1.x, this.p4.x), Math.max(this.p1.x, this.p4.x));
-		const sqd = Math.sqrt(d);
-		const x_0 = this.#bezier_x(Math.min(Math.max(0.0, (-sqd - b) / (2.0 * a)), 1.0));
-		const x_1 = this.#bezier_x(Math.min(Math.max(0.0, ( sqd - b) / (2.0 * a)), 1.0));
-		return new Vector2d(Math.min(Math.min(Math.min(this.p1.x, this.p4.x), x_0), x_1),
-						    Math.max(Math.max(Math.max(this.p1.x, this.p4.x), x_0), x_1));
-	}
-
-	#bounds_y_size()
-	{
-		const a =-3 * this.p1.y + 9  * this.p2.y - 9 * this.p3.y + 3 * this.p4.y;
-		const b = 6 * this.p1.y - 12 * this.p2.y + 6 * this.p3.y;
-		const c =-3 * this.p1.y + 3  * this.p2.y;
-		if(Math.abs(a) < 1e-3)
-		{
-			if(Math.abs(b) < 1e-3) return new Vector2d(Math.min(this.p1.y, this.p4.y), Math.max(this.p1.y, this.p4.y));
-			const y = this.#bezier_y(-c / b);
-			return Math.min(Math.min(y, this.p1.y), this.p4.y), Math.max(Math.max(y, this.p1.y), this.p4.y)
-		}
-		const d = b * b - a * c * 4.0
-		if(d <= 0) return new Vector2d(Math.min(this.p1.y, this.p4.y), Math.max(this.p1.y, this.p4.y));
-		const sqd = Math.sqrt(d);
-		const x_0 = this.#bezier_y(Math.min(Math.max(0.0, (-sqd - b) / (2.0 * a)), 1.0));
-		const x_1 = this.#bezier_y(Math.min(Math.max(0.0, ( sqd - b) / (2.0 * a)), 1.0));
-		return new Vector2d(Math.min(Math.min(Math.min(this.p1.y, this.p4.y), x_0), x_1),
-						    Math.max(Math.max(Math.max(this.p1.y, this.p4.y), x_0), x_1));
-	}
-
 	#update_bounds()
 	{
 		if(!this.state.is_focusable) return;
-		const min_max_x = this.#bounds_x_size();
-		const min_max_y = this.#bounds_y_size();
-		this._bounds = new RectBounds(new Vector2d(min_max_x.x, min_max_y.x), new Vector2d(min_max_x.y, min_max_y.y));
+		this._bounds = cubic_bezier_bounds(this.p1, this.p2, this.p3, this.p4); 
 	}
 
 	get p1(){return this.#p1;};
@@ -386,23 +347,24 @@ class BezierObject extends VisualObject
 	contains(point)
 	{
 		if(!super.contains(point))return false;
-		return true;
+		return is_close_to_bezier(point, this.p1, this.p2, this.p3, this.p4, 14);
 	}
 	_render_object(ctx) {
+		ctx.beginPath()
 		this.transform.apply_to_context(ctx);
 		this.visual.apply_to_context(ctx);
 		// ctx.strokeStyle = this.visual.eval_object_color(this.state).color_code;
-		ctx.strokeStyle  = this.state.on_focus?'rgb(255, 0, 0, 0.5)': ctx.lineColor;
+		ctx.strokeStyle  = this.state.is_toggle ? 'rgb(255, 0, 0, 1.0)': ctx.lineColor;
 		ctx.moveTo(this.p1.x, this.p1.y);
 		ctx.bezierCurveTo(this.p2.x, this.p2.y,
 						  this.p3.x, this.p3.y,
 						  this.p4.x, this.p4.y);
 		// ctx.stroke();
-		const width  = this.bounds.width;
-		const height = this.bounds.height;
-		const x0     = this.bounds.min.x;
-		const y0     = this.bounds.min.y;
-		ctx.roundRect(x0, y0, width, height,[5,5,5,5]);
+		// const width  = this.bounds.width;
+		// const height = this.bounds.height;
+		// const x0     = this.bounds.min.x;
+		// const y0     = this.bounds.min.y;
+		// ctx.roundRect(x0, y0, width, height,[5,5,5,5]);
 		ctx.stroke();
 	}
 }

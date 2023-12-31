@@ -5,6 +5,7 @@ let obj_press_delta_position   = new Vector2d();
  */
 const limit_object_movement = (obj)=>
 {
+	// TODO учесть трансформации 
 	const position = obj.transform.position;
 	const w        = obj.bounds.width * 0.5;
 	const h        = obj.bounds.height * 0.5;
@@ -23,15 +24,15 @@ const limit_object_movement = (obj)=>
 const object_movement_callback = (obj) =>
 {
 	if (!MouseInfo.instance.is_left_down)return;
-	const scale = Transform2d.root.scale;
-	obj.transform.position = Vector2d.div(Vector2d.sub(MouseInfo.instance.position, obj_press_delta_position), scale);
+	const delta = Vector2d.sub(MouseInfo.instance.position, obj_press_delta_position);
+	obj.transform.position = Transform2d.root.inv_world_transform_direction(delta);
 	limit_object_movement(obj);
 }
 /**
  * 
  * @param {VisualObject} obj 
  */
-const object_movement_end_callback = (obj) => {obj_press_delta_position = new Vector2d();} // console.log('end!!!');}
+const object_movement_end_callback = (obj) => {obj_press_delta_position = new Vector2d();}
 /**
  * 
  * @param {VisualObject} obj 
@@ -39,9 +40,8 @@ const object_movement_end_callback = (obj) => {obj_press_delta_position = new Ve
 const object_movement_begin_callback = (obj) =>
 {
 	if (!MouseInfo.instance.is_left_down) return;
-	const scale = Transform2d.root.scale;
-	obj_press_delta_position = Vector2d.sub(MouseInfo.instance.position, Vector2d.mul(VisualObject.on_press_object.transform.position, scale));
-	/// VisualObject.#obj_press_delta_position = Transform2d.root_transform.world_transform_direction(VisualObject.#obj_press_delta_position);
+	const position = Transform2d.root.world_transform_direction(VisualObject.on_press_object.transform.position);
+	obj_press_delta_position = Vector2d.sub(MouseInfo.instance.position, position);
 }
 /**
  * 

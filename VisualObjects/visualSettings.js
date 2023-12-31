@@ -191,12 +191,12 @@ var BUTTON_VISUAL_SETTINGS       = null;
 var BUTTON_VISUAL_LEFT_SETTINGS  = null;
 var BUTTON_VISUAL_RIGHT_SETTINGS = null;
 var COMMON_VISUAL_SETTINGS       = null;
+var BEZIER_VISUAL_SETTINGS       = null;
 
 const init_common_styles = () =>
 {
 	if(COMMON_VISUAL_SETTINGS === null)
 	{
-		COMMON_VISUAL_SETTINGS    = VisualSettings.default;
 		ROUND_PIN_VISUAL_SETTINGS = new VisualSettings();
 		ROUND_PIN_VISUAL_SETTINGS.up_left_radius    = 12.0;
 		ROUND_PIN_VISUAL_SETTINGS.down_left_radius  = 12.0;
@@ -209,7 +209,6 @@ const init_common_styles = () =>
 
 	if(BUTTON_VISUAL_SETTINGS === null)
 	{
-		BUTTON_VISUAL_SETTINGS              = VisualSettings.default;
 		BUTTON_VISUAL_SETTINGS              = new VisualSettings();
 		BUTTON_VISUAL_SETTINGS.focus_color  = new Color(55, 55, 55, 255);
 		BUTTON_VISUAL_SETTINGS.click_color  = new Color(255, 0,  0, 255);
@@ -218,7 +217,6 @@ const init_common_styles = () =>
 
 	if(BUTTON_VISUAL_LEFT_SETTINGS == null )
 	{
-		BUTTON_VISUAL_LEFT_SETTINGS    = VisualSettings.default;
 		BUTTON_VISUAL_LEFT_SETTINGS = new VisualSettings();
 		BUTTON_VISUAL_LEFT_SETTINGS.up_left_radius    = 12.0;
 		BUTTON_VISUAL_LEFT_SETTINGS.down_left_radius  = 12.0;
@@ -229,7 +227,6 @@ const init_common_styles = () =>
 
 	if(BUTTON_VISUAL_RIGHT_SETTINGS === null)
 	{
-		BUTTON_VISUAL_RIGHT_SETTINGS = VisualSettings.default;
 		BUTTON_VISUAL_RIGHT_SETTINGS = new VisualSettings();
 		BUTTON_VISUAL_RIGHT_SETTINGS.down_right_radius = 12.0;
 		BUTTON_VISUAL_RIGHT_SETTINGS.up_right_radius   = 12.0;
@@ -244,6 +241,15 @@ const init_common_styles = () =>
 		TEXT_VISUAL_SETTINGS.down_left_radius  = 12.0;
 		TEXT_VISUAL_SETTINGS.down_right_radius = 12.0;
 		TEXT_VISUAL_SETTINGS.up_right_radius   = 12.0;
+	}
+
+	if(BEZIER_VISUAL_SETTINGS === null)
+	{
+		BEZIER_VISUAL_SETTINGS = new VisualSettings();
+		BEZIER_VISUAL_SETTINGS.focus_color  = new Color(55, 55, 55, 255);
+		BEZIER_VISUAL_SETTINGS.click_color  = new Color(255, 0,  0, 255);
+		BEZIER_VISUAL_SETTINGS.color        = new Color(25,  25, 25, 255);
+		BEZIER_VISUAL_SETTINGS.stroke_width   = 5.0;
 	}
 	if(STATISTICS_VISUAL_SETTINGS === null)
 	{

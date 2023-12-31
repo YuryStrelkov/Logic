@@ -83,6 +83,14 @@ class Vector2d
 	 * @returns {Number}  
 	 */
 	static manhattan_dist(a, b) { return Math.abs(b.x - a.x) + Math.abs(b.y - a.y);	}
+	
+	static distance_to_line(point, p1, p2)
+	{
+		const pp1  = Vector2d.sub(point, p1);
+		const p2p1 = Vector2d.sub(p2, p1);
+		const prjl = Vector2d.dot(pp1, p2p1) * p2p1.inv_length;
+		return new Vector2d(p2p1.x  * prjl - point.x, p2p1.y  * prjl - point.y).length;
+	}
 	/**
 	 * 
 	 * @param {Number} x 
@@ -93,6 +101,7 @@ class Vector2d
 		this.x = x;
 		this.y = y;
 	}
+	get sq_length (){ return this.x * this.x + this.y  * this.y; }
 	get length    (){ return Math.sqrt(this.x * this.x + this.y  * this.y); }
 	get inv_length(){ return 1.0 / this.length; }
 	get normalized()

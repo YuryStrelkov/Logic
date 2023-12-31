@@ -50,19 +50,19 @@ const not_gate  = (center) => new NotGate(center);
 
 const create_visual_objects = () =>
 {
-	const gates = [and_gate, xor_gate, or_gate, nor_gate, nand_gate, not_gate];
-	const visualObjects = [];
-	const numb = 6;
-	// const numb = 1;
-   	for(var i = 0; i < numb; i++)
-   	{
-   		for(var j = 0; j < numb; j++)
-   		{
-   			const objects = gates[i % 6](new Vector2d((-2.5 + i) * 200 , (-2.5 + j) * 80));
-			visualObjects.push(objects);
-   		}
-   	}
-    return visualObjects;
+	 const gates = [and_gate, xor_gate, or_gate, nor_gate, nand_gate, not_gate];
+	 const visualObjects = [];
+	 const numb = 6;
+	 // const numb = 1;
+   	 for(var i = 0; i < numb; i++)
+   	 {
+   	 	for(var j = 0; j < numb; j++)
+   	 	{
+   	 		const objects = gates[i % 6](new Vector2d((-2.5 + i) * 200 , (-2.5 + j) * 80));
+	 		visualObjects.push(objects);
+   	 	}
+   	 }
+     return visualObjects;
 	// return [and_gate(new Vector2d(0, 0))]//visualObjects;
 }
 var FRAME_TIME = 0.0

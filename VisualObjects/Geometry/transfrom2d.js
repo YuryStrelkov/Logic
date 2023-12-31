@@ -10,6 +10,10 @@ class Transform2d {
 		Transform2d.#root = new Transform2d();
 		Transform2d.#append_to_transform_layers(Transform2d.root);
 	}
+	/**
+	 * 
+	 * @returns {Transform2d}
+	 */
 	static get root() {
 		return Transform2d.#root;
 	}
@@ -218,6 +222,14 @@ class Transform2d {
 	 */
 	get position() {
 		return this.#position;
+	}
+	/**
+	 * @returns {Vector2d}
+	 */
+	get position_world() {
+		if(this.has_parent)
+			return this.parent.world_transform_point(this.position);
+		return this.position;
 	}
 	/**
 	 * @returns {Vector2d}
