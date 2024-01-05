@@ -59,8 +59,10 @@ class DigitalPin extends RectangleObject
 {
     static #make_pin_to_pin_connection  (target) 
     {
-        // console.log(`${INPUT_TARGET_PIN}||${OUTPUT_TARGET_PIN}`);
-        if((INPUT_TARGET_PIN !== null) && (OUTPUT_TARGET_PIN !== null)){ const link = new PinToPinLink(OUTPUT_TARGET_PIN, INPUT_TARGET_PIN);}
+        if((INPUT_TARGET_PIN !== null) && (OUTPUT_TARGET_PIN !== null))
+        {
+             const link = new PinToPinLink(OUTPUT_TARGET_PIN, INPUT_TARGET_PIN);
+        }
         INPUT_TARGET_PIN  = null;
         OUTPUT_TARGET_PIN = null;
     }
@@ -90,46 +92,51 @@ class DigitalPin extends RectangleObject
 
 class InputDigitalPin extends DigitalPin
 {
-    static #on_begin_press(target) 
-    {
-         INPUT_TARGET_PIN = target;
-         OUTPUT_TARGET_PIN = null;
-    } 
-    static #on_begin_focus(target) { INPUT_TARGET_PIN = target;} 
-    static #on_end_focus  (target) {
-        if(INPUT_TARGET_PIN === null) return;
-        if(INPUT_TARGET_PIN.state.is_pressed) return;
+    static #on_lost_focus(target) 
+    { 
+        if(INPUT_TARGET_PIN === null) return
+        if(INPUT_TARGET_PIN.state.on_press) return;
         INPUT_TARGET_PIN = null;
-        OUTPUT_TARGET_PIN = null;
-    } 
+    }  
+    static #on_focus(target) 
+    { 
+        if(INPUT_TARGET_PIN === null)
+        {
+            INPUT_TARGET_PIN = target;
+            return;
+        }
+        INPUT_TARGET_PIN = INPUT_TARGET_PIN.state.on_press ? INPUT_TARGET_PIN : target;
+    }
     constructor(position, parent=null)
     {
         super(position, parent);
         this.on_end_press_callback_append(toggle_pin);
-        this.on_begin_focus_callback_append(InputDigitalPin.#on_begin_focus);
-        this.on_end_focus_callback_append  (InputDigitalPin.#on_end_focus);
-        this.on_end_press_callback_append  (InputDigitalPin.#on_begin_press);
+        this.on_begin_focus_callback_append(InputDigitalPin.#on_focus);
+        this.on_end_focus_callback_append  (InputDigitalPin.#on_lost_focus);
     }
 }
 class OutputDigitalPin extends DigitalPin
 {
-    static #on_begin_press(target) { 
-        OUTPUT_TARGET_PIN = target;
-        INPUT_TARGET_PIN = null;
-    } 
-    static #on_begin_focus(target) { OUTPUT_TARGET_PIN = target;} 
-    static #on_end_focus  (target) { 
-        if(OUTPUT_TARGET_PIN === null) return;
-        if(OUTPUT_TARGET_PIN.state.is_pressed) return;
-        INPUT_TARGET_PIN = null;
+    static #on_lost_focus(target) 
+    { 
+        if(OUTPUT_TARGET_PIN === null) return
+        if(OUTPUT_TARGET_PIN.state.on_press) return;
         OUTPUT_TARGET_PIN = null;
+    }  
+    static #on_focus(target) 
+    { 
+        if(OUTPUT_TARGET_PIN === null)
+        {
+            OUTPUT_TARGET_PIN = target;
+            return;
+        }
+        OUTPUT_TARGET_PIN = OUTPUT_TARGET_PIN.state.on_press ? OUTPUT_TARGET_PIN : target;
     }
     constructor(position, parent=null)
     {
         super(position, parent);
-        this.on_begin_focus_callback_append(OutputDigitalPin.#on_begin_focus);
-        this.on_end_focus_callback_append  (OutputDigitalPin.#on_end_focus);
-        this.on_end_press_callback_append  (OutputDigitalPin.#on_begin_press);
+        this.on_begin_focus_callback_append(OutputDigitalPin.#on_focus);
+        this.on_end_focus_callback_append  (OutputDigitalPin.#on_lost_focus);
     }
 }
 class PinToPinLink extends BezierObject
@@ -167,7 +174,7 @@ class PinToPinLink extends BezierObject
     get is_toggle() { return this.state.is_toggle;}
     set is_toggle(value)
     {
-        if(this.is_toggle === value)return;
+        if(this.is_toggle === value) return;
         this.state.is_toggle = value;
         this.target.eval_state();
     }
@@ -193,6 +200,7 @@ class NotGate extends TextObject
         this.#output = new OutputDigitalPin(new Vector2d( ONE_T_ONE_GATE_SIZE.x * 0.5, 0.0), this);
         this.on_press_callback_append(NotGate.#update_links_geometry);
         this.on_end_press_callback_append(NotGate.#update_links_geometry);
+        make_object_selectable(this);
     	make_object_moveable(this);
     }
     update(){ this.output.state.is_toggle = !this.input.state.is_toggle;}
@@ -221,6 +229,7 @@ class TwoInSingleOutGate extends TextObject
         this.#output  = new OutputDigitalPin(new Vector2d( ONE_T_ONE_GATE_SIZE.x * 0.5, 0), this);
         this.on_press_callback_append    (TwoInSingleOutGate.#update_links_geometry);
         this.on_end_press_callback_append(TwoInSingleOutGate.#update_links_geometry);
+        make_object_selectable(this);
         make_object_moveable(this);
     }
 }

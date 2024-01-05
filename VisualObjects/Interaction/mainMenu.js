@@ -62,8 +62,10 @@ class MainMenu extends VisualObject
         const stroke_w = MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.stroke_width
         super(new Vector2d(-RenderCanvas.instance.width * 0.5, -RenderCanvas.instance.height * 0.5),
               new Vector2d( RenderCanvas.instance.width * 0.5, -RenderCanvas.instance.height * 0.5 + stroke_w + button_size.y));
-        this.transform.freeze   = true;
-        this.state.is_focusable = false;
+        this.layer += FIRST_UI_OBJECTS_LAYER;
+        this.transform.freeze    = true;
+        this.state.is_focusable  = false;
+        this.state.viewport_cast = false;
         this.visual     = MAIN_MENU_VISUAL_SETTINGS;
         labels = labels == null ? ["File", "Edit", "Gates", "Settings", "Help"]:labels;
         const x_shift   = labels.length * button_size.x * 0.5;

@@ -3,11 +3,30 @@
  */
 class Vector2d
 {
+		/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Vector2d}  
+	 */
+	static min(a, b)
+	{
+		return new Vector2d(Math.min(a.x, b.x), Math.min(a.y, b.y));
+	}
+		/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @param {Vector2d} b 
+	 * @returns {Vector2d}  
+	 */
+	static max(a, b)
+	{
+		return new Vector2d(Math.max(a.x, b.x), Math.max(a.y, b.y));
+	}
 	/**
 	 * 
 	 * @param {Vector2d} a 
 	 * @param {Vector2d} b 
-	 * @param {Number} t 
 	 * @returns {Vector2d}  
 	 */
 	static lerp(a, b, t)
@@ -119,6 +138,26 @@ class Vector2d
 }
 class Vector3d
 {
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Vector3d}  
+	 */
+	static min(a, b)
+	{
+		return new Vector3d(Math.min(a.x, b.x), Math.min(a.y, b.y), Math.min(a.z, b.z));
+	}
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @param {Vector3d} b 
+	 * @returns {Vector3d}  
+	 */
+	static max(a, b)
+	{
+		return new Vector3d(Math.max(a.x, b.x), Math.max(a.y, b.y), Math.max(a.z, b.z));
+	}
 	/**
 	 * 
 	 * @param {Vector3d} a 
@@ -507,6 +546,10 @@ class RectBounds
 		if(point.y < this.min.y) return false;
 		if(point.y > this.max.y) return false;
 		return true;
+	}
+	encapsulate   (point) {
+		this.#min_pt = Vector2d.min(this.#min_pt, point);
+		this.#max_pt = Vector2d.max(this.#max_pt, point);
 	}
 	contains      (point) { return this.#contains(point);}
 	contains_rect (rect)  { return this.#contains(rect.min) && this.#contains(rect.max);}

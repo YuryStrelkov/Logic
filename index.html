@@ -5,22 +5,19 @@
         <meta charset='utf-8' />
 		<link rel="stylesheet" href="styles.css">
 		<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Varela+Round" />
-		<script src="dragable_object.js"></script>
-		<script src="assets_utils.js"></script>
-		<script src="wiring.js"></script>
-		
 		<script src="VisualObjects/common.js"></script>
 		<script src="VisualObjects/Geometry/geometry.js"></script>
 		<script src="VisualObjects/Geometry/bezier.js"></script>
 		<script src="VisualObjects/Geometry/transfrom2d.js"></script>
 		<script src="VisualObjects/visualSettings.js"></script>
 		<script src="VisualObjects/inputs.js"></script>
-		<script src="Rendering/patternCanvas.js"></script>
-		<script src="Rendering/renderCanvas.js"></script>
 		<script src="VisualObjects/visualObject.js"></script>
 		<script src="VisualObjects/Interaction/visualObjectsMovement.js"></script>
-		<script src="VisualObjects/CustomObjects/gates.js"></script>
 		<script src="VisualObjects/Interaction/infoPannel.js"></script>
+		<script src="VisualObjects/CustomObjects/gates.js"></script>
+		<script src="Rendering/patternCanvas.js"></script>
+		<script src="Rendering/renderCanvas.js"></script>
+		<script src="VisualObjects/Interaction/visualObjectsSelection.js"></script>
 		<script src="VisualObjects/Interaction/dropDownPanel.js"></script>
 		<script src="VisualObjects/Interaction/mainMenu.js"></script>
 		<script src="VisualObjects/visualObjects.js"></script>
@@ -34,12 +31,12 @@
 				    width:100%;
 				    position: unset;">
 					<div id="mainContainer" style="height:900px; width:1600px; background-color:#dddddd85">
-					<canvas id="mainCanvas" height="900px" width="1600px"></canvas>
-						<script>
-							init_app();
-							setInterval(repaint_app, 16);
-							//setInterval(repaint_app, 500);
-						</script>
+					<canvas id="mainCanvas" width="900" height="1600"></canvas>
+					<script>
+						init_app();
+						setInterval(repaint_app, 16);
+						//setInterval(repaint_app, 500);
+					</script>
 					</div>
 		</div>
 	</body>

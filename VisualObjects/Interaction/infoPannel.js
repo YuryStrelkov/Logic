@@ -27,6 +27,8 @@ class InfoPanel extends VisualObject
     constructor(position=null, element_size=null)
     {
         super();
+        this.layer += FIRST_UI_OBJECTS_LAYER;
+        this.state.viewport_cast = false;
         position = position==null? new Vector2d(-RenderCanvas.instance.width * 0.5, RenderCanvas.instance.height * 0.5):position;
         this.transform.position = position;
         this.state.is_shown     = false;
@@ -44,6 +46,7 @@ class InfoPanel extends VisualObject
         {
            element.transform.freeze = true;
            element.state.is_focusable = false;
+           element.state.viewport_cast = false;
            element.visual = INFO_PANEL_VISUAL_SETTINGS;
            element.transform.position = new Vector2d(element_size.x * (index + 0.5), -element_size.y * 0.5);
            element.parent = this;

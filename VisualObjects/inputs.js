@@ -1,15 +1,4 @@
 
-const KEY_UP      = 0;
-const KEY_PRESS   = 1;
-const KEY_HOLD    = 2;
-const KEY_RELEASE = 3;
-const KEY_STATES  = 4;    
-                           /* INPUT -> |  UP  | PRESS | HOLD | RELEASE */
-const KEY_STATE_MACHINE = [/*     UP */      0,      1,     0,       0, 
-                           /*  PRESS */      0,      0,     1,       1, 
-                           /*   HOLD */      0,      0,     0,       1, 
-                           /*RELEASE */      1,      0,     0,       0]; 
-
 const MOUSE_MOVE   = 0;
 const MOUSE_DRAG   = 1;
 const MOUSE_SCROLL = 2;
@@ -21,24 +10,84 @@ const MIDDLE_BUTTON_BIT  = 2;
 const BACK_BUTTON_BIT    = 3;
 const FORWARD_BUTTON_BIT = 4;
 
+/**
+ * Состояния:
+ *|  prev | curr  |       | 
+ *________________________
+ *|   P   |   P   | value | state
+ *________________________
+ *|   0   |   0   |   0   | on_idle
+ *|   0   |   1   |   2   | on_begin_press
+ *|   1   |   1   |   3   | on_press
+ *|   1   |   0   |   1   | on_end_press
+ *________________________
+ */
+const KEY_IDLE = 0;
+const KEY_BEGIN_PRESS = 2;
+const KEY_PRESS = 3;
+const KEY_END_PRESS = 1;
 class KeyState
 {
-	#_state = KEY_UP;
-	constructor() {}
-    
-    #validate_state_change(state){ return KEY_STATE_MACHINE[state + this.state * KEY_STATES] === 1; }
-
-    update(state)
+    #state;
+    constructor() {}
+    update()
     {
-        if(!this.#validate_state_change(state)) return;
-        this.#_state = state;
+        this.#state;
     }
-    reset         (){this.#_state = KEY_UP; }
-	get state     (){return this.#_state;}
-	get on_press  (){return this.state === KEY_PRESS  ;}
-	get on_hold   (){return this.state === KEY_HOLD   ;}
-	get on_up     (){return this.state === KEY_UP     ;}
-	get on_release(){return this.state === KEY_RELEASE;}
+    reset             (){ this.#state = 0; }
+	get state         (){return this.#state;}
+	get on_begin_press(){return this.#state === KEY_BEGIN_PRESS;}
+	get on_end_press  (){return this.#state === KEY_END_PRESS;}
+	get on_press      (){return this.#state === KEY_PRESS;}
+	get on_idle       (){return this.#state === KEY_IDLE;}
+}
+
+const MAX_KEYS_COUNT = 256;
+class KeyboardInfo
+{
+    static _instance = new KeyboardInfo();
+    static get instance() { return KeyboardInfo._instance;}
+    #begin_press_keys = null;
+    #press_keys       = null;
+    #end_press_keys   = null;
+    constructor()
+    {
+        if(KeyboardInfo.instance != null) return KeyboardInfo.instance;
+        this.#begin_press_keys = new Set();
+        this.#press_keys       = new Set();
+        this.#end_press_keys   = new Set();
+    }
+    
+    is_key_begin_pressed(key_code) { return this.#begin_press_keys.has(key_code);}
+    is_key_pressed      (key_code) { return this.#press_keys.has      (key_code);}
+    is_key_end_pressed  (key_code) { return this.#end_press_keys.has  (key_code);}
+    
+    update_begin_press_key(evt)
+    {
+        this.#begin_press_keys.add (evt.keyCode);
+        this.#end_press_keys.delete(evt.keyCode);
+        console.log(`begin press ${evt.keyCode}`);
+    }
+    
+    update_press_key(evt)
+    {
+        this.#begin_press_keys.delete(evt.keyCode);
+        this.#press_keys.add         (evt.keyCode);
+        // console.log(evt.keyCode);
+        console.log(`press ${evt.keyCode}`);
+        // console.log(this.#press_keys);
+    }
+
+    update_end_press_key(evt)
+    {
+        this.#press_keys.delete (evt.keyCode);
+        this.#end_press_keys.add(evt.keyCode);
+        console.log(`end press ${evt.keyCode}`);
+        //console.log(evt.keyCode);
+        // console.log(this.#press_keys);
+    }
+
+    clear_released_keys() { this.#end_press_keys.clear(); }
 }
 
 const canvas_clique_coord = (evt) => { return new Vector2d(evt.clientX - RenderCanvas.instance.canvas.offsetLeft,

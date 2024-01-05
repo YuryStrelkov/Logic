@@ -1,4 +1,5 @@
-
+FIRST_OBJECTS_LAYER = 1;
+FIRST_UI_OBJECTS_LAYER = 32;
 class VisualObject {
 	static #draw_queue = new Map();
 	static #delete_request = [];
@@ -8,32 +9,72 @@ class VisualObject {
 	static get on_press_object() { return VisualObject.#on_press_object; }
 	static get on_focus_object() { return VisualObject.#on_focus_object; }
 	static get visual_objects() { return VisualObject.#visual_objects; }
-
+	
 	static #eval_objects_destroy() {
 		while (VisualObject.#delete_request.length != 0) {
 			const object = VisualObject.#delete_request.pop();
 			VisualObject.#visual_objects.delete(object);
 		}
 	}
-	static #before_mouse_input_update() {
-		if (MouseInfo.instance.is_any_down) return;
-		VisualObject.#on_focus_object = null;
-		if (VisualObject.on_press_object != null) VisualObject.on_press_object.state.on_press = false;
+	static #focus_update()
+	{
+		var focus_object = null;
+		for (const obj of VisualObject.#visual_objects)
+		{
+			if(! obj.state.is_focusable) continue;
+			if(! obj.state.is_shown) continue;
+			if(! obj.contains(MouseInfo.instance.position)) continue;
+			if(focus_object === null)
+			{
+				focus_object = obj;
+				continue;
+			}
+			if (obj.layer < focus_object.layer) continue;
+			focus_object = obj;
+		}
+		if(focus_object === null)
+		{
+			if(VisualObject.on_focus_object !== null)
+			{
+				VisualObject.on_focus_object.state.on_focus = false;
+				VisualObject.#on_focus_object = null;
+			}
+			return;
+		}
+		if(VisualObject.on_focus_object === focus_object) return;
+		if(VisualObject.on_focus_object !== null) VisualObject.on_focus_object.state.on_focus = false;
+		VisualObject.#on_focus_object = focus_object;
+		focus_object.state.on_focus = true;
+	}
+	static #press_update()
+	{
+		if (MouseInfo.instance.is_any_down)
+		{
+			if(VisualObject.on_press_object !== null) return;
+			if(VisualObject.on_focus_object === null) return;
+			VisualObject.#on_press_object = VisualObject.on_focus_object;
+			VisualObject.#on_press_object.state.on_press = true;
+			return;
+		}
+		if(VisualObject.on_press_object === null) return;
+		VisualObject.on_press_object.state.on_press = false;
 		VisualObject.#on_press_object = null;
 	}
-
-	static #after_mouse_input_update() {
-		if (VisualObject.on_press_object !== null) return;
-		if (VisualObject.on_focus_object === null) return;
-		if (!MouseInfo.instance.is_any_down) return;
-		VisualObject.#on_press_object = VisualObject.on_focus_object;
-		VisualObject.on_press_object.state.on_press = true;
-	}
-
 	static #mouse_input_update() {
-		VisualObject.#before_mouse_input_update();
-		for (const obj of VisualObject.#visual_objects) obj._focus_update();
-		VisualObject.#after_mouse_input_update();
+		VisualObject.#focus_update();
+		VisualObject.#press_update();
+	}
+	static register_object(object)
+	{
+		if(VisualObject.#visual_objects.has(object)) return;
+		VisualObject.#visual_objects.add(object);
+	}
+	static render_object(object)
+	{
+		if (!object.state.is_shown) return;
+		if (object.state.viewport_cast) if (object.cast_by_view) return;
+		if (!VisualObject.#draw_queue.has(object.layer)) { VisualObject.#draw_queue.set(object.layer, new Set()); }
+		VisualObject.#draw_queue.get(object.layer).add(object);
 	}
 
 	static destroy(visual_object) {
@@ -50,7 +91,9 @@ class VisualObject {
 	}
 
 	static render_objects(ctx) {
-		for (const layer_object of VisualObject.#draw_queue.values()) {
+		const layers = [... VisualObject.#draw_queue.keys()].sort(function (a, b) {return a - b;});
+		for (const layer_id of layers) {
+			const layer_object = VisualObject.#draw_queue.get(layer_id); 
 			for (const obj of layer_object) {
 				ctx.beginPath();
 				obj._render_object(ctx);
@@ -60,6 +103,7 @@ class VisualObject {
 		}
 	}
 	#_name;
+	#_layer;
 	#_parent;
 	#_children;
 	_bounds;
@@ -74,17 +118,18 @@ class VisualObject {
 		this.#_callbacks = new Map();
 		this._bounds = new RectBounds(min, max);
 		this.#_transform = new Transform2d();
-		this.#_visual = VisualSettings.default;
-		this.#_state = new VisualObjectState(set_bits(0, [OBJECT_SHOW_BIT, OBJECT_FOCUSABLE_BIT]));
+		this.#_layer     = this.transform.layer;
+		this.#_visual    = VisualSettings.default;
+		this.#_state     = new VisualObjectState(set_bits(0, [OBJECT_SHOW_BIT, OBJECT_FOCUSABLE_BIT, OBJECT_VIEWPORT_CAST]));
 		this.transform.position = this.bounds.center;
 		this.bounds.center = new Vector2d(0, 0);
-		VisualObject.#visual_objects.add(this);
 		// this.on_begin_focus_callback_append((obj) => { console.log(`begin focus at layer ${obj.layer}`) });
-		// this.on_end_focus_callback_append((obj) => { console.log(`end focus at layer ${obj.layer}`) });
-		// this.on_focus_callback_append((obj) => { console.log('focus') });
-		// this.on_press_callback_append((obj) => { console.log('press') });
-		// this.on_begin_press_callback_append((obj) => { console.log('begin press') });
-		// this.on_end_press_callback_append((obj) => { console.log('end press') });
+		// this.on_end_focus_callback_append  ((obj) => { console.log(`end focus at layer ${obj.layer}`) });
+		// this.on_focus_callback_append      ((obj) => { console.log(`focus at layer ${obj.layer}`) });
+		// this.on_press_callback_append      ((obj) => { console.log(`press at layer ${obj.layer}`) });
+		// this.on_begin_press_callback_append((obj) => { console.log(`begin press at layer ${obj.layer}`) });
+		// this.on_end_press_callback_append  ((obj) => { console.log(`end press at layer ${obj.layer}`) });
+		VisualObject.register_object(this);
 	}
 	/**
 	 * 
@@ -100,7 +145,7 @@ class VisualObject {
 		if (!this.#_callbacks.has(key)) return;
 		this.#_callbacks.get(key).delete(fcn);
 	}
-	#eval_callbacks() {
+	eval_callbacks() {
 		const state = this.state.inst_state;
 		if (state == 0) return;
 		if (!this.#_callbacks.has(state)) return;
@@ -112,10 +157,10 @@ class VisualObject {
 	 * @param {function(VisualObject)} callback_fcn 
 	 */
 	on_begin_focus_callback_append(callback_fcn) { this.#register_callback(ON_FOCUS_BEGIN_STATE, callback_fcn); }
-	on_end_focus_callback_append(callback_fcn) { this.#register_callback(ON_FOCUS_END_STATE, callback_fcn); }
-	on_focus_callback_append(callback_fcn) { this.#register_callback(ON_FOCUS_STATE, callback_fcn); }
+	on_end_focus_callback_append  (callback_fcn) { this.#register_callback(ON_FOCUS_END_STATE, callback_fcn); }
+	on_focus_callback_append      (callback_fcn) { this.#register_callback(ON_FOCUS_STATE, callback_fcn); }
 	on_begin_press_callback_append(callback_fcn) { this.#register_callback(ON_PRESS_BEGIN_STATE, callback_fcn); }
-	on_end_press_callback_append(callback_fcn) {
+	on_end_press_callback_append  (callback_fcn) {
 		this.#register_callback(ON_PRESS_END_STATE_1, callback_fcn);
 		this.#register_callback(ON_PRESS_END_STATE_2, callback_fcn);
 	}
@@ -126,10 +171,10 @@ class VisualObject {
 	}
 
 	on_begin_focus_callback_remove(callback_fcn) { this.#unregister_callback(ON_FOCUS_BEGIN_STATE, callback_fcn); }
-	on_end_focus_callback_remove(callback_fcn) { this.#unregister_callback(ON_FOCUS_END_STATE, callback_fcn); }
-	on_focus_callback_remove(callback_fcn) { this.#unregister_callback(ON_FOCUS_STATE, callback_fcn); }
+	on_end_focus_callback_remove  (callback_fcn) { this.#unregister_callback(ON_FOCUS_END_STATE, callback_fcn); }
+	on_focus_callback_remove      (callback_fcn) { this.#unregister_callback(ON_FOCUS_STATE, callback_fcn); }
 	on_begin_press_callback_remove(callback_fcn) { this.#unregister_callback(ON_PRESS_BEGIN_STATE, callback_fcn); }
-	on_end_press_callback_remove(callback_fcn) {
+	on_end_press_callback_remove  (callback_fcn) {
 		this.#unregister_callback(ON_PRESS_END_STATE_1, callback_fcn);
 		this.#unregister_callback(ON_PRESS_END_STATE_2, callback_fcn);
 	}
@@ -138,15 +183,29 @@ class VisualObject {
 		this.#unregister_callback(ON_PRESS_STATE_2, callback_fcn);
 		this.#unregister_callback(ON_PRESS_STATE_3, callback_fcn);
 	}
-
-	get cast_by_view() { return RenderCanvas.instance.cast_by(this.bounds, this.transform); }
-	get intersect_by_view() { return RenderCanvas.instance.intersect_by(this.bounds, this.transform); }
-	get parent() { return this.#_parent; }
-	get has_parent() { return this.#_parent != null; }
-	get children() { return this.#_children; }
-	get has_children()   { return this.#_children.size != 0; }
-	get children_count() { return this.#_children.size; }
-	get layer() { return this.transform.layer; }
+	move_to_layer (layer) {
+		this.layer = layer;
+		for(const child of this.children)child.layer = layer + 1;
+	}
+	get cast_by_view      ()      { return RenderCanvas.instance.cast_by(this.bounds, this.transform); }
+	get intersect_by_view ()      { return RenderCanvas.instance.intersect_by(this.bounds, this.transform); }
+	get parent            ()      { return this.#_parent; }
+	get has_parent        ()      { return this.#_parent != null; }
+	get children          ()      { return this.#_children; }
+	get children_count    ()      { return this.#_children.size; }
+	get has_children      ()      { return this.children_count != 0; }
+	get layer             ()      { return this.#_layer; }
+	set layer             (value) 
+	{ 
+		if(!this.has_parent) 
+		{
+			this.#_layer = Math.max(0, value);
+			return;
+		};
+		if(value <= this.parent.layer) return;
+		this.#_layer = value;
+		for(const child of this.children)child.layer = layer + 1;
+	}
 	/**
 	 * @returns {RectBounds}
 	 */
@@ -162,9 +221,9 @@ class VisualObject {
 	/**
 	 * @returns {VisualObjectState}
 	 */
-	get state() { return this.#_state; }
-	get name() { return this.#_name; }
-	set name(value) { this.#_name = value; }
+	get state () { return this.#_state; }
+	get name  () { return this.#_name; }
+	set name  (value) { this.#_name = value; }
 	get points() {
 		const points = this.bounds.points;
 		return [this.transform.world_transform_point(points[0]),
@@ -181,11 +240,12 @@ class VisualObject {
 	}
 	set visual(value) { this.#_visual = value; }
 	set parent(value) {
-		if (this.has_parent) this.parent.#_children.delete(this);
+		if (this.has_parent) this.parent.children.delete(this);
 		this.#_parent = value;
 		if (!this.has_parent) return;
-		value.#_children.add(this);
+		value.children.add(this);
 		this.transform.parent = value.transform
+		this.layer = this.parent.layer + 1;
 		return;
 	}
 
@@ -214,31 +274,11 @@ class VisualObject {
 
 	update() { }
 
-	render() {
-		if (!this.state.is_shown) return;
-		if (this.cast_by_view) return;
-		if (!VisualObject.#draw_queue.has(this.layer)) { VisualObject.#draw_queue.set(this.layer, new Set()); }
-		VisualObject.#draw_queue.get(this.layer).add(this);
-	}
-
-	_focus_update() {
-		if (!this.state.is_focusable) return;
-		if (!this.state.is_shown) return;
-		this.state.on_focus = this.contains(MouseInfo.instance.position);
-		if (!this.state.on_focus) return;
-		if ((VisualObject.on_focus_object === null) || (this === VisualObject.on_focus_object)) {
-			VisualObject.#on_focus_object = this.state.on_focus ? this : null;
-			return;
-		}
-		/// Сортировка по слоям. Предпочтение отдаётся слою с большим значением
-		if (this.layer < VisualObject.on_focus_object.layer) { this.state.on_focus = false; return; };
-		VisualObject.on_focus_object.state.on_focus = false;
-		VisualObject.#on_focus_object = this;
-	}
+	render() { VisualObject.render_object(this);}
 
 	_update_object() {
 		this.update();
-		this.#eval_callbacks();
+		this.eval_callbacks();
 		this.render();
 	}
 

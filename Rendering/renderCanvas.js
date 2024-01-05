@@ -1,4 +1,5 @@
-class RenderCanvas
+
+class RenderCanvas extends VisualObject
 {
     #limit_movement()
 	{
@@ -32,10 +33,9 @@ class RenderCanvas
     get scale()     {return Transform2d.root.scale.x;}
     set scale(value)
     {
-        Transform2d.root.scale       = new Vector2d(value, value);
-        Transform2d.root.scale.x     = Math.max(Math.min(Transform2d.root.scale.x, MAX_SCALE), 1.0);
-        Transform2d.root.scale.y     = Math.max(Math.min(Transform2d.root.scale.y, MAX_SCALE), 1.0);
-        PatternCanvas.instance.lines_frequency = Transform2d.root.scale; // ??
+        value                  = Math.max(Math.min(value, MAX_SCALE), 1.0)
+        Transform2d.root.scale = new Vector2d(value, value);
+        PatternCanvas.instance.stroke_width = Math.sqrt(Math.max(value)); // ??
     }
     get position(){return  Transform2d.root.position;}
     set position(value){this.change_view_position(value);}
@@ -44,38 +44,44 @@ class RenderCanvas
     change_view_position(position)
     {
         Transform2d.root.position = Vector2d.sum(position, Transform2d.root.position);
-        this.#limit_movement();
-        PatternCanvas.instance.lines_shift = Transform2d.root.position; // ??
+        // this.#limit_movement();
+        // PatternCanvas.instance.lines_shift = Transform2d.root.position; // ??
     }
-    constructor()
+    constructor(width, height)
     {
         if(RenderCanvas.#instance != null) return RenderCanvas.instance;
-        this.#color          = new Color(80, 90, 100);
-        this.#canvas         = document.getElementById("mainCanvas");
-        this.#canvas_ctx     = this.#canvas.getContext('2d');
-        this.#pattern        = this.canvas_ctx.createPattern(PatternCanvas.instance.canvas, "repeat");
-        this.#border         = new RectBounds(new Vector2d(), new Vector2d(this.width, this.height));
-        Transform2d.root.position = new Vector2d(this.width * 0.5, this.height * 0.5);
+        super(new Vector2d(-width * 0.5 + 2, -height * 0.5 + 2), new Vector2d(width * 0.5 - 2, height * 0.5 - 2));
+        // this.state.is_focusable = false;
+        this.state.viewport_cast = false;
+        this.#color      = new Color(80, 90, 100);
+        this.#canvas     = document.getElementById("mainCanvas");
+        this.#canvas_ctx = this.#canvas.getContext('2d');
+        this.width       = width;     
+        this.height      = height;
+        this.layer       = 0;     
+        this.#pattern    = this.canvas_ctx.createPattern(PatternCanvas.instance.canvas, "repeat");
+        this.on_end_press_callback_append(clear_selection);
         RenderCanvas.#instance = this;
-    }
-    get border_points_local(){return this.#border.points;}
-    get border_points_world(){
-        const points = this.bounds.points;
-		return [Transform2d.root.transform_point(points[0]),
-				Transform2d.root.transform_point(points[1]),
-				Transform2d.root.transform_point(points[2]),
-				Transform2d.root.transform_point(points[3])];
     }
     get canvas      (){return this.#canvas;}
     get canvas_ctx  (){return this.#canvas_ctx;}
     get width       (){return this.canvas.width;}
     get height      (){return this.canvas.height;}
+    set width       (value)
+    {
+        this.canvas.width  = Math.max(value, 256);
+        Transform2d.root.position = new Vector2d(this.width * 0.5, this.height * 0.5);
+    }
+    set height      (value)
+    {
+        this.canvas.height = Math.max(value, 256);
+        Transform2d.root.position = new Vector2d(this.width * 0.5, this.height * 0.5);
+    }
     get clear_color (){return this.#color;}
     set clear_color (value){this.#color = (value instanceof Color) ? value: this.#color;}
     clear()
     {
-        this.#update_background_pattern();
-        this.canvas_ctx.fillStyle = this.#pattern === null ? this.clear_color.color_code : this.#pattern;
+        this.canvas_ctx.fillStyle = this.clear_color.color_code;
         this.canvas_ctx.fillRect(0, 0, this.width, this.height);
     }
     /**
@@ -88,10 +94,10 @@ class RenderCanvas
 	{
         if (transform!==null)
         {
-            for(const point of bounds.points) if(this.#border.contains(transform.world_transform_point(point))) return false;
+            for(const point of bounds.points) if(this.contains(transform.world_transform_point(point))) return false;
             return true;
         }
-        for(const point of bounds.points) if(this.#border.contains(point)) return false;
+        for(const point of bounds.points) if(this.contains(point)) return false;
         return true;
 	}
      /**
@@ -109,5 +115,21 @@ class RenderCanvas
         }
         for(const point of bounds.points) if(this.#border.contains(point)) return true;
         return false;
+	}
+    
+    _render_object(ctx) {
+		this.transform.apply_to_context(ctx);
+		this.visual.apply_to_context(ctx);
+        this.#update_background_pattern();
+		const width = this.bounds.width;
+		const height = this.bounds.height;
+		const x0 = this.bounds.min.x;
+		const y0 = this.bounds.min.y;
+		ctx.fillStyle = this.#pattern;
+		ctx.roundRect(x0, y0, width, height, this.visual.corners_radiuses);
+		ctx.fill();
+		if (this.visual.stroke_width === 0) return;
+		ctx.roundRect(x0, y0, width, height, this.visual.corners_radiuses);
+		ctx.stroke();
 	}
 }

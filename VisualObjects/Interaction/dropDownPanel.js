@@ -39,6 +39,8 @@ class DropDownMenu extends TextObject
         size = size == null? new Vector2d(155, 45): size;
         super(new Vector2d(position.x - size.x * 0.5, position.y - size.y * 0.5),
               new Vector2d(position.x + size.x * 0.5, position.y + size.y * 0.5));
+        this.layer += FIRST_UI_OBJECTS_LAYER;
+        this.state.viewport_cast = false;
         if(parent!==null) this.parent = parent;
         this.transform. freeze  = true;
         this.visual     = MAIN_MENU_VISUAL_SETTINGS;
