@@ -10,7 +10,8 @@ class VisualObjectMovementSystem
 	{
 		if (!MouseInfo.instance.is_left_down) return;
 		for(const object of VisualObjectSelectionSystem.selected_objects)
-		{
+		{	
+			if(!object.state.is_moveable)continue;
 			const position = Transform2d.root.world_transform_direction(object.transform.position); 
 			const delta = Vector2d.sub(MouseInfo.instance.position, position);
 			VisualObjectMovementSystem.#delta_positions.push([delta, object]);
@@ -69,6 +70,7 @@ class VisualObjectMovementSystem
 	{
 		if(VisualObjectMovementSystem.#moveable_objects.has(obj))return;
 		VisualObjectMovementSystem.#moveable_objects.add(obj);
+		obj.state.is_moveable = true;
 		obj.on_begin_press_callback_append(VisualObjectMovementSystem.object_movement_begin_callback);
 		obj.on_press_callback_append      (VisualObjectMovementSystem.object_movement_callback );
 		obj.on_end_press_callback_append  (VisualObjectMovementSystem.object_movement_end_callback  );
@@ -77,6 +79,7 @@ class VisualObjectMovementSystem
 	{
 		if(!VisualObjectMovementSystem.#moveable_objects.has(obj))return;
 		VisualObjectMovementSystem.#moveable_objects.delete(obj);
+		obj.state.is_moveable = false;
 		obj.on_begin_press_callback_remove(VisualObjectMovementSystem.object_movement_begin_callback);
 		obj.on_press_callback_remove      (VisualObjectMovementSystem.object_movement_callback );
 		obj.on_end_press_callback_remove  (VisualObjectMovementSystem.object_movement_end_callback  );

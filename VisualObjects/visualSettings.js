@@ -5,10 +5,14 @@ class VisualObjectState extends ObjectState
 	get is_toggle    ()       { return is_bit_set(this.curr_state, OBJECT_TOGGLE_BIT    );}
 	get is_focusable ()       { return is_bit_set(this.curr_state, OBJECT_FOCUSABLE_BIT );}
 	get viewport_cast()       { return is_bit_set(this.curr_state, OBJECT_VIEWPORT_CAST );}
+	get is_selectable()       { return is_bit_set(this.curr_state, OBJECT_SELECTABLE_BIT );}
+	get is_moveable  ()       { return is_bit_set(this.curr_state, OBJECT_MOVEABLE_BIT );}
 	set is_shown     (value)  { this._setup(value, OBJECT_SHOW_BIT); }
 	set is_toggle    (value)  { this._setup(value, OBJECT_TOGGLE_BIT); }
 	set is_focusable (value)  { this._setup(value, OBJECT_FOCUSABLE_BIT); }
 	set viewport_cast(value)  { this._setup(value, OBJECT_VIEWPORT_CAST); }
+	set is_selectable(value)  { this._setup(value, OBJECT_SELECTABLE_BIT); }
+	set is_moveable  (value)  { this._setup(value, OBJECT_MOVEABLE_BIT); }
 }
 
 class Color

@@ -60,7 +60,7 @@ class RenderCanvas extends VisualObject
         this.height      = height;
         this.layer       = 0;     
         this.#pattern    = this.canvas_ctx.createPattern(PatternCanvas.instance.canvas, "repeat");
-        this.on_end_press_callback_append  (VisualObjectSelectionSystem.clear_selection);
+        // this.on_end_press_callback_append  (VisualObjectSelectionSystem.clear_selection);
         this.on_begin_press_callback_append(VisualObjectSelectionSystem.before_display_selection_region);
         this.on_end_press_callback_append  (VisualObjectSelectionSystem.after_display_selection_region);
         this.on_press_callback_append      (VisualObjectSelectionSystem.display_selection_region);

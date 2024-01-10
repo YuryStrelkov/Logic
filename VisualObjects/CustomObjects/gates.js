@@ -170,7 +170,8 @@ class PinToPinLink extends BezierObject
         this.target.links.add(this);
         this.update_link_geometry();
         this.update();
-        PinToPinLink.#connected_pins.add(`${this.source.name}:${this.target.name}`);
+        VisualObjectSelectionSystem.subscribe(this);
+		PinToPinLink.#connected_pins.add(`${this.source.name}:${this.target.name}`);
     }
     update_link_geometry()
     {
@@ -198,7 +199,8 @@ class PinToPinLink extends BezierObject
         this.target.links.delete(this);
         if(this.target.links_count === 0) this.target.is_toggle = false;
         PinToPinLink.#connected_pins.delete(`${this.source.name}:${this.target.name}`);
-    }
+		VisualObjectSelectionSystem.unsubscribe(this);
+	}
 }
 
 class NotGate extends TextObject
@@ -221,7 +223,6 @@ class NotGate extends TextObject
         this.#output = new OutputDigitalPin(new Vector2d( ONE_T_ONE_GATE_SIZE.x * 0.5, 0.0), this);
         VisualObjectSelectionSystem.subscribe(this);
         VisualObjectMovementSystem.subscribe(this);
-    	// make_object_moveable(this);
     }
     update(){ this.output.state.is_toggle = !this.input.state.is_toggle;}
     on_delete() 
@@ -252,10 +253,8 @@ class TwoInSingleOutGate extends TextObject
         this.#input_a = new InputDigitalPin (new Vector2d(-ONE_T_ONE_GATE_SIZE.x * 0.5,  0.4 * ONE_T_ONE_GATE_SIZE.y), this);
         this.#input_b = new InputDigitalPin (new Vector2d(-ONE_T_ONE_GATE_SIZE.x * 0.5, -0.4 * ONE_T_ONE_GATE_SIZE.y), this);
         this.#output  = new OutputDigitalPin(new Vector2d( ONE_T_ONE_GATE_SIZE.x * 0.5, 0), this);
-        //make_object_selectable(this);
         VisualObjectSelectionSystem.subscribe(this);
         VisualObjectMovementSystem.subscribe(this);
-        //make_object_moveable  (this);
     }
     on_delete() 
     {
