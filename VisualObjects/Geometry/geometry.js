@@ -13,7 +13,7 @@ class Vector2d
 	{
 		return new Vector2d(Math.min(a.x, b.x), Math.min(a.y, b.y));
 	}
-		/**
+	/**
 	 * 
 	 * @param {Vector2d} a 
 	 * @param {Vector2d} b 
@@ -22,6 +22,15 @@ class Vector2d
 	static max(a, b)
 	{
 		return new Vector2d(Math.max(a.x, b.x), Math.max(a.y, b.y));
+	}
+	/**
+	 * 
+	 * @param {Vector2d} a 
+	 * @returns {Vector2d}  
+	 */
+	static abs(a)
+	{
+		return new Vector2d(Math.abs(a.x), Math.abs(a.y));
 	}
 	/**
 	 * 
@@ -138,6 +147,15 @@ class Vector2d
 }
 class Vector3d
 {
+	/**
+	 * 
+	 * @param {Vector3d} a 
+	 * @returns {Vector3d}  
+	 */
+	static abs(a)
+	{
+		return new Vector3d(Math.abs(a.x), Math.abs(a.y), Math.abs(a.z));
+	}
 	/**
 	 * 
 	 * @param {Vector3d} a 
@@ -506,6 +524,20 @@ class Matrix3d
 		return new Vector2d(this.m00 * point.x + this.m01 * point.y,
 						    this.m10 * point.x + this.m11 * point.y);
 	}
+	/// multiply_by_point_unit_scale(point)
+	/// {
+	/// 	const sx  = 1.0 / Math.sqrt(this.m00 * this.m00 + this.m10 * this.m10); 
+	/// 	const sy  = 1.0 / Math.sqrt(this.m01 * this.m01 + this.m11 * this.m11); 
+	/// 	return new Vector2d(this.m00 * sx * point.x + this.m01  * sy * point.y + this.m02,
+	/// 						this.m10 * sx * point.x + this.m11  * sy * point.y + this.m12);
+	/// }
+	/// multiply_by_direction_unit_scale(point)
+	/// {
+	/// 	const sx  = 1.0 / Math.sqrt(this.m00 * this.m00 + this.m10 * this.m10); 
+	/// 	const sy  = 1.0 / Math.sqrt(this.m01 * this.m01 + this.m11 * this.m11); 
+	/// 	return new Vector2d(this.m00 * sx * point.x + this.m01 * sy * point.y,
+	/// 					    this.m10 * sx * point.x + this.m11 * sy * point.y);
+	/// }
 }
 class RectBounds
 {

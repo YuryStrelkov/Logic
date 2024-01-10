@@ -8,11 +8,14 @@ class VisualObject {
 	static #on_focus_object = null;
 	static get on_press_object() { return VisualObject.#on_press_object; }
 	static get on_focus_object() { return VisualObject.#on_focus_object; }
-	static get visual_objects() { return VisualObject.#visual_objects; }
+	static get visual_objects () { return VisualObject.#visual_objects; }
 	
 	static #eval_objects_destroy() {
 		while (VisualObject.#delete_request.length != 0) {
 			const object = VisualObject.#delete_request.pop();
+			object._delete_object();
+			if(object === VisualObject.on_focus_object) VisualObject.#on_focus_object = null;
+			if(object === VisualObject.on_press_object) VisualObject.#on_press_object = null;
 			VisualObject.#visual_objects.delete(object);
 		}
 	}
@@ -77,10 +80,10 @@ class VisualObject {
 		VisualObject.#draw_queue.get(object.layer).add(object);
 	}
 
-	static destroy(visual_object) {
+	static destroy_visual_object(visual_object) {
 		VisualObject.#delete_request.push(visual_object);
-		if (!visual_object.has_children) return;
-		for (const child of visual_object.children) VisualObject.destroy(child);
+		// if (!visual_object.has_children) return;
+		// for (const child of visual_object.children) VisualObject.destroy(child);
 	}
 
 	static update_objects() {
@@ -112,7 +115,7 @@ class VisualObject {
 	#_state;
 	#_callbacks;
 	constructor(min, max) {
-		this.#_name = `visualObject${VisualObject.visual_objects.length}`;
+		this.#_name = `visualObject ${VisualObject.visual_objects.size}`;
 		this.#_parent = null;
 		this.#_children = new Set();
 		this.#_callbacks = new Map();
@@ -276,6 +279,16 @@ class VisualObject {
 
 	render() { VisualObject.render_object(this);}
 
+	on_delete() {}
+
+	on_move(){};
+
+	_delete_object()
+	{
+		this.on_delete();
+		for(const child of this.children) VisualObject.destroy_visual_object(child);
+	}
+
 	_update_object() {
 		this.update();
 		this.eval_callbacks();
@@ -382,29 +395,31 @@ class BezierObject extends VisualObject
 		this.#p2 = an1;
 		this.#p3 = an2;
 		this.#p4 = p2;
+		this.visual = BEZIER_VISUAL_SETTINGS;
 		this.#update_bounds();
 	}
 	contains(point)
 	{
 		if(!super.contains(point))return false;
-		return is_close_to_bezier(point, this.p1, this.p2, this.p3, this.p4, 14);
+		//this.transform.inv_world_transform_point(point)
+		// return is_close_to_bezier(this.transform.inv_world_transform_point(point), this.p1, this.p2, this.p3, this.p4, 2);
+		return is_close_to_bezier(Transform2d.root.inv_local_transform_point(point), this.p1, this.p2, this.p3, this.p4, 1);
 	}
 	_render_object(ctx) {
 		ctx.beginPath()
 		this.transform.apply_to_context(ctx);
 		this.visual.apply_to_context(ctx);
-		// ctx.strokeStyle = this.visual.eval_object_color(this.state).color_code;
-		ctx.strokeStyle  = this.state.is_toggle ? 'rgb(255, 0, 0, 1.0)': ctx.lineColor;
+		ctx.strokeStyle  = this.state.is_toggle ? 'rgb(255, 0, 0, 1.0)': this.visual.eval_object_color(this.state).color_code;
 		ctx.moveTo(this.p1.x, this.p1.y);
 		ctx.bezierCurveTo(this.p2.x, this.p2.y,
 						  this.p3.x, this.p3.y,
 						  this.p4.x, this.p4.y);
-		// ctx.stroke();
+		ctx.stroke();
 		// const width  = this.bounds.width;
 		// const height = this.bounds.height;
 		// const x0     = this.bounds.min.x;
 		// const y0     = this.bounds.min.y;
 		// ctx.roundRect(x0, y0, width, height,[5,5,5,5]);
-		ctx.stroke();
+		// ctx.stroke();
 	}
 }

@@ -41,7 +41,7 @@ class DropDownMenu extends TextObject
               new Vector2d(position.x + size.x * 0.5, position.y + size.y * 0.5));
         this.layer += FIRST_UI_OBJECTS_LAYER;
         this.state.viewport_cast = false;
-        if(parent!==null) this.parent = parent;
+        if(parent !== null) this.parent = parent;
         this.transform. freeze  = true;
         this.visual     = MAIN_MENU_VISUAL_SETTINGS;
         this.on_begin_press_callback_append(DropDownMenu.#drop_down_show_content);

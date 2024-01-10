@@ -46,10 +46,10 @@ class BezierCurveObject extends BezierObject
         this.#p2_controller. visual = ROUND_PIN_VISUAL_SETTINGS;
         this.#p3_controller. visual = ROUND_PIN_VISUAL_SETTINGS;
         this.#p4_controller. visual = ROUND_PIN_VISUAL_SETTINGS;
-    	make_object_moveable(this.#p1_controller);
-    	make_object_moveable(this.#p2_controller);
-    	make_object_moveable(this.#p3_controller);
-    	make_object_moveable(this.#p4_controller);
+        VisualObjectMovementSystem.subscribe(this.#p1_controller);
+        VisualObjectMovementSystem.subscribe(this.#p2_controller);
+        VisualObjectMovementSystem.subscribe(this.#p3_controller);
+        VisualObjectMovementSystem.subscribe(this.#p4_controller);
     }
 }
 
@@ -61,7 +61,12 @@ class DigitalPin extends RectangleObject
     {
         if((INPUT_TARGET_PIN !== null) && (OUTPUT_TARGET_PIN !== null))
         {
-             const link = new PinToPinLink(OUTPUT_TARGET_PIN, INPUT_TARGET_PIN);
+            if(PinToPinLink.is_connection_exists(OUTPUT_TARGET_PIN, INPUT_TARGET_PIN))
+            {
+                console.log(`connection already exists ${OUTPUT_TARGET_PIN.name}:${INPUT_TARGET_PIN.name}`);
+                return;
+            }
+            const link = new PinToPinLink(OUTPUT_TARGET_PIN, INPUT_TARGET_PIN);
         }
         INPUT_TARGET_PIN  = null;
         OUTPUT_TARGET_PIN = null;
@@ -88,6 +93,7 @@ class DigitalPin extends RectangleObject
         this.state.is_toggle = false;
         for(const link of this.links) this.state.is_toggle |= link.is_toggle;
     }
+    on_delete() { for(const link of this.links) VisualObject.destroy_visual_object(link); }
 }
 
 class InputDigitalPin extends DigitalPin
@@ -110,6 +116,7 @@ class InputDigitalPin extends DigitalPin
     constructor(position, parent=null)
     {
         super(position, parent);
+		this.name = `input pin ${VisualObject.visual_objects.size}`;
         this.on_end_press_callback_append(toggle_pin);
         this.on_begin_focus_callback_append(InputDigitalPin.#on_focus);
         this.on_end_focus_callback_append  (InputDigitalPin.#on_lost_focus);
@@ -135,12 +142,18 @@ class OutputDigitalPin extends DigitalPin
     constructor(position, parent=null)
     {
         super(position, parent);
+		this.name = `output pin ${VisualObject.visual_objects.size}`;
         this.on_begin_focus_callback_append(OutputDigitalPin.#on_focus);
         this.on_end_focus_callback_append  (OutputDigitalPin.#on_lost_focus);
     }
 }
 class PinToPinLink extends BezierObject
 {
+    static #connected_pins = new Set();
+    
+    static is_connection_exists(pin_a, pin_b)
+    { return PinToPinLink.#connected_pins.has(`${pin_a.name}:${pin_b.name}`);}
+
     #source_pin;
     #target_pin;
     /**
@@ -157,6 +170,7 @@ class PinToPinLink extends BezierObject
         this.target.links.add(this);
         this.update_link_geometry();
         this.update();
+        PinToPinLink.#connected_pins.add(`${this.source.name}:${this.target.name}`);
     }
     update_link_geometry()
     {
@@ -168,9 +182,8 @@ class PinToPinLink extends BezierObject
         this.p3 = new Vector2d(middle, point_b.y);
         this.p4 = point_b;
     }
-    get source  () {return this.#source_pin};
-    get target  () {return this.#target_pin};
-    update() { this.is_toggle = this.source.state.is_toggle;}
+    get source   () {return this.#source_pin};
+    get target   () {return this.#target_pin};
     get is_toggle() { return this.state.is_toggle;}
     set is_toggle(value)
     {
@@ -178,14 +191,22 @@ class PinToPinLink extends BezierObject
         this.state.is_toggle = value;
         this.target.eval_state();
     }
+    update() { this.is_toggle = this.source.state.is_toggle;}
+    on_delete()
+    {
+        this.source.links.delete(this);
+        this.target.links.delete(this);
+        if(this.target.links_count === 0) this.target.is_toggle = false;
+        PinToPinLink.#connected_pins.delete(`${this.source.name}:${this.target.name}`);
+    }
 }
 
 class NotGate extends TextObject
 {
-    static #update_links_geometry(source)
+    on_move()
     {
-        for(const link of source.input.links) link.update_link_geometry();
-        for(const link of source.output.links) link.update_link_geometry();
+        for(const link of this.input.links)  link.update_link_geometry();
+        for(const link of this.output.links) link.update_link_geometry();
     }
     #input ;
     #output;
@@ -198,20 +219,24 @@ class NotGate extends TextObject
 	    this.visual  = TEXT_VISUAL_SETTINGS;
         this.#input  = new InputDigitalPin (new Vector2d(-ONE_T_ONE_GATE_SIZE.x * 0.5, 0.0), this);
         this.#output = new OutputDigitalPin(new Vector2d( ONE_T_ONE_GATE_SIZE.x * 0.5, 0.0), this);
-        this.on_press_callback_append(NotGate.#update_links_geometry);
-        this.on_end_press_callback_append(NotGate.#update_links_geometry);
-        make_object_selectable(this);
-    	make_object_moveable(this);
+        VisualObjectSelectionSystem.subscribe(this);
+        VisualObjectMovementSystem.subscribe(this);
+    	// make_object_moveable(this);
     }
     update(){ this.output.state.is_toggle = !this.input.state.is_toggle;}
+    on_delete() 
+    {
+        VisualObjectSelectionSystem.unsubscribe(this);
+        VisualObjectMovementSystem.unsubscribe(this);
+    }
 }
 class TwoInSingleOutGate extends TextObject
 {
-    static #update_links_geometry(source)
+    on_move()
     {
-        for(const link of source.input_a.links) link.update_link_geometry();
-        for(const link of source.input_b.links) link.update_link_geometry();
-        for(const link of source.output.links)  link.update_link_geometry();
+        for(const link of this.input_a.links) link.update_link_geometry();
+        for(const link of this.input_b.links) link.update_link_geometry();
+        for(const link of this.output. links) link.update_link_geometry();
     }
     #input_a;
     #input_b;
@@ -227,10 +252,15 @@ class TwoInSingleOutGate extends TextObject
         this.#input_a = new InputDigitalPin (new Vector2d(-ONE_T_ONE_GATE_SIZE.x * 0.5,  0.4 * ONE_T_ONE_GATE_SIZE.y), this);
         this.#input_b = new InputDigitalPin (new Vector2d(-ONE_T_ONE_GATE_SIZE.x * 0.5, -0.4 * ONE_T_ONE_GATE_SIZE.y), this);
         this.#output  = new OutputDigitalPin(new Vector2d( ONE_T_ONE_GATE_SIZE.x * 0.5, 0), this);
-        this.on_press_callback_append    (TwoInSingleOutGate.#update_links_geometry);
-        this.on_end_press_callback_append(TwoInSingleOutGate.#update_links_geometry);
-        make_object_selectable(this);
-        make_object_moveable(this);
+        //make_object_selectable(this);
+        VisualObjectSelectionSystem.subscribe(this);
+        VisualObjectMovementSystem.subscribe(this);
+        //make_object_moveable  (this);
+    }
+    on_delete() 
+    {
+        VisualObjectSelectionSystem.unsubscribe(this);
+        VisualObjectMovementSystem.unsubscribe(this);
     }
 }
 

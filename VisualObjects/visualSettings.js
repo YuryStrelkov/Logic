@@ -245,11 +245,11 @@ const init_common_styles = () =>
 
 	if(BEZIER_VISUAL_SETTINGS === null)
 	{
-		BEZIER_VISUAL_SETTINGS = new VisualSettings();
-		BEZIER_VISUAL_SETTINGS.focus_color  = new Color(55, 55, 55, 255);
-		BEZIER_VISUAL_SETTINGS.click_color  = new Color(255, 0,  0, 255);
-		BEZIER_VISUAL_SETTINGS.color        = new Color(25,  25, 25, 255);
-		BEZIER_VISUAL_SETTINGS.stroke_width   = 5.0;
+		BEZIER_VISUAL_SETTINGS              = new VisualSettings();
+		BEZIER_VISUAL_SETTINGS.focus_color  =  new Color(148, 158, 168, 255);
+		BEZIER_VISUAL_SETTINGS.color        =  new Color(128, 138, 148, 255);
+		BEZIER_VISUAL_SETTINGS.click_color  =  new Color(255, 108, 118, 255);
+		BEZIER_VISUAL_SETTINGS.stroke_width = 3.0;
 	}
 	if(STATISTICS_VISUAL_SETTINGS === null)
 	{
