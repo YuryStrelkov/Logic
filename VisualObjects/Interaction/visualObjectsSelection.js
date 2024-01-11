@@ -53,8 +53,8 @@ class VisualObjectSelectionSystem
     static #selectable_objects = new Set();
     static #selected_objects   = new Set();
     static #selection_preview_obj = new SelectionRectangle();
-    static #selection_region_start_pt = null;
-    static #selection_region_current_pt = null;
+    static #selection_region_start_pt = new Vector2d();
+    static #selection_region_current_pt = new Vector2d();
 
     static get selected_objects(){return VisualObjectSelectionSystem.#selected_objects;}
     static get selection_preview_obj(){return VisualObjectSelectionSystem.#selection_preview_obj;}
@@ -173,6 +173,11 @@ class VisualObjectSelectionSystem
 
     static on_begin_press(object) 
     {
+        if (MouseInfo.instance.is_middle_down)
+		{
+			VisualObject.destroy_visual_object(object);
+			return;
+		};
         VisualObjectSelectionSystem.#select_object(object);
         VisualObjectSelectionSystem.#recompute_selected_bounds();
     }

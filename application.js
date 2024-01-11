@@ -50,6 +50,7 @@ const key_on_down_event = (evt) =>
         
         case '+':RenderCanvas.instance.zoom_in ();break;
         case '-':RenderCanvas.instance.zoom_out();break;
+        case 'g':RenderCanvas.instance.grab_screen_shot();break;
     }
 }
 

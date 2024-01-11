@@ -62,6 +62,8 @@ const create_visual_objects = () =>
 	 		visualObjects.push(objects);
    	 	}
    	 }
+	 InputGate.create_gates(new Vector2d(-RenderCanvas.instance.width * 0.5, 0.0), 8);
+	 OutputGate.create_gates(new Vector2d(RenderCanvas.instance.width * 0.5, 0.0), 8);
      return visualObjects;
 	// return [and_gate(new Vector2d(0, 0))]//visualObjects;
 }

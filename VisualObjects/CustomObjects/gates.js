@@ -306,3 +306,98 @@ class NorGate extends TwoInSingleOutGate
     }
     update(){ this.output.is_toggle = !(this.input_a.is_toggle || this.input_b.is_toggle);}
 }
+
+const  vertical_pack = (objects, position, space_between=0.0) => 
+{
+    var n_objects = 0;
+    var length    = 0.0;
+    for(const obj of objects)
+    {
+        n_objects += 1;
+        length    += obj.bounds.height;
+    }
+    length += (n_objects - 1) * space_between;
+    var height = -length * 0.5;
+    var obj_height = 0.0;
+
+    for(const obj of objects)
+    {
+        obj_height = obj.bounds.height;
+        obj.transform.position = new Vector2d(position.x, position.y + obj_height * 0.5 + height);
+        height += obj_height + space_between;
+    }
+}
+const  vertical_pack_common_center = (objects, space_between=0.0) => 
+{
+    const position = new Vector2d(0, 0);
+    var n_objects = 0
+    for(const obj of objects)
+    {
+        n_objects  += 1;
+        position.x += obj.transform.position.x;
+        position.y += obj.transform.position.y;
+    }
+    if(n_objects == 0) return;
+    position.x /= n_objects;
+    position.y /= n_objects;
+    console.log(`position.y:${position.y}`)
+    vertical_pack(objects, new Vector2d(position.x, 0.0), space_between);
+}
+
+class InputGate extends TextObject
+{
+    static #input_gates = new Set();
+    #input_pin;
+    static get input_gates(){return InputGate.#input_gates;}
+    static get input_gates_count(){return InputGate.#input_gates.size;}
+    static create_gates(position, count)
+    {
+        for(var index = 0; index < count; index++) new InputGate(position, "In");
+        vertical_pack(InputGate.input_gates, new Vector2d(position.x + ONE_T_ONE_GATE_SIZE.x * 0.5, position.y), ONE_T_ONE_GATE_SIZE.y * 0.5);
+    }
+    get input_pin() { return this.#input_pin;}
+    constructor(position, name = "pin")
+    {
+        super(new Vector2d(position.x - ONE_T_ONE_GATE_SIZE.x * 0.5, position.y - ONE_T_ONE_GATE_SIZE.y * 0.5),
+              new Vector2d(position.x + ONE_T_ONE_GATE_SIZE.x * 0.5, position.y + ONE_T_ONE_GATE_SIZE.y * 0.5), `${name}:${InputGate.input_gates_count}`);
+	    this.visual = TEXT_VISUAL_SETTINGS;
+        this.#input_pin = new OutputDigitalPin(new Vector2d(ONE_T_ONE_GATE_SIZE.x * 0.5, 0.0), this);
+        InputGate.input_gates.add(this);
+        VisualObjectSelectionSystem.subscribe(this);
+        this.on_end_press_callback_append((obj) => {obj.input_pin.state.is_toggle =! obj.input_pin.state.is_toggle;})
+    }
+    on_delete() 
+    {
+        InputGate.input_gates.delete(this);
+        VisualObjectSelectionSystem.unsubscribe(this);
+        vertical_pack_common_center(InputGate.input_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
+    }
+}
+class OutputGate extends TextObject
+{
+    static #output_gates = new Set();
+    #output_pin;
+    static get output_gates(){return OutputGate.#output_gates;}
+    static get output_gates_count(){return OutputGate.#output_gates.size;}
+    get output_pin() { return this.#output_pin;}
+    static create_gates(position, count)
+    {
+        for(var index =0; index < count; index++) new OutputGate(position, "Out");
+        vertical_pack(OutputGate.output_gates, new Vector2d(position.x - ONE_T_ONE_GATE_SIZE.x * 0.5, position.y), ONE_T_ONE_GATE_SIZE.y * 0.5);
+    }
+    constructor(position, name = "pin")
+    {
+        super(new Vector2d(position.x - ONE_T_ONE_GATE_SIZE.x * 0.5, position.y - ONE_T_ONE_GATE_SIZE.y * 0.5),
+              new Vector2d(position.x + ONE_T_ONE_GATE_SIZE.x * 0.5, position.y + ONE_T_ONE_GATE_SIZE.y * 0.5), `${name}:${OutputGate.output_gates_count}`);
+	    this.visual = TEXT_VISUAL_SETTINGS;
+        this.#output_pin = new InputDigitalPin (new Vector2d(-ONE_T_ONE_GATE_SIZE.x * 0.5,  0.0), this);
+        OutputGate.output_gates.add(this);
+        VisualObjectSelectionSystem.subscribe(this);
+    }
+    on_delete() 
+    {
+        OutputGate.output_gates.delete(this);
+        VisualObjectSelectionSystem.unsubscribe(this);
+        vertical_pack_common_center(OutputGate.output_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
+    }
+}

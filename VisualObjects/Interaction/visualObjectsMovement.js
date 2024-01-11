@@ -26,12 +26,6 @@ class VisualObjectMovementSystem
 	 */
 	static object_movement_callback(o)
 	{
-		if (MouseInfo.instance.is_middle_down)
-		{
-			VisualObject.destroy_visual_object(o);
-			return;
-		};
-
 		if (!MouseInfo.instance.is_left_down)return;
 		for(const [delta, obj] of VisualObjectMovementSystem.#delta_positions)
 		{

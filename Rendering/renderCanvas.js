@@ -135,4 +135,16 @@ class RenderCanvas extends VisualObject
 		ctx.roundRect(x0, y0, width, height, this.visual.corners_radiuses);
 		ctx.stroke();
 	}
+    grab_screen_shot(filename="screen_shot.png")
+    {
+        const image_data = this.canvas.toDataURL("image/png").replace(/^data:image\/png/,'data:application/octet-stream');;
+        // console.log(image_data);
+        var a_element = document.createElement('a');
+        a_element.href = image_data;
+        a_element.download = filename;
+        document.body.appendChild(a_element);
+        a_element.click();
+        document.body.removeChild(a_element);
+        // here is the most important part because if you don't replace you will get a DOM 18 exception.
+    }
 }

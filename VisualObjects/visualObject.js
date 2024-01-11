@@ -13,10 +13,10 @@ class VisualObject {
 	static #eval_objects_destroy() {
 		while (VisualObject.#delete_request.length != 0) {
 			const object = VisualObject.#delete_request.pop();
+			VisualObject.#visual_objects.delete(object);
 			object._delete_object();
 			if(object === VisualObject.on_focus_object) VisualObject.#on_focus_object = null;
 			if(object === VisualObject.on_press_object) VisualObject.#on_press_object = null;
-			VisualObject.#visual_objects.delete(object);
 		}
 	}
 	static #focus_update()
@@ -401,8 +401,6 @@ class BezierObject extends VisualObject
 	contains(point)
 	{
 		if(!super.contains(point))return false;
-		//this.transform.inv_world_transform_point(point)
-		// return is_close_to_bezier(this.transform.inv_world_transform_point(point), this.p1, this.p2, this.p3, this.p4, 2);
 		return is_close_to_bezier(Transform2d.root.inv_local_transform_point(point), this.p1, this.p2, this.p3, this.p4, 1);
 	}
 	_render_object(ctx) {
