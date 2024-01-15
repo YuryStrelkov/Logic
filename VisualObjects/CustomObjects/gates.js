@@ -151,8 +151,7 @@ class PinToPinLink extends BezierObject
 {
     static #connected_pins = new Set();
     
-    static is_connection_exists(pin_a, pin_b)
-    { return PinToPinLink.#connected_pins.has(`${pin_a.name}:${pin_b.name}`);}
+    static is_connection_exists(pin_a, pin_b) { return PinToPinLink.#connected_pins.has(`${pin_a.name}:${pin_b.name}`);}
 
     #source_pin;
     #target_pin;

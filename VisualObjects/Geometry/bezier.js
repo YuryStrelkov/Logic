@@ -92,12 +92,18 @@ const cubic_bezier_bounds = (p1, p2, p3, p4) =>
     return new RectBounds(new Vector2d(min_max_x.x, min_max_y.x), new Vector2d(min_max_x.y, min_max_y.y));
 }
 
-const is_close_to_segment = (point, p1, p2, threshold = 1.0) => {
-    const center =  new Vector2d((p2.x + p1.x) * 0.5, (p2.y + p1.y) * 0.5);
-    if(Vector2d.sub(center, point).sq_length > threshold * threshold + Vector2d.sub(center, p1).sq_length) return false;
-    return true;
-    // return Vector2d.distance_to_line(point, p1, p2) < threshold;
+const is_close_to_segment = (point, p1, p2, threshold = 1.0) => 
+{
+	if (Vector2d.sub(point, p1).length <= threshold) return true;
+	if (Vector2d.sub(point, p2).length <= threshold) return true;
+	const  d    = Vector2d.sub(p2,    p1);
+	const  k    = Vector2d.sub(point, p1);
+	const  c    = Vector2d.dot(d, k) / d.sq_length;
+	if (c > 0) return false; 
+	const  dist = Math.sqrt(Math.pow(point.x - c * d.x, 2) + Math.pow(point.y - c * d.y, 2));
+    return dist <= threshold;
 }
+
 const BEZIER_SECTIONS_PARAM_T = 
    [[0.0, 0.1],
     [0.1, 0.2],
@@ -110,6 +116,16 @@ const BEZIER_SECTIONS_PARAM_T =
     [0.8, 0.9],
     [0.9, 1.0]];
 
+/**
+ * 
+ * @param {Vector2d} point 
+ * @param {Vector2d} p1 
+ * @param {Vector2d} p2 
+ * @param {Vector2d} p3 
+ * @param {Vector2d} p4 
+ * @param {Number} threshold 
+ * @returns {Boolean}
+ */
 const is_close_to_bezier = (point, p1, p2, p3, p4, threshold = 1.0) =>
 {
     for(const [t1, t2] of BEZIER_SECTIONS_PARAM_T)

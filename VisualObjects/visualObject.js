@@ -82,8 +82,6 @@ class VisualObject {
 
 	static destroy_visual_object(visual_object) {
 		VisualObject.#delete_request.push(visual_object);
-		// if (!visual_object.has_children) return;
-		// for (const child of visual_object.children) VisualObject.destroy(child);
 	}
 
 	static update_objects() {
@@ -350,7 +348,7 @@ class BezierObject extends VisualObject
 	static #bezier_preview_curve = null;
     static get preview_curve()
     {
-        if(BezierObject.#bezier_preview_curve == null)
+        if(BezierObject.#bezier_preview_curve === null)
         {
             BezierObject.#bezier_preview_curve = new BezierObject(new Vector2d(50, 50), 
             new Vector2d(50, 150),
@@ -401,7 +399,8 @@ class BezierObject extends VisualObject
 	contains(point)
 	{
 		if(!super.contains(point))return false;
-		return is_close_to_bezier(Transform2d.root.inv_local_transform_point(point), this.p1, this.p2, this.p3, this.p4, 1);
+		return is_close_to_bezier(Transform2d.root.inv_local_transform_point(point), 
+								  this.p1, this.p2, this.p3, this.p4, Transform2d.root.scale.x * 6);
 	}
 	_render_object(ctx) {
 		ctx.beginPath()
