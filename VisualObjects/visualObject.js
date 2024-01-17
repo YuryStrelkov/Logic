@@ -342,6 +342,28 @@ class TextObject extends VisualObject
 		}
 	}
 }
+const  param_t =
+ [0.0, 
+  0.05,
+  0.1,
+  0.15,
+  0.2,
+  0.25,
+  0.3,
+  0.35,
+  0.4,
+  0.45,
+  0.5,
+  0.55,
+  0.6,
+  0.65,
+  0.7,
+  0.75,
+  0.8,
+  0.85,
+  0.9,
+  0.95,
+  1.0]
 
 class BezierObject extends VisualObject
 {
@@ -399,18 +421,32 @@ class BezierObject extends VisualObject
 	contains(point)
 	{
 		if(!super.contains(point))return false;
-		return is_close_to_bezier(Transform2d.root.inv_local_transform_point(point), 
-								  this.p1, this.p2, this.p3, this.p4, Transform2d.root.scale.x * 6);
+		const pt = Transform2d.root.inv_world_transform_point(point);
+		const line_width = this.visual.stroke_width;// * Math.sqrt(Transform2d.root.scale.x);
+		return is_close_to_bezier(pt, this.p1, this.p2, this.p3, this.p4, line_width);
 	}
 	_render_object(ctx) {
 		ctx.beginPath()
 		this.transform.apply_to_context(ctx);
 		this.visual.apply_to_context(ctx);
 		ctx.strokeStyle  = this.state.is_toggle ? 'rgb(255, 0, 0, 1.0)': this.visual.eval_object_color(this.state).color_code;
+		// const points = [];
+		
+		const pt = Transform2d.root.inv_world_transform_point(MouseInfo.instance.position);
+		ctx.roundRect(pt.x - 2.5, pt.y - 2.5, 5, 5, [5,5,5,5]);
+		ctx.fill();
+
 		ctx.moveTo(this.p1.x, this.p1.y);
-		ctx.bezierCurveTo(this.p2.x, this.p2.y,
-						  this.p3.x, this.p3.y,
-						  this.p4.x, this.p4.y);
+		for(const t of param_t)
+		{
+			const point = cubic_bezier(t, this.p1, this.p2, this.p3, this.p4);
+			ctx.lineTo(point.x, point.y);
+		}
+		// for(const p of points)ctx.lineTo(p.x, p.y);
+		// ctx.moveTo(this.p1.x, this.p1.y);
+		// ctx.bezierCurveTo(this.p2.x, this.p2.y,
+		// 				  this.p3.x, this.p3.y,
+		// 				  this.p4.x, this.p4.y);
 		ctx.stroke();
 		// const width  = this.bounds.width;
 		// const height = this.bounds.height;

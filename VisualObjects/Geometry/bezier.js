@@ -94,8 +94,8 @@ const cubic_bezier_bounds = (p1, p2, p3, p4) =>
 
 const is_close_to_segment = (point, p1, p2, threshold = 1.0) => 
 {
-	if (Vector2d.sub(point, p1).length <= threshold) return true;
-	if (Vector2d.sub(point, p2).length <= threshold) return true;
+	// if (Vector2d.sub(point, p1).length <= threshold) return true;
+	// if (Vector2d.sub(point, p2).length <= threshold) return true;
 	const  d    = Vector2d.sub(p2,    p1);
 	const  k    = Vector2d.sub(point, p1);
 	const  c    = Vector2d.dot(d, k) / d.sq_length;
@@ -105,16 +105,26 @@ const is_close_to_segment = (point, p1, p2, threshold = 1.0) =>
 }
 
 const BEZIER_SECTIONS_PARAM_T = 
-   [[0.0, 0.1],
-    [0.1, 0.2],
-    [0.2, 0.3],
-    [0.3, 0.4],
-    [0.4, 0.5],
-    [0.5, 0.6],
-    [0.6, 0.7],
-    [0.7, 0.8],
-    [0.8, 0.9],
-    [0.9, 1.0]];
+   [[0.00, 0.05],
+    [0.05, 0.10],
+    [0.10, 0.15],
+    [0.15, 0.20],
+    [0.20, 0.25],
+    [0.25, 0.30],
+    [0.30, 0.35],
+    [0.35, 0.40],
+    [0.40, 0.45],
+    [0.45, 0.50],
+    [0.50, 0.55],
+    [0.55, 0.60],
+    [0.60, 0.65],
+    [0.65, 0.70],
+    [0.70, 0.75],
+    [0.75, 0.80],
+    [0.80, 0.85],
+    [0.85, 0.90],
+    [0.90, 0.95],
+    [0.95, 1.00]];
 
 /**
  * 
@@ -132,7 +142,7 @@ const is_close_to_bezier = (point, p1, p2, p3, p4, threshold = 1.0) =>
     {
         const bezier_p1 = cubic_bezier(t1, p1, p2, p3, p4);
         const bezier_p2 = cubic_bezier(t2, p1, p2, p3, p4);
-        if(is_close_to_segment(point, bezier_p1, bezier_p2, threshold))return true;
+        if(is_close_to_segment(point, bezier_p1, bezier_p2, threshold)) return true;
     }
     return false;
 }

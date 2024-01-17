@@ -253,7 +253,7 @@ const init_common_styles = () =>
 		BEZIER_VISUAL_SETTINGS.focus_color  = new Color(  0,   0,  255, 255);
 		BEZIER_VISUAL_SETTINGS.color        = new Color(  0,   255,  0, 255);
 		BEZIER_VISUAL_SETTINGS.click_color  = new Color(255,   0,    0, 255);
-		BEZIER_VISUAL_SETTINGS.stroke_width = 3.0;
+		BEZIER_VISUAL_SETTINGS.stroke_width = 20.0;
 	}
 	if(STATISTICS_VISUAL_SETTINGS === null)
 	{

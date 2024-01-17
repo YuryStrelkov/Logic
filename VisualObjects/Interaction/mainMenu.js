@@ -79,5 +79,36 @@ class MainMenu extends VisualObject
             dorp_down.text  = label;
             dorp_down.visual = MAIN_MENU_BUTTON_VISUAL_SETTINGS;
         }
+        this.#init_input_pins_controllers();
+
     }
+    #init_input_pins_controllers()
+    {
+        const append_input_pin = new TextObject(new Vector2d(15 + 40  - RenderCanvas.instance.width * 0.5, -20 +  RenderCanvas.instance.height - 80),
+                                                new Vector2d(15 + 80  - RenderCanvas.instance.width * 0.5,  20 +  RenderCanvas.instance.height - 80));
+        const remove_input_pin = new TextObject(new Vector2d(5  +     - RenderCanvas.instance.width * 0.5, -20 +  RenderCanvas.instance.height - 80),
+                                                new Vector2d(5  + 40  - RenderCanvas.instance.width * 0.5,  20 +  RenderCanvas.instance.height - 80));
+        append_input_pin.visual = MAIN_MENU_BUTTON_VISUAL_SETTINGS;
+        remove_input_pin.visual = MAIN_MENU_BUTTON_VISUAL_SETTINGS;
+        append_input_pin.parent = this;
+        remove_input_pin.parent = this;
+        append_input_pin.text  = '+';
+        remove_input_pin.text  = '-';
+        append_input_pin.name  = 'append_input_pin';
+        remove_input_pin.name  = 'remove_input_pin';
+
+        const append_output_pin = new TextObject(new Vector2d(-5       + RenderCanvas.instance.width * 0.5, -20 +  RenderCanvas.instance.height - 80),
+                                                 new Vector2d(-5  - 40 + RenderCanvas.instance.width * 0.5,  20 +  RenderCanvas.instance.height - 80));
+        const remove_output_pin = new TextObject(new Vector2d(-15 - 40 + RenderCanvas.instance.width * 0.5, -20 +  RenderCanvas.instance.height - 80),
+                                                 new Vector2d(-15 - 80 + RenderCanvas.instance.width * 0.5,  20 +  RenderCanvas.instance.height - 80));
+        append_output_pin.visual = MAIN_MENU_BUTTON_VISUAL_SETTINGS;
+        remove_output_pin.visual = MAIN_MENU_BUTTON_VISUAL_SETTINGS;
+        append_output_pin.parent = this;
+        remove_output_pin.parent = this;
+        append_output_pin.text  = '+';
+        remove_output_pin.text  = '-';
+        append_output_pin.name  = 'append_output_pin';
+        remove_output_pin.name  = 'remove_output_pin';
+    }
+
 }
