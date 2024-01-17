@@ -347,13 +347,41 @@ class InputGate extends TextObject
 {
     static #input_gates = new Set();
     #input_pin;
+	static pack_gates(position=null)
+	{
+		if(position == null)
+		{
+			vertical_pack_common_center(InputGate.input_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
+			return;
+		}
+          vertical_pack(InputGate.input_gates,
+		  new Vector2d(position.x + ONE_T_ONE_GATE_SIZE.x * 0.5, position.y), ONE_T_ONE_GATE_SIZE.y * 0.5);	}
+	
+	static remove_last()
+	{
+		if(InputGate.input_gates_count == 1) return;
+		var last_val = [...InputGate.input_gates.values()].pop();
+		InputGate.input_gates.delete(last_val);
+		VisualObject.destroy_visual_object(last_val);
+	}
+	
+	static append     ()
+	{
+		var pos = new Vector2d();
+		for (const gate of InputGate.input_gates) pos = Vector2d.sum(pos, gate.transform.position);
+		pos.x /= InputGate.input_gates_count;
+		pos.y /= InputGate.input_gates_count;
+		new InputGate(pos, "In");
+		InputGate.pack_gates();
+	}
+	
     static get input_gates(){return InputGate.#input_gates;}
     static get input_gates_count(){return InputGate.#input_gates.size;}
     static create_gates(position, count)
     {
         for(var index = 0; index < count; index++) new InputGate(position, "In");
-        vertical_pack(InputGate.input_gates, new Vector2d(position.x + ONE_T_ONE_GATE_SIZE.x * 0.5, position.y), ONE_T_ONE_GATE_SIZE.y * 0.5);
-    }
+        InputGate.pack_gates(position);
+	}
     get input_pin() { return this.#input_pin;}
     constructor(position, name = "pin")
     {
@@ -369,21 +397,48 @@ class InputGate extends TextObject
     {
         InputGate.input_gates.delete(this);
         VisualObjectSelectionSystem.unsubscribe(this);
-        vertical_pack_common_center(InputGate.input_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
+        InputGate.pack_gates();// vertical_pack_common_center(InputGate.input_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
     }
 }
 class OutputGate extends TextObject
 {
     static #output_gates = new Set();
     #output_pin;
+	static pack_gates(position=null)
+	{
+		if(position == null)
+		{
+			vertical_pack_common_center(OutputGate.output_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
+			return;
+		}
+        vertical_pack(OutputGate.output_gates,
+					  new Vector2d(position.x - ONE_T_ONE_GATE_SIZE.x * 0.5, position.y), ONE_T_ONE_GATE_SIZE.y * 0.5);
+	}
+	static remove_last()
+	{
+		if(OutputGate.output_gates_count == 1) return;
+		var last_val = [...OutputGate.output_gates.values()].pop();
+		OutputGate.output_gates.delete(last_val);
+		VisualObject.destroy_visual_object(last_val);
+	}
+	
+	static append     ()
+	{
+		var pos = new Vector2d();
+		for (const gate of OutputGate.output_gates) pos = Vector2d.sum(pos, gate.transform.position);
+		pos.x /= OutputGate.output_gates_count;
+		pos.y /= OutputGate.output_gates_count;
+		new OutputGate(pos, "Out");
+		OutputGate.pack_gates();
+	}
     static get output_gates(){return OutputGate.#output_gates;}
     static get output_gates_count(){return OutputGate.#output_gates.size;}
     get output_pin() { return this.#output_pin;}
     static create_gates(position, count)
     {
-        for(var index =0; index < count; index++) new OutputGate(position, "Out");
-        vertical_pack(OutputGate.output_gates, new Vector2d(position.x - ONE_T_ONE_GATE_SIZE.x * 0.5, position.y), ONE_T_ONE_GATE_SIZE.y * 0.5);
-    }
+        for(var index = 0; index < count; index++) new OutputGate(position, "Out");
+		OutputGate.pack_gates(position);
+	}
     constructor(position, name = "pin")
     {
         super(new Vector2d(position.x - ONE_T_ONE_GATE_SIZE.x * 0.5, position.y - ONE_T_ONE_GATE_SIZE.y * 0.5),
@@ -397,6 +452,6 @@ class OutputGate extends TextObject
     {
         OutputGate.output_gates.delete(this);
         VisualObjectSelectionSystem.unsubscribe(this);
-        vertical_pack_common_center(OutputGate.output_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
+        OutputGate.pack_gates();//vertical_pack_common_center(OutputGate.output_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
     }
 }

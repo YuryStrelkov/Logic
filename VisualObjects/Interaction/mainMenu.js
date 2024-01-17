@@ -96,6 +96,8 @@ class MainMenu extends VisualObject
         remove_input_pin.text  = '-';
         append_input_pin.name  = 'append_input_pin';
         remove_input_pin.name  = 'remove_input_pin';
+		append_input_pin.on_end_press_callback_append(InputGate.append);
+		remove_input_pin.on_end_press_callback_append(InputGate.remove_last);
 
         const append_output_pin = new TextObject(new Vector2d(-5       + RenderCanvas.instance.width * 0.5, -20 +  RenderCanvas.instance.height - 80),
                                                  new Vector2d(-5  - 40 + RenderCanvas.instance.width * 0.5,  20 +  RenderCanvas.instance.height - 80));
@@ -109,6 +111,8 @@ class MainMenu extends VisualObject
         remove_output_pin.text  = '-';
         append_output_pin.name  = 'append_output_pin';
         remove_output_pin.name  = 'remove_output_pin';
+		append_output_pin.on_end_press_callback_append(OutputGate.append);
+		remove_output_pin.on_end_press_callback_append(OutputGate.remove_last);
     }
 
 }
