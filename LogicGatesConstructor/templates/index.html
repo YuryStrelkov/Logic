@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+	 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/common.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Geometry/geometry.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Geometry/bezier.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Geometry/transform2d.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/visualSettings.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/inputs.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/visualObject.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Interaction/visualObjectsMovement.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Interaction/infoPanel.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/CustomObjects/gates.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='Rendering/patternCanvas.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='Rendering/renderCanvas.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='Rendering/previewRenderer.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Interaction/visualObjectsSelection.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Interaction/dropDownPanel.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/Interaction/mainMenu.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='VisualObjects/visualObjects.js') }}"></script>
+	 <script type="text/javascript" src="{{ url_for('static',filename='application.js') }}"></script>
+</head>
+<body>
+	   <div style="display: flex; 
+				    flex-direction: row;
+				    align-items: center;
+				    justify-content: flex-start;
+				    width:100%;
+				    position: unset;">
+					<div id="mainContainer" style="height:900px; width:1600px; background-color:#dddddd85">
+					<canvas id="mainCanvas" width="900" height="1600"></canvas>
+					<script>
+						init_app();
+						setInterval(repaint_app, 16);
+					</script>
+					</div>
+	   </div>
+</body>
+</html>
