@@ -51,6 +51,8 @@ const key_on_down_event = (evt) =>
         case '+':RenderCanvas.instance.zoom_in ();break;
         case '-':RenderCanvas.instance.zoom_out();break;
         case 'g':RenderCanvas.instance.grab_screen_shot();break;
+        case 'v':vertical_pack_common_center(VisualObjectSelectionSystem.selected_objects, 5);break;
+        case 'h':horizontal_pack_common_center(VisualObjectSelectionSystem.selected_objects, 15);break;
     }
 }
 

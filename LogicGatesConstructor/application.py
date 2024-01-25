@@ -1,10 +1,11 @@
-import numpy as np
-from PIL import Image
 from flask import Flask, render_template, Response, request
+from PIL import Image
+import numpy as np
+import io
 import os
 
 NOTHING = "nothing"
-web_app = Flask(__name__, template_folder="./templates", static_folder='./static')
+web_app = Flask(__name__, template_folder="./page", static_folder='./scripts')
 
 
 @web_app.route('/', methods=['GET', 'POST'])
@@ -75,6 +76,18 @@ def screen_shot_save():
     _save_preview_image('visuals/screen_shots', response, False)
     _save_dump('visuals/screen_shots', response, False)
     return "nothing"
+
+
+def read_image(image_src):
+    frame = Image.open(image_src)
+    buf = io.BytesIO()
+    frame.save(buf, format='PNG')
+    return b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + buf.getvalue() + b'\r\n'
+
+
+@web_app.route('/get_frame')
+def get_image():
+    return Response(read_image(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
 if __name__ == "__main__":

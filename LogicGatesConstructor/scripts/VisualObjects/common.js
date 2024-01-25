@@ -1,12 +1,13 @@
-var startTime = Date.now();
-const SCALE_STEP = 1.0;
-const MAX_SCALE = 10.0;
-const MOVEMENT_STEP = 10.0;
-const DEG_TO_RAD = Math.PI / 180.0;
-const RAD_TO_DEG = 180.0 / Math.PI;
-const NUMERICAL_ACCURACY = 1e-6;
-const msec = 1e-3;
-const current_time = () => { return msec * (Date.now() - startTime);}
+const START_TIME          = Date.now();
+const SCALE_STEP    	  = 1.0;
+const MAX_SCALE     	  = 10.0;
+const MOVEMENT_STEP 	  = 10.0;
+const DEG_TO_RAD    	  = Math.PI / 180.0;
+const RAD_TO_DEG    	  = 180.0 / Math.PI;
+const NUMERICAL_ACCURACY  = 1e-6;
+const MSEC                = 1e-3;
+
+const current_time = () => { return MSEC * (Date.now() - START_TIME);}
 
 const set_bit = (bytes, bit) => 
 {

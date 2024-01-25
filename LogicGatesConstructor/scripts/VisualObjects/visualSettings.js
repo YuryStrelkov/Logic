@@ -1,3 +1,6 @@
+const ONE_T_ONE_GATE_SIZE = new Vector2d(100, 40);
+const PIN_SIZE            = new Vector2d(24, 24);
+
 class VisualObjectState extends ObjectState
 {
 	constructor      (value=0){ super(value); }
