@@ -45,10 +45,10 @@ const  vertical_pack = (objects, position, space_between=0.0) =>
     for(const obj of objects) total_height += obj.bounds.height;
     var height = -total_height * 0.5;
     var obj_height = 0.0;
-
+    
     for(const obj of objects)
     {
-        obj_height = obj.bounds.height;
+        obj_height = VisualObject.visual_object_bounds(obj).height;
         obj.transform.position = new Vector2d(position.x, position.y + obj_height * 0.5 + height);
         height += obj_height + space_between;
     }
@@ -73,7 +73,7 @@ const horizontal_pack = (objects, position, space_between=0.0) =>
 
     for(const obj of objects)
     {
-        obj_width = obj.bounds.width;
+        obj_width = VisualObject.visual_object_bounds(obj).width;
         obj.transform.position = new Vector2d(position.x + obj_width * 0.5 + width, position.y);
         width += obj_width + space_between;
     }
