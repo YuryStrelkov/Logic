@@ -69,6 +69,7 @@ const OBJECT_VIEWPORT_CAST   = 5;
 const OBJECT_SELECTABLE_BIT  = 6;
 const OBJECT_MOVEABLE_BIT    = 7;
 const OBJECT_COLOR_INFO_MASK = set_bits(0, [OBJECT_FOCUS_BIT, OBJECT_PRESS_BIT, OBJECT_TOGGLE_BIT]);
+
 class ObjectState
 {
 	#curr_absolute_state = 0;
@@ -118,3 +119,5 @@ class ObjectState
 		this._setup(value, OBJECT_PRESS_BIT);
 	}
 }
+
+// export * from '\'

@@ -616,3 +616,5 @@ class RectBounds
 		return `{\n\t"min": ${this.min},\n\t"max": ${this.max}\n}`
 	}
 }
+
+// export { Vector2d, Vector3d, Matrix3d, RectBounds}; 

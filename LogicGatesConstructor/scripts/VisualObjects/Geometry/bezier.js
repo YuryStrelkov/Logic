@@ -1,3 +1,4 @@
+// import { Vector2d, RectBounds } from './geometry.js';
 // f(t)=p_1 * (1−t)^3 + 3 * p_2 * t * (1 − t)^2 + 3_p * 3 * t^2 * (1 − t) + p4 * t^3
 // f'(t)= p_1 * (1−t)^3 + 3 * p_2 * t * (1 − t)^2 + 3_p * 3 * t^2 * (1 − t) + p4 * t^3
 /**

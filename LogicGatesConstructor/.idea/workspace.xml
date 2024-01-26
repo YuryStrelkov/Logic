@@ -2,7 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3867fd97-bbc1-4a57-98c4-eb2eacb1da98" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/visualObjectsAlignment.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/visualObjectsAlignment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/page/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/ioGates.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/ioGates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Geometry/bezier.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/Geometry/bezier.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Geometry/geometry.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/Geometry/geometry.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/application.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/application.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

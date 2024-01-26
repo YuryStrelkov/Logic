@@ -1,3 +1,5 @@
+import {Test} from './test.js';
+
 const mouse_on_up    = (evt) => {MouseInfo.instance.on_up   (evt);}
 const mouse_on_down  = (evt) => {MouseInfo.instance.on_down (evt);}
 const mouse_on_move  = (evt) => {MouseInfo.instance.on_move (evt);}
@@ -60,6 +62,8 @@ const key_on_down_event = (evt) =>
 RENDER_CANVAS = null
 const init_app = () =>
 {
+    const t = new Test();
+    t.do_thing();
     rootElement = document.getElementById("mainContainer");
     window.addEventListener("mouseup",   mouse_on_up      );
     window.addEventListener("mousedown", mouse_on_down    );
