@@ -1,3 +1,10 @@
+// // @ts-check
+import { VisualObjectSelectionSystem } from "../Interaction/visualObjectsSelection.js";
+import { vertical_pack_zero_center, vertical_pack } from "../visualObjectsAlignment.js";
+import { ONE_T_ONE_GATE_SIZE, TEXT_VISUAL_SETTINGS } from "../visualSettings.js";
+import { InputDigitalPin, OutputDigitalPin } from "./digitalPins.js";
+import { TextObject, VisualObject } from "../visualObject.js";
+import { Vector2d } from "../../Geometry/geometry.js";
 
 class InputGate extends TextObject
 {
@@ -8,14 +15,12 @@ class InputGate extends TextObject
 		if(position == null)
 		{
 			vertical_pack_zero_center(InputGate.input_gates, ONE_T_ONE_GATE_SIZE.y * 0.125 );
-            for(const gate of InputGate.input_gates)
-            for(const link of gate.input_pin.links) link.update_link_geometry();
+            for(const gate of InputGate.input_gates) gate.input_pin.update_links_geometry();
             return;
 		}
           vertical_pack(InputGate.input_gates,
 		  new Vector2d(position.x + ONE_T_ONE_GATE_SIZE.x * 0.5, position.y), ONE_T_ONE_GATE_SIZE.y * 0.125);
-          for(const gate of InputGate.input_gates)
-          for(const link of gate.input_pin.links) link.update_link_geometry();
+          for(const gate of InputGate.input_gates) gate.input_pin.update_links_geometry();
     }
 	
 	static remove_last()
@@ -123,3 +128,5 @@ class OutputGate extends TextObject
         OutputGate.pack_gates();//vertical_pack_common_center(OutputGate.output_gates, ONE_T_ONE_GATE_SIZE.y * 0.5);
     }
 }
+
+export {InputGate, OutputGate};

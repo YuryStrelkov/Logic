@@ -1,11 +1,11 @@
+// // @ts-check
+import { VisualObject, TextObject, FIRST_UI_OBJECTS_LAYER } from "../visualObject.js";
+import { RenderCanvas } from "../../Rendering/renderCanvas.js";
+import { Transform2d } from "../../Geometry/transform2d.js";
+import { INFO_PANEL_VISUAL_SETTINGS } from "./mainMenu.js";
+import { Vector2d } from "../../Geometry/geometry.js";
+import { current_time, SCALE_STEP} from "../common.js";
 
-var INFO_PANEL_VISUAL_SETTINGS;
-INFO_PANEL_VISUAL_SETTINGS              = new VisualSettings();
-INFO_PANEL_VISUAL_SETTINGS.font_size    = 12;
-INFO_PANEL_VISUAL_SETTINGS.color        = new Color(125, 125, 125, 0.5);
-INFO_PANEL_VISUAL_SETTINGS.font_color   = new Color(225, 225, 225, 255);
-INFO_PANEL_VISUAL_SETTINGS.stroke_width = 0.0;
-INFO_PANEL_VISUAL_SETTINGS.text_align   = 'left';
 
 class InfoPanel extends VisualObject
 {
@@ -70,3 +70,5 @@ class InfoPanel extends VisualObject
         this.#last_frame_time   = current_time();
     }
 }
+
+export {InfoPanel};

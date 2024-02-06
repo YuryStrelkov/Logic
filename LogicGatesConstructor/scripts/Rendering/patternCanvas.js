@@ -1,3 +1,6 @@
+import { Vector2d } from "../Geometry/geometry.js";
+import { Color } from "../VisualObjects/visualSettings.js";
+
 class PatternCanvas
 {
     #apply_settings    ()
@@ -23,8 +26,6 @@ class PatternCanvas
     {
         this.#pattern_canvas = document.createElement("canvas");
         this.#pattern_canvas_context = this.#pattern_canvas.getContext("2d");
-        // this.#pattern_canvas_context.mozImageSmoothingEnabled    = false;
-        // this.#pattern_canvas_context.webkitImageSmoothingEnabled = false;
         this.#main_color      = new Color(80, 90, 100);
         this.#lines_color     = new Color(40, 45, 50, 0.75);
         this.#lines_width     = 1;
@@ -77,43 +78,8 @@ class PatternCanvas
             this.canvas_ctx.lineTo(x0, this.height);
             this.canvas_ctx.stroke();	
         }
-        // for (var row = 0; row < dfx; row++)
-        // {
-        //     y0 = row * dw + this.lines_shift.y % dw;
-        //     this.canvas_ctx.beginPath();
-        //     this.canvas_ctx.moveTo(0,          y0);
-        //     this.canvas_ctx.lineTo(this.width, y0);
-        //     this.canvas_ctx.stroke();	
-        // }
-        // for (var col = 0; col < dfy; col++)
-        // {
-        //     x0 = col * dh + this.lines_shift.x % dh;
-        //     this.canvas_ctx.beginPath();
-        //     this.canvas_ctx.moveTo(x0,           0);
-        //     this.canvas_ctx.lineTo(x0, this.height);
-        //     this.canvas_ctx.stroke();	
-        // }
-        // for (var col = 0; col < fx; col++)
-        // {
-        //     x0 = col * this.lines_frequency.x * 25.0;
-        //     this.canvas_ctx.beginPath();
-        //     this.canvas_ctx.moveTo(x0, 0);
-        //     this.canvas_ctx.lineTo(x0, this.height);
-        //     this.canvas_ctx.stroke();	
-        // }
-
-        // this.canvas_ctx.fillStyle   = this.stroke_color.color_code;
-        // for (var row = 0; row < dfx; row++)
-        // {
-        //     y0 = row * dw + this.lines_shift.y % dw - 2;
-// 
-        //     for (var col = 0; col < dfy; col++)
-        //     {
-        //         x0 = col * dh + this.lines_shift.x % dh - 2;
-        //         this.canvas_ctx.fillRect(x0, y0, this.stroke_width * 4, this.stroke_width * 4);
-        //         this.canvas_ctx.fill();	
-        //     }
-        // }
         return true;
     }
 }
+
+export {PatternCanvas}

@@ -1,3 +1,5 @@
+// // @ts-check
+
 const START_TIME          = Date.now();
 const SCALE_STEP    	  = 1.0;
 const MAX_SCALE     	  = 10.0;
@@ -51,24 +53,25 @@ const MOUSE_INPUTS_MASK      = 3
 const MOUSE_INPUTS_MASK_BITS = 2
 const ON_IDLE_STATE          = 0
 
-const ON_FOCUS_BEGIN_STATE   = 4;
-const ON_FOCUS_STATE         = 5;
-const ON_FOCUS_END_STATE     = 1;
-const ON_PRESS_BEGIN_STATE   = 13;
-const ON_PRESS_STATE_1       = 15;
-const ON_PRESS_STATE_2       = 14;
-const ON_PRESS_STATE_3       = 10;
-const ON_PRESS_END_STATE_1   = 7;
-const ON_PRESS_END_STATE_2   = 2;
-const OBJECT_FOCUS_BIT       = 0;
-const OBJECT_PRESS_BIT       = 1;
-const OBJECT_TOGGLE_BIT      = 2;
-const OBJECT_SHOW_BIT        = 3;
-const OBJECT_FOCUSABLE_BIT   = 4;
-const OBJECT_VIEWPORT_CAST   = 5;
-const OBJECT_SELECTABLE_BIT  = 6;
-const OBJECT_MOVEABLE_BIT    = 7;
-const OBJECT_COLOR_INFO_MASK = set_bits(0, [OBJECT_FOCUS_BIT, OBJECT_PRESS_BIT, OBJECT_TOGGLE_BIT]);
+export const ON_FOCUS_BEGIN_STATE   = 4;
+export const ON_FOCUS_STATE         = 5;
+export const ON_FOCUS_END_STATE     = 1;
+export const ON_PRESS_BEGIN_STATE   = 13;
+export const ON_PRESS_STATE_1       = 15;
+export const ON_PRESS_STATE_2       = 14;
+export const ON_PRESS_STATE_3       = 10;
+export const ON_PRESS_END_STATE_1   = 7;
+export const ON_PRESS_END_STATE_2   = 2;
+export const OBJECT_FOCUS_BIT       = 0;
+export const OBJECT_PRESS_BIT       = 1;
+export const OBJECT_TOGGLE_BIT      = 2;
+export const OBJECT_SHOW_BIT        = 3;
+export const OBJECT_FOCUSABLE_BIT   = 4;
+export const OBJECT_VIEWPORT_CAST   = 5;
+export const OBJECT_SELECTABLE_BIT  = 6;
+export const OBJECT_MOVEABLE_BIT    = 7;
+export const OBJECT_DEFAULT_STATE = 0;
+export const OBJECT_COLOR_INFO_MASK = set_bits(0, [OBJECT_FOCUS_BIT, OBJECT_PRESS_BIT, OBJECT_TOGGLE_BIT]);
 
 class ObjectState
 {
@@ -120,4 +123,5 @@ class ObjectState
 	}
 }
 
-// export * from '\'
+export {START_TIME, SCALE_STEP, MAX_SCALE, MOVEMENT_STEP, DEG_TO_RAD, RAD_TO_DEG, NUMERICAL_ACCURACY,
+	    current_time, set_bit, is_bit_set, clear_bit, ObjectState, set_bits}

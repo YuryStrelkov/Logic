@@ -1,24 +1,7 @@
-// const TOP_CENTER    = 0;
-// const BOTTOM_CENTER = 1;
-// const LEFT_CENTER   = 2;
-// const RIGHT_CENTER  = 3;
-// const CENTER        = 4;
-// const FREE          = 5;
-// 
-// const exact_pack_center = (position, mode) => 
-// {
-//     switch(mode)
-//     {
-//         case TOP_CENTER: position.x = 0; position.y = RenderCanvas.Instance.height * 0.5; break;
-//         case BOTTOM_CENTER: position.x = 0; position.y = -RenderCanvas.Instance.height * 0.5;  break;
-//         case LEFT_CENTER: position.y = 0; position.x = -RenderCanvas.Instance.width * 0.5; break;
-//         case RIGHT_CENTER: position.y = 0; position.x = RenderCanvas.Instance.width * 0.5; break;
-//         case CENTER: position.y = 0; position.x =0; break;
-//         case FREE: break;
-//         default:break;
-//     }
-//     return position;
-// }
+// // @ts-check
+
+import { Vector2d } from "../Geometry/geometry.js";
+import { VisualObject } from "./visualObject.js";
 
 const objects_center = (objects) => 
 {
@@ -57,6 +40,7 @@ const  vertical_pack = (objects, position, space_between=0.0) =>
 const  vertical_pack_zero_center = (objects, space_between=0.0) => 
 {
     const center = objects_center(objects);
+    if(!center) return;
     vertical_pack(objects, new Vector2d(center.x, 0.0), space_between);
 }
 
@@ -82,6 +66,7 @@ const horizontal_pack = (objects, position, space_between=0.0) =>
 const  horizontal_pack_zero_center = (objects, space_between=0.0) => 
 {
     const center = objects_center(objects);
+    if(!center) return;
     horizontal_pack(objects, new Vector2d(0.0, center.y), space_between);
 }
 
@@ -94,3 +79,6 @@ const  vertical_pack_common_center = (objects, space_between=0.0) =>
 {
     vertical_pack(objects, objects_center(objects), space_between);
 }
+
+export {objects_center, vertical_pack, vertical_pack_zero_center, horizontal_pack,
+        horizontal_pack_zero_center, horizontal_pack_common_center, vertical_pack_common_center};

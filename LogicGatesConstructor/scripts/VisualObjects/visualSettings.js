@@ -1,15 +1,23 @@
+
+// @ts-check
+
+import { Vector2d } from "../Geometry/geometry.js";
+import { set_bit, is_bit_set, clear_bit, ObjectState, set_bits, OBJECT_SHOW_BIT, OBJECT_FOCUSABLE_BIT, OBJECT_VIEWPORT_CAST ,
+	OBJECT_TOGGLE_BIT, OBJECT_SELECTABLE_BIT, OBJECT_MOVEABLE_BIT, OBJECT_COLOR_INFO_MASK} from "./common.js"; 
+
 const ONE_T_ONE_GATE_SIZE = new Vector2d(100, 40);
 const PIN_SIZE            = new Vector2d(24, 24);
+const DEFAULT_OBJ_STATE   = set_bits(0, [OBJECT_SHOW_BIT, OBJECT_FOCUSABLE_BIT, OBJECT_VIEWPORT_CAST]);
 
 class VisualObjectState extends ObjectState
 {
-	constructor      (value=0){ super(value); }
+	constructor      (value=DEFAULT_OBJ_STATE){ super(value); }
 	get is_shown     ()       { return is_bit_set(this.curr_state, OBJECT_SHOW_BIT      );}
 	get is_toggle    ()       { return is_bit_set(this.curr_state, OBJECT_TOGGLE_BIT    );}
 	get is_focusable ()       { return is_bit_set(this.curr_state, OBJECT_FOCUSABLE_BIT );}
 	get viewport_cast()       { return is_bit_set(this.curr_state, OBJECT_VIEWPORT_CAST );}
-	get is_selectable()       { return is_bit_set(this.curr_state, OBJECT_SELECTABLE_BIT );}
-	get is_moveable  ()       { return is_bit_set(this.curr_state, OBJECT_MOVEABLE_BIT );}
+	get is_selectable()       { return is_bit_set(this.curr_state, OBJECT_SELECTABLE_BIT);}
+	get is_moveable  ()       { return is_bit_set(this.curr_state, OBJECT_MOVEABLE_BIT  );}
 	set is_shown     (value)  { this._setup(value, OBJECT_SHOW_BIT); }
 	set is_toggle    (value)  { this._setup(value, OBJECT_TOGGLE_BIT); }
 	set is_focusable (value)  { this._setup(value, OBJECT_FOCUSABLE_BIT); }
@@ -20,10 +28,17 @@ class VisualObjectState extends ObjectState
 
 class Color
 {
+	/**
+	 * 
+	 * @param {Color} a 
+	 * @param {Color} b 
+	 * @param {number} t 
+	 * @returns 
+	 */
 	static lerp(a, b, t)
 	{
-		if(!(a instanceof Color))return new Color(0, 0, 0);
-		if(!(b instanceof Color))return new Color(0, 0, 0);
+		// if(!(a instanceof Color))return new Color(0, 0, 0);
+		// if(!(b instanceof Color))return new Color(0, 0, 0);
 		const _t = Math.min(Math.max(0.0, t), 1.0);
 		return new Color(a.r + (b.r - a.r) * _t,
 						 a.g + (b.g - a.g) * _t,
@@ -204,9 +219,23 @@ var BUTTON_VISUAL_LEFT_SETTINGS  = null;
 var BUTTON_VISUAL_RIGHT_SETTINGS = null;
 var COMMON_VISUAL_SETTINGS       = null;
 var BEZIER_VISUAL_SETTINGS       = null;
+var SELECTION_PREVIEW_VISUAL_OBJECT_STYLE = null;
 
 const init_common_styles = () =>
 {
+	if(SELECTION_PREVIEW_VISUAL_OBJECT_STYLE === null)
+	{
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE                   = new VisualSettings();
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.up_left_radius    = 5.0;
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.down_left_radius  = 5.0;
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.down_right_radius = 5.0;
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.up_right_radius   = 5.0;
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.stroke_width      = 1.5;
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.stroke_color      = new Color(255, 255, 255, 0.5);
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.focus_color       = new Color(0, 0, 0, 0.0);
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.click_color       = new Color(0, 0, 0, 0.0);
+		SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.color             = new Color(0, 0, 0, 0.0);
+	}
 	if(COMMON_VISUAL_SETTINGS === null)
 	{
 		ROUND_PIN_VISUAL_SETTINGS = new VisualSettings();
@@ -214,9 +243,9 @@ const init_common_styles = () =>
 		ROUND_PIN_VISUAL_SETTINGS.down_left_radius  = 12.0;
 		ROUND_PIN_VISUAL_SETTINGS.down_right_radius = 12.0;
 		ROUND_PIN_VISUAL_SETTINGS.up_right_radius   = 12.0;
-		ROUND_PIN_VISUAL_SETTINGS.focus_color  = new Color(255, 55, 55, 255);
-		ROUND_PIN_VISUAL_SETTINGS.click_color  = new Color(255, 0,  0, 255);
-		ROUND_PIN_VISUAL_SETTINGS.color        = new Color(25,  25, 25, 255);
+		ROUND_PIN_VISUAL_SETTINGS.focus_color  		= new Color(255, 55, 55, 255);
+		ROUND_PIN_VISUAL_SETTINGS.click_color  		= new Color(255, 0,  0, 255);
+		ROUND_PIN_VISUAL_SETTINGS.color        		= new Color(25,  25, 25, 255);
 	}
 
 	if(BUTTON_VISUAL_SETTINGS === null)
@@ -232,9 +261,9 @@ const init_common_styles = () =>
 		BUTTON_VISUAL_LEFT_SETTINGS = new VisualSettings();
 		BUTTON_VISUAL_LEFT_SETTINGS.up_left_radius    = 12.0;
 		BUTTON_VISUAL_LEFT_SETTINGS.down_left_radius  = 12.0;
-		BUTTON_VISUAL_LEFT_SETTINGS.focus_color  = new Color(55, 55, 55, 255);
-		BUTTON_VISUAL_LEFT_SETTINGS.click_color  = new Color(255, 0,  0, 255);
-		BUTTON_VISUAL_LEFT_SETTINGS.color        = new Color(25,  25, 25, 255);
+		BUTTON_VISUAL_LEFT_SETTINGS.focus_color  	  = new Color(55, 55, 55, 255);
+		BUTTON_VISUAL_LEFT_SETTINGS.click_color  	  = new Color(255, 0,  0, 255);
+		BUTTON_VISUAL_LEFT_SETTINGS.color        	  = new Color(25,  25, 25, 255);
 	}
 
 	if(BUTTON_VISUAL_RIGHT_SETTINGS === null)
@@ -273,3 +302,21 @@ const init_common_styles = () =>
 		STATISTICS_VISUAL_SETTINGS.text_align   = 'left';
 	}
 }
+
+export {
+	ONE_T_ONE_GATE_SIZE,
+	ROUND_PIN_VISUAL_SETTINGS,
+	TEXT_VISUAL_SETTINGS,
+	STATISTICS_VISUAL_SETTINGS   ,
+	BUTTON_VISUAL_SETTINGS       ,
+	BUTTON_VISUAL_LEFT_SETTINGS  ,
+	BUTTON_VISUAL_RIGHT_SETTINGS ,
+	COMMON_VISUAL_SETTINGS       ,
+	BEZIER_VISUAL_SETTINGS       ,
+	SELECTION_PREVIEW_VISUAL_OBJECT_STYLE,
+	PIN_SIZE,
+	init_common_styles,
+	VisualSettings,
+	Color,
+	VisualObjectState
+};

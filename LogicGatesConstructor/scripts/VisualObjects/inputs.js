@@ -1,3 +1,6 @@
+// // @ts-check
+import { Vector2d } from "../Geometry/geometry.js";
+import { RenderCanvas } from "../Rendering/renderCanvas.js";
 
 const MOUSE_MOVE   = 0;
 const MOUSE_DRAG   = 1;
@@ -9,6 +12,7 @@ const RIGHT_BUTTON_BIT   = 1;
 const MIDDLE_BUTTON_BIT  = 2;
 const BACK_BUTTON_BIT    = 3;
 const FORWARD_BUTTON_BIT = 4;
+const MAX_KEYS_COUNT = 256;
 
 /**
  * Состояния:
@@ -42,7 +46,6 @@ class KeyState
 	get on_idle       (){return this.#state === KEY_IDLE;}
 }
 
-const MAX_KEYS_COUNT = 256;
 class KeyboardInfo
 {
     static _instance = new KeyboardInfo();
@@ -132,3 +135,5 @@ class MouseInfo
     get is_right_up   (){return !this.is_right_down; }
     get is_middle_up  (){return !this.is_middle_down;}
 }
+
+export {KeyState, KeyboardInfo, MouseInfo}

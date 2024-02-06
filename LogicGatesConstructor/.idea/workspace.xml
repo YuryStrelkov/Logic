@@ -2,9 +2,33 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3867fd97-bbc1-4a57-98c4-eb2eacb1da98" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utilities.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/application.py" beforeDir="false" afterPath="$PROJECT_DIR$/application.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/page/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/page/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/Rendering/patternCanvas.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/Rendering/patternCanvas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/Rendering/previewRenderer.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/Rendering/previewRenderer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/Rendering/renderCanvas.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/Rendering/renderCanvas.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/basicGates.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/basicGates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/digitalPins.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/digitalPins.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/ioGates.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/CustomObjects/ioGates.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Geometry/bezier.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Geometry/geometry.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Geometry/transform2d.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/dropDownPanel.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/dropDownPanel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/infoPanel.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/infoPanel.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/mainMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/mainMenu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/visualObjectsMovement.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/visualObjectsMovement.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/visualObjectsSelection.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/Interaction/visualObjectsSelection.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/common.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/inputs.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/inputs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/visualObject.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/visualObject.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/visualObjects.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/visualObjectsAlignment.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/visualObjectsAlignment.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/VisualObjects/visualSettings.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/VisualObjects/visualSettings.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/scripts/application.js" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/application.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,6 +139,11 @@
           <url>file://$PROJECT_DIR$/main.py</url>
           <line>8</line>
           <option name="timeStamp" value="1" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/utilities.py</url>
+          <line>93</line>
+          <option name="timeStamp" value="2" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

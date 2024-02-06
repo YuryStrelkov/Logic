@@ -1,3 +1,10 @@
+// // @ts-check
+import { VisualObjectSelectionSystem } from "../VisualObjects/Interaction/visualObjectsSelection.js";
+import { SCALE_STEP, MAX_SCALE } from "../VisualObjects/common.js";
+import { VisualObject } from "../VisualObjects/visualObject.js";
+import { Vector2d, RectBounds } from "../Geometry/geometry.js";
+import { Color } from "../VisualObjects/visualSettings.js";
+import { Transform2d } from "../Geometry/transform2d.js";
 
 class RenderCanvas extends VisualObject
 {
@@ -156,7 +163,4 @@ class RenderCanvas extends VisualObject
     }
 }
 
-// function image_data_save(data)
-// {
-// 
-// }
+export {RenderCanvas}

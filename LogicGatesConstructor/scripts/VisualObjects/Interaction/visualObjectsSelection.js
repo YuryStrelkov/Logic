@@ -1,13 +1,9 @@
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE              = new VisualSettings();
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.up_left_radius    = 5.0;
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.down_left_radius  = 5.0;
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.down_right_radius = 5.0;
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.up_right_radius   = 5.0;
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.stroke_width = 1.5;
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.stroke_color = new Color(255, 255, 255, 0.5);
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.focus_color  = new Color(0, 0, 0, 0.0);
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.click_color  = new Color(0, 0, 0, 0.0);
-SELECTION_PREVIEW_VISUAL_OBJECT_STYLE.color        = new Color(0, 0, 0, 0.0);
+// // @ts-check
+import { SELECTION_PREVIEW_VISUAL_OBJECT_STYLE } from "../visualSettings.js";
+import { Transform2d } from "../../Geometry/transform2d.js";
+import { Vector2d } from "../../Geometry/geometry.js";
+import { VisualObject} from "../visualObject.js";
+import { MouseInfo } from "../inputs.js";
 
 class SelectionRectangle extends VisualObject
 {
@@ -121,7 +117,7 @@ class VisualObjectSelectionSystem
         VisualObjectSelectionSystem.#selected_objects.clear();
         VisualObjectSelectionSystem.#selection_preview_obj.state.is_shown     = false;
         VisualObjectSelectionSystem.#selection_preview_obj.transform.position = new Vector2d();
-        VisualObjectSelectionSystem.#selection_preview_obj.transform.size     = new Vector2d();
+        VisualObjectSelectionSystem.#selection_preview_obj.transform.scale    = new Vector2d();
     }
     
     static #selection_request()
@@ -168,6 +164,7 @@ class VisualObjectSelectionSystem
 		VisualObjectSelectionSystem.#selectable_objects.add(obj);
 		obj.on_begin_press_callback_append(VisualObjectSelectionSystem.on_begin_press);
 	}
+
 	static unsubscribe(obj) 
 	{
 		if(!VisualObjectSelectionSystem.#selectable_objects.has(obj))return;
@@ -175,3 +172,5 @@ class VisualObjectSelectionSystem
 		obj.on_begin_press_callback_remove(VisualObjectSelectionSystem.on_begin_press);
 	}
 }
+
+export{VisualObjectSelectionSystem, SelectionRectangle}

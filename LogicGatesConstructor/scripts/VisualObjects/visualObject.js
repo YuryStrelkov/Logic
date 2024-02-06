@@ -1,5 +1,16 @@
-FIRST_OBJECTS_LAYER = 1;
-FIRST_UI_OBJECTS_LAYER = 32;
+// //@ts-check
+
+import { ON_PRESS_BEGIN_STATE, ON_FOCUS_BEGIN_STATE, ON_FOCUS_END_STATE, ON_FOCUS_STATE,
+	     ON_PRESS_END_STATE_1, ON_PRESS_END_STATE_2, ON_PRESS_STATE_3,ON_PRESS_STATE_2, ON_PRESS_STATE_1} from "./common.js";
+import { VisualObjectState, VisualSettings, BEZIER_VISUAL_SETTINGS} from "./visualSettings.js";
+import { cubic_bezier, is_close_to_bezier, cubic_bezier_bounds } from "../Geometry/bezier.js";
+import { Vector2d, RectBounds } from "../Geometry/geometry.js";
+import { RenderCanvas } from "../Rendering/renderCanvas.js";
+import { Transform2d } from "../Geometry/transform2d.js";
+import { MouseInfo } from "./inputs.js";
+		 
+const FIRST_OBJECTS_LAYER = 1;
+const FIRST_UI_OBJECTS_LAYER = 32;
 class VisualObject {
 	static #draw_queue = new Map();
 	static #delete_request = [];
@@ -155,14 +166,14 @@ static visual_objects_bounds = (objects) =>
 	#_callbacks;
 	constructor(min, max) {
 		this.#_name = `visualObject ${VisualObject.visual_objects.size}`;
-		this.#_parent = null;
+		this.#_parent   = null;
 		this.#_children = new Set();
 		this.#_callbacks = new Map();
-		this._bounds = new RectBounds(min, max);
+		this._bounds     = new RectBounds(min, max);
 		this.#_transform = new Transform2d();
 		this.#_layer     = this.transform.layer;
 		this.#_visual    = VisualSettings.default;
-		this.#_state     = new VisualObjectState(set_bits(0, [OBJECT_SHOW_BIT, OBJECT_FOCUSABLE_BIT, OBJECT_VIEWPORT_CAST]));
+		this.#_state     = new VisualObjectState();
 		this.transform.position = this.bounds.center;
 		this.bounds.center = new Vector2d(0, 0);
 		// this.on_begin_focus_callback_append((obj) => { console.log(`begin focus at layer ${obj.layer}`) });
@@ -246,7 +257,7 @@ static visual_objects_bounds = (objects) =>
 		};
 		if(value <= this.parent.layer) return;
 		this.#_layer = value;
-		for(const child of this.children)child.layer = layer + 1;
+		for(const child of this.children)child.layer = this.layer + 1;
 	}
 	/**
 	 * @returns {RectBounds}
@@ -301,7 +312,7 @@ static visual_objects_bounds = (objects) =>
 
 	/**
 	 * 
-	 * @returns {VisualObject}  
+	 * @returns {VisualObject|null}  
 	 */
 	get_by_name(name) {
 		if (this.name == name) return this;
@@ -365,7 +376,7 @@ class TextObject extends VisualObject
     constructor( min, max, text="text")
     {
         super(min, max);
-        this.#_text = text;
+        this.#_text = text === null? "no text" : text;
     }
     get text(){return this.#_text;}
     set text(value){this.#_text = value;}
@@ -383,6 +394,7 @@ class TextObject extends VisualObject
 		}
 	}
 }
+
 const  param_t =
  [0.0, 
   0.05,
@@ -498,3 +510,4 @@ class BezierObject extends VisualObject
 	}
 }
 
+export {VisualObject, RectangleObject, TextObject, BezierObject, FIRST_UI_OBJECTS_LAYER, FIRST_OBJECTS_LAYER}

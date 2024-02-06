@@ -1,6 +1,14 @@
+// // @ts-check
+import { VisualObjectSelectionSystem } from "../Interaction/visualObjectsSelection.js";
+import { RectangleObject, BezierObject } from "../visualObject.js";
+import { Transform2d } from "../../Geometry/transform2d.js";
+import { Vector2d } from "../../Geometry/geometry.js";
+import { VisualObject } from "../visualObject.js";
+import { PIN_SIZE, ROUND_PIN_VISUAL_SETTINGS } from "../visualSettings.js";
+import { MouseInfo } from "../inputs.js";
+
 var INPUT_TARGET_PIN  = null;
 var OUTPUT_TARGET_PIN = null;
-// const PIN_SIZE = new Vector2d(24, 24);
 
 const toggle_pin = (source) => { if (source.state.on_focus) {source.is_toggle = !source.is_toggle;}}
 
@@ -51,6 +59,10 @@ class DigitalPin extends RectangleObject
     get links_count ()      { return this.#links.size; }
     get is_toggle   ()      { return this.state.is_toggle;  }
     set is_toggle   (value) { this.state.is_toggle = value; }
+    update_links_geometry()
+    {
+        for(const link of this.links) link.update_link_geometry();
+    }
     eval_state      ()
     {   
         if(this.links_count == 0)return;
@@ -167,3 +179,5 @@ class PinToPinLink extends BezierObject
 		VisualObjectSelectionSystem.unsubscribe(this);
 	}
 }
+
+export {DigitalPin, InputDigitalPin, OutputDigitalPin, PinToPinLink}

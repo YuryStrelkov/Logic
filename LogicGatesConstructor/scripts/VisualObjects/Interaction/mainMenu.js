@@ -1,64 +1,81 @@
-const BUTTON_SIZE = new Vector2d(155, 45);
-var MAIN_MENU_BUTTON_VISUAL_SETTINGS = null;
-var MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS = null;
-var MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS = null;
-var MAIN_MENU_VISUAL_SETTINGS = null;
-var MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS = null;
+// // @ts-check
 
-MAIN_MENU_VISUAL_SETTINGS              = new VisualSettings();
-MAIN_MENU_VISUAL_SETTINGS.font_size    = 12;
-MAIN_MENU_VISUAL_SETTINGS.color        = new Color(125, 125, 125, 0.5);
-MAIN_MENU_VISUAL_SETTINGS.font_color   = new Color(225, 225, 225, 255);
-MAIN_MENU_VISUAL_SETTINGS.stroke_width = 0.0;
-MAIN_MENU_VISUAL_SETTINGS.text_align   = 'left';
+import { VisualObject, TextObject, FIRST_UI_OBJECTS_LAYER} from "../visualObject.js";
+import { InputGate, OutputGate } from "../CustomObjects/ioGates.js";
+import { RenderCanvas } from "../../Rendering/renderCanvas.js";
+import { VisualSettings, Color } from "../visualSettings.js";
+import { Vector2d } from "../../Geometry/geometry.js";
+import { DropDownMenu } from "./dropDownPanel.js";
 
-MAIN_MENU_BUTTON_VISUAL_SETTINGS             = VisualSettings.default;
-MAIN_MENU_BUTTON_VISUAL_SETTINGS             = new VisualSettings();
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.up_left_radius   = 12.0;
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.down_left_radius = 12.0;
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.up_right_radius   = 12.0;
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.down_right_radius = 12.0;
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.focus_color = new Color(55, 55, 55, 255);
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.click_color = new Color(255, 0,  0, 255);
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.color       = new Color(25,  25, 25, 255);
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.font_size   = 15;
-MAIN_MENU_BUTTON_VISUAL_SETTINGS.stroke_width = 2;
+export var UI_BUTTON_SIZE                         = null;
+export var MAIN_MENU_BUTTON_VISUAL_SETTINGS       = null;
+export var MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS  = null;
+export var MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS = null;
+export var MAIN_MENU_VISUAL_SETTINGS              = null;
+export var MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS  = null;
+export var INFO_PANEL_VISUAL_SETTINGS             = null;
 
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS                  = VisualSettings.default;
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS                  = new VisualSettings();
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.up_left_radius   = 12.0;
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.down_left_radius = 12.0;
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.focus_color      = new Color(55, 55, 55, 255);
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.click_color      = new Color(255, 0,  0, 255);
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.color            = new Color(25,  25, 25, 255);
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.font_size       = 15;
-MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.stroke_width    = 2;
+export const  init_ui_styles = () => {
+    UI_BUTTON_SIZE = new Vector2d(155, 45);
+    INFO_PANEL_VISUAL_SETTINGS             = new VisualSettings();
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS       = new VisualSettings();
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS  = new VisualSettings();
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS = new VisualSettings();
+    MAIN_MENU_VISUAL_SETTINGS              = new VisualSettings();
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS  = new VisualSettings();
 
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS                   = VisualSettings.default;
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS                   = new VisualSettings();
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.down_right_radius = 12.0;
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.up_right_radius   = 12.0;
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.focus_color       = new Color(55, 55, 55, 255);
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.click_color       = new Color(255, 0,  0, 255);
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.color             = new Color(25,  25, 25, 255);
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.font_size       = 15;
-MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.stroke_width = 2;
+    INFO_PANEL_VISUAL_SETTINGS.font_size    = 12;
+    INFO_PANEL_VISUAL_SETTINGS.color        = new Color(125, 125, 125, 0.5);
+    INFO_PANEL_VISUAL_SETTINGS.font_color   = new Color(225, 225, 225, 255);
+    INFO_PANEL_VISUAL_SETTINGS.stroke_width = 0.0;
+    INFO_PANEL_VISUAL_SETTINGS.text_align   = 'left';
 
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS                 = VisualSettings.default;
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS                 = new VisualSettings();
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.up_right_radius = 12.0;
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.up_left_radius  = 12.0;
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.focus_color     = new Color(55, 55, 55, 255);
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.click_color     = new Color(255, 0,  0, 255);
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.color           = new Color(25,  25, 25, 255);
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.font_size       = 15;
-MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.stroke_width = 2;
+    MAIN_MENU_VISUAL_SETTINGS.font_size    = 12;
+    MAIN_MENU_VISUAL_SETTINGS.color        = new Color(125, 125, 125, 0.5);
+    MAIN_MENU_VISUAL_SETTINGS.font_color   = new Color(225, 225, 225, 255);
+    MAIN_MENU_VISUAL_SETTINGS.stroke_width = 0.0;
+    MAIN_MENU_VISUAL_SETTINGS.text_align   = 'left';
+    
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.up_left_radius    = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.down_left_radius  = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.up_right_radius   = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.down_right_radius = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.focus_color       = new Color(55, 55, 55, 255);
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.click_color       = new Color(255, 0,  0, 255);
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.color             = new Color(25,  25, 25, 255);
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.font_size         = 15;
+    MAIN_MENU_BUTTON_VISUAL_SETTINGS.stroke_width      = 2;
+    
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.up_left_radius   = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.down_left_radius = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.focus_color      = new Color(55, 55, 55, 255);
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.click_color      = new Color(255, 0,  0, 255);
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.color            = new Color(25,  25, 25, 255);
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.font_size        = 15;
+    MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.stroke_width     = 2;
+    
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.down_right_radius = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.up_right_radius   = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.focus_color       = new Color(55, 55, 55, 255);
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.click_color       = new Color(255, 0,  0, 255);
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.color             = new Color(25,  25, 25, 255);
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.font_size         = 15;
+    MAIN_MENU_BUTTON_VISUAL_RIGHT_SETTINGS.stroke_width      = 2;
+    
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.up_right_radius = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.up_left_radius  = 12.0;
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.focus_color     = new Color(55, 55, 55, 255);
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.click_color     = new Color(255, 0,  0, 255);
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.color           = new Color(25,  25, 25, 255);
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.font_size       = 15;
+    MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.stroke_width    = 2;
+}
 
 class MainMenu extends VisualObject
 {
     constructor(button_size, labels=null)
     {
-	    button_size = button_size == null? BUTTON_SIZE: button_size;
+	    button_size = button_size == null? UI_BUTTON_SIZE: button_size;
         const stroke_w = MAIN_MENU_BUTTON_VISUAL_LEFT_SETTINGS.stroke_width
         super(new Vector2d(-RenderCanvas.instance.width * 0.5, -RenderCanvas.instance.height * 0.5),
               new Vector2d( RenderCanvas.instance.width * 0.5, -RenderCanvas.instance.height * 0.5 + stroke_w + button_size.y));
@@ -116,3 +133,5 @@ class MainMenu extends VisualObject
     }
 
 }
+
+export {MainMenu};

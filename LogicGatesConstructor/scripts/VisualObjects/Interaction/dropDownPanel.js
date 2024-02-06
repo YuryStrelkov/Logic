@@ -1,3 +1,7 @@
+// // @ts-check
+import { MAIN_MENU_VISUAL_SETTINGS, MAIN_MENU_BUTTON_VISUAL_SETTINGS } from "./mainMenu.js";
+import { TextObject, FIRST_UI_OBJECTS_LAYER } from "../visualObject.js";
+import { Vector2d } from "../../Geometry/geometry.js";
 
 class DropDownMenu extends TextObject
 {
@@ -37,6 +41,7 @@ class DropDownMenu extends TextObject
     constructor(position=null, size=null, parent=null)
     {
         size = size == null? new Vector2d(155, 45): size;
+        position = position == null? new Vector2d(0, 0): size;
         super(new Vector2d(position.x - size.x * 0.5, position.y - size.y * 0.5),
               new Vector2d(position.x + size.x * 0.5, position.y + size.y * 0.5));
         this.layer += FIRST_UI_OBJECTS_LAYER;
@@ -63,3 +68,5 @@ class DropDownMenu extends TextObject
         return button;
     }
 }
+
+export {DropDownMenu};

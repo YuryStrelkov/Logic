@@ -3,27 +3,9 @@
 	<head>
 		 <link   rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 		 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-		 <script src="scripts/VisualObjects/common.js"></script>
-		 <script src="scripts/VisualObjects/Geometry/geometry.js"></script>
-		 <script src="scripts/VisualObjects/Geometry/bezier.js"></script>
-		 <script src="scripts/VisualObjects/Geometry/transform2d.js"></script>
-		 <script src="scripts/VisualObjects/visualSettings.js"></script>
-		 <script src="scripts/VisualObjects/inputs.js"></script>
-		 <script src="scripts/VisualObjects/visualObject.js"></script>
-		 <script src="scripts/VisualObjects/visualObjectsAlignment.js"></script>
-		 <script src="scripts/VisualObjects/Interaction/visualObjectsMovement.js"></script>
-		 <script src="scripts/VisualObjects/Interaction/infoPanel.js"></script>
-		 <script src="scripts/VisualObjects/CustomObjects/digitalPins.js"></script>
-		 <script src="scripts/VisualObjects/CustomObjects/basicGates.js"></script>
-		 <script src="scripts/VisualObjects/CustomObjects/ioGates.js"></script>
-		 <script src="scripts/Rendering/patternCanvas.js"></script>
-		 <script src="scripts/Rendering/renderCanvas.js"></script>
-		 <script src="scripts/Rendering/previewRenderer.js"></script>
-		 <script src="scripts/VisualObjects/Interaction/visualObjectsSelection.js"></script>
-		 <script src="scripts/VisualObjects/Interaction/dropDownPanel.js"></script>
-		 <script src="scripts/VisualObjects/Interaction/mainMenu.js"></script>
-		 <script src="scripts/VisualObjects/visualObjects.js"></script>
-		 <script src="scripts/application.js"></script>
+		 {% for script in scripts %}
+		  <script type="module" src = {{script}}></script>
+		 {% endfor %}
 	</head>
 	<body>
 		   <div style="display: flex;
@@ -34,7 +16,8 @@
 				position: unset;">
 				<div id="mainContainer" style="height:900px; width:1600px; background-color:#dddddd85">
 					<canvas id="mainCanvas" width="900" height="1600"></canvas>
-					<script>
+					<script type="text\javascript">
+						import { init_app, repaint_app } from "./application.js";
 						init_app();
 						setInterval(repaint_app, 16);
 					</script>

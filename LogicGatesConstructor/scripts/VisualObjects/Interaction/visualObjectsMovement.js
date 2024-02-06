@@ -1,3 +1,11 @@
+// // @ts-check
+import { VisualObjectSelectionSystem } from "./visualObjectsSelection.js";
+import { RenderCanvas } from "../../Rendering/renderCanvas.js";
+import { Transform2d } from "../../Geometry/transform2d.js";
+import { Vector2d } from "../../Geometry/geometry.js";
+import { VisualObject } from "../visualObject.js";
+import { MouseInfo } from "../inputs.js";
+
 class VisualObjectMovementSystem
 {
 	static #delta_positions  = [];
@@ -79,3 +87,5 @@ class VisualObjectMovementSystem
 		obj.on_end_press_callback_remove  (VisualObjectMovementSystem.object_movement_end_callback  );
 	}
 }
+
+export {VisualObjectMovementSystem};
