@@ -72,7 +72,7 @@ const cubic_bezier_bounds_x = (p1, p2, p3, p4) =>
     {
         if(Math.abs(b) < 1e-3) return new Vector2d(Math.min(p1.x, p4.x), Math.max(p1.x, p4.x));
         const x = cubic_bezier_x(-c / b, p1, p2, p3, p4);
-        return Math.min(Math.min(x, p1.x), p4.x), Math.max(Math.max(x, p1.x), p4.x)
+        return new Vector2d(Math.min(Math.min(x, p1.x), p4.x), Math.max(Math.max(x, p1.x), p4.x));
     }
     const d = b * b - a * c * 4.0;
     if(d <= 0) return new Vector2d(Math.min(p1.x, p4.x), Math.max(p1.x, p4.x));
@@ -100,7 +100,7 @@ const cubic_bezier_bounds_y = (p1, p2, p3, p4) =>
     {
         if(Math.abs(b) < 1e-3) return new Vector2d(Math.min(p1.y, p4.y), Math.max(p1.y, p4.y));
         const y = cubic_bezier_y(-c / b, p1, p2, p3, p4);
-        return Math.min(Math.min(y, p1.y), p4.y), Math.max(Math.max(y, p1.y), p4.y)
+        return new Vector2d(Math.min(Math.min(y, p1.y), p4.y), Math.max(Math.max(y, p1.y), p4.y));
     }
     const d = b * b - a * c * 4.0
     if(d <= 0) return new Vector2d(Math.min(p1.y, p4.y), Math.max(p1.y, p4.y));
