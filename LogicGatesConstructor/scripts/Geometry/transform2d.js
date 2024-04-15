@@ -79,12 +79,12 @@ class Transform2d {
 			? set_bit(this.#transform_status, RAW_TRANSFORM_BIT)
 			: clear_bit(this.#transform_status, RAW_TRANSFORM_BIT);
 	}
-	/**
-	 * @returns {boolean}
-	 */
-	get sync_required() {
-		return this.#children_sync_count != this.children_count;
-	}
+	// /**
+	//  * @returns {boolean}
+	//  */
+	// get sync_required() {
+	// 	return this.#children_sync_count != this.children_count;
+	// }
 	/**
 	 * @returns {boolean}
 	 */

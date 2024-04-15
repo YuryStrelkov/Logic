@@ -3,7 +3,7 @@ import { DEG_TO_RAD, NUMERICAL_ACCURACY } from "../VisualObjects/common.js";
 /**
  * Двумерный вектор.
  */
-class Vector2d
+export default class Vector2d
 {
 		/**
 	 * 
@@ -150,7 +150,7 @@ class Vector2d
 		return `{"x": ${this.x}, "y": ${this.y}}`;
 	  }
 }
-class Vector3d
+export default class Vector3d
 {
 	/**
 	 * 
@@ -295,7 +295,7 @@ class Vector3d
 		return `{"x": ${this.x}, "y": ${this.y}, "z": ${this.y}}`;
 	  }
 }
-class Matrix3d
+export default class Matrix3d
 {
 	static identity(){return new Matrix3d();}
 	static zeros   (){return new Matrix3d(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);}
@@ -538,7 +538,7 @@ class Matrix3d
 				   `\n\t"m20": ${this.m20}, "m21": ${this.m21}, "m22": ${this.m22},\n` + "}"
 	  }
 }
-class RectBounds
+export default class RectBounds
 {
 	#min_pt;
 	#max_pt;
@@ -625,4 +625,4 @@ class RectBounds
 	}
 }
 
-export { Vector2d, Vector3d, Matrix3d, RectBounds}; 
+// export { Vector2d, Vector3d, Matrix3d, RectBounds}; 
