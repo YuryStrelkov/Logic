@@ -8,7 +8,7 @@ import { Vector2d, RectBounds } from "./geometry.js";
  * @param {Vector2d} p4 
  * @returns {Vector2d}
  */
-const cubic_bezier = (t, p1, p2, p3, p4) => 
+export const cubic_bezier = (t, p1, p2, p3, p4) => 
 {
     const t1 = Math.pow((1.0 - t), 3.0);
     const t2 = 3.0 * t * Math.pow((1.0 - t), 2.0);
@@ -119,7 +119,7 @@ const cubic_bezier_bounds_y = (p1, p2, p3, p4) =>
  * @param {Vector2d} p4 
  * @returns {RectBounds}
  */
-const cubic_bezier_bounds = (p1, p2, p3, p4) => 
+export const cubic_bezier_bounds = (p1, p2, p3, p4) => 
 {
     const min_max_x = cubic_bezier_bounds_x(p1, p2, p3, p4);
     const min_max_y = cubic_bezier_bounds_y(p1, p2, p3, p4);
@@ -170,7 +170,7 @@ const BEZIER_SECTIONS_PARAM_T =
  * @param {Number} threshold 
  * @returns {Boolean}
  */
-const is_close_to_bezier = (point, p1, p2, p3, p4, threshold = 1.0) =>
+export const is_close_to_bezier = (point, p1, p2, p3, p4, threshold = 1.0) =>
 {
     for(const [t1, t2] of BEZIER_SECTIONS_PARAM_T)
     {
@@ -181,4 +181,4 @@ const is_close_to_bezier = (point, p1, p2, p3, p4, threshold = 1.0) =>
     return false;
 }
 
-export {is_close_to_bezier, cubic_bezier_bounds, cubic_bezier};
+// export {is_close_to_bezier, cubic_bezier_bounds, cubic_bezier};
