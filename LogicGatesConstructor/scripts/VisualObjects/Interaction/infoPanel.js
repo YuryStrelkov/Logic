@@ -7,7 +7,7 @@ import { Vector2d } from "../../Geometry/geometry.js";
 import { current_time, SCALE_STEP} from "../common.js";
 
 
-class InfoPanel extends VisualObject
+export class InfoPanel extends VisualObject
 {
     #fps_acum      = 0.0;
     #fps_curr      = 0.0;
@@ -71,4 +71,4 @@ class InfoPanel extends VisualObject
     }
 }
 
-export {InfoPanel};
+// export {InfoPanel};

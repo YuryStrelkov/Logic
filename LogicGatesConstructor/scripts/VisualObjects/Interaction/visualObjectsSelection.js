@@ -2,59 +2,25 @@
 import { SELECTION_PREVIEW_VISUAL_OBJECT_STYLE } from "../visualSettings.js";
 import { Transform2d } from "../../Geometry/transform2d.js";
 import { Vector2d } from "../../Geometry/geometry.js";
-import { VisualObject} from "../visualObject.js";
+import { VisualObject, SelectionRectangle} from "../visualObject.js";
 import { MouseInfo } from "../inputs.js";
 
-class SelectionRectangle extends VisualObject
-{
-    #dash_length;
-    #swap;
-    constructor()
-    {
-       super(new Vector2d(0, 0), new Vector2d(0, 0));
-       this.state.is_focusable  = false;
-       this.state.is_shown      = false;
-       this.state.viewport_cast = false;
-       this.layer               = 10;
-       this.#dash_length        = 3.0;
-       this.#swap               = false;
-       this.visual = SELECTION_PREVIEW_VISUAL_OBJECT_STYLE;
-    }
-    _render_object(ctx) {
-		this.transform.apply_to_context(ctx);
-		this.visual.apply_to_context(ctx);
-		const width = this.bounds.width;
-		const height = this.bounds.height;
-		const x0 = this.bounds.min.x;
-		const y0 = this.bounds.min.y;
-        ctx.setLineDash([2.5, 2.5]);
-        // const t = current_time() % 1.0;
-        // const w  = this.#dash_length;
-        // if(t > 0.95) this.#swap = !this.#swap; 
-        // if(this.#swap)
-        // {
-        //     ctx.setLineDash([t * w, 0, (1.0 - t) * w, t * w, (1.0 - t) * w, 0]);
-        // }
-        // else
-        // {
-        //     ctx.setLineDash([0, t * w, (1.0 - t) * w, 0, t * w, (1.0 - t) * w]);
-        // }
-        ctx.roundRect(x0, y0, width, height, this.visual.corners_radiuses);
-		ctx.stroke();
-		ctx.setLineDash([]);
-	}
-}
-
-class VisualObjectSelectionSystem
+export class VisualObjectSelectionSystem
 {
     static #selectable_objects = new Set();
     static #selected_objects   = new Set();
-    static #selection_preview_obj = new SelectionRectangle();
+    static #selection_preview_obj = null;
     static #selection_region_start_pt = new Vector2d();
     static #selection_region_current_pt = new Vector2d();
 
-    static get selected_objects(){return VisualObjectSelectionSystem.#selected_objects;}
-    static get selection_preview_obj(){return VisualObjectSelectionSystem.#selection_preview_obj;}
+    static get selected_objects     (){return VisualObjectSelectionSystem.#selected_objects;}
+    static get selection_preview_obj()
+    {   if(VisualObjectSelectionSystem.#selection_preview_obj === null)
+        {
+            VisualObjectSelectionSystem.#selection_preview_obj = new SelectionRectangle();
+        }
+        return VisualObjectSelectionSystem.#selection_preview_obj;
+    }
     static #recompute_selected_bounds = () =>
     {
         if(VisualObjectSelectionSystem.#selected_objects.size === 0)
@@ -173,4 +139,4 @@ class VisualObjectSelectionSystem
 	}
 }
 
-export{VisualObjectSelectionSystem, SelectionRectangle}
+// export{VisualObjectSelectionSystem, SelectionRectangle}

@@ -1,10 +1,10 @@
 // // @ts-check
-import { OrGate, AndGate, NandGate, XorGate, NotGate, NorGate } from "../VisualObjects/CustomObjects/basicGates.js";
 import { VisualObject } from "../VisualObjects/visualObject.js";
 import { Color } from "../VisualObjects/visualSettings.js";
 import { Transform2d } from "../Geometry/transform2d.js";
 import { Vector2d } from "../Geometry/geometry.js";
 import { RenderCanvas } from "./renderCanvas.js";
+import { OrGate, AndGate, NandGate, XorGate, NotGate, NorGate } from "../VisualObjects/CustomObjects/basicGates.js";
 
 const render_object_recursive = (object) => 
 {

@@ -6,7 +6,7 @@ import { InputDigitalPin, OutputDigitalPin } from "./digitalPins.js";
 import { TextObject, VisualObject } from "../visualObject.js";
 import { Vector2d } from "../../Geometry/geometry.js";
 
-class InputGate extends TextObject
+export class InputGate extends TextObject
 {
     static #input_gates = new Set();
     #input_pin;
@@ -67,7 +67,7 @@ class InputGate extends TextObject
     }
 }
 
-class OutputGate extends TextObject
+export class OutputGate extends TextObject
 {
     static #output_gates = new Set();
     #output_pin;
@@ -129,4 +129,4 @@ class OutputGate extends TextObject
     }
 }
 
-export {InputGate, OutputGate};
+// export {InputGate, OutputGate};

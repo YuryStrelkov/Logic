@@ -1,4 +1,4 @@
-// // @ts-check
+//// @ts-check
 import { VisualObjectSelectionSystem } from "../VisualObjects/Interaction/visualObjectsSelection.js";
 import { SCALE_STEP, MAX_SCALE } from "../VisualObjects/common.js";
 import { VisualObject } from "../VisualObjects/visualObject.js";

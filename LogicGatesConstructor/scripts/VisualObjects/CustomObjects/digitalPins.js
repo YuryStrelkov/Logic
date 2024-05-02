@@ -27,7 +27,7 @@ const show_preview_curve = (source) =>
 
 const hide_preview_curve = (source) => { BezierObject.preview_curve.state.is_shown = false; }
 
-class DigitalPin extends RectangleObject
+export class DigitalPin extends RectangleObject
 {
     static #make_pin_to_pin_connection  (target) 
     {
@@ -72,7 +72,7 @@ class DigitalPin extends RectangleObject
     on_delete() { for(const link of this.links) VisualObject.destroy_visual_object(link); }
 }
 
-class InputDigitalPin extends DigitalPin
+export class InputDigitalPin extends DigitalPin
 {
     static #on_lost_focus(target) 
     { 
@@ -99,7 +99,7 @@ class InputDigitalPin extends DigitalPin
     }
 }
 
-class OutputDigitalPin extends DigitalPin
+export class OutputDigitalPin extends DigitalPin
 {
     static #on_lost_focus(target) 
     { 
@@ -125,7 +125,7 @@ class OutputDigitalPin extends DigitalPin
     }
 }
 
-class PinToPinLink extends BezierObject
+export class PinToPinLink extends BezierObject
 {
     static #connected_pins = new Set();
     
@@ -180,4 +180,4 @@ class PinToPinLink extends BezierObject
 	}
 }
 
-export {DigitalPin, InputDigitalPin, OutputDigitalPin, PinToPinLink}
+// export {DigitalPin, InputDigitalPin, OutputDigitalPin, PinToPinLink}

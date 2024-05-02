@@ -19,7 +19,7 @@ const objects_center = (objects) =>
     return position;
 }
 
-const  vertical_pack = (objects, position, space_between=0.0) => 
+export const  vertical_pack = (objects, position, space_between=0.0) => 
 {
     var n_objects = objects.length ? objects.length: objects.size;
     if (!n_objects) return;
@@ -37,14 +37,14 @@ const  vertical_pack = (objects, position, space_between=0.0) =>
     }
 }
 
-const  vertical_pack_zero_center = (objects, space_between=0.0) => 
+export const  vertical_pack_zero_center = (objects, space_between=0.0) => 
 {
     const center = objects_center(objects);
     if(!center) return;
     vertical_pack(objects, new Vector2d(center.x, 0.0), space_between);
 }
 
-const horizontal_pack = (objects, position, space_between=0.0) => 
+export const horizontal_pack = (objects, position, space_between=0.0) => 
 {
     if (!position) return;
     var n_objects = objects.length ? objects.length: objects.size;
@@ -63,22 +63,22 @@ const horizontal_pack = (objects, position, space_between=0.0) =>
     }
 }
 
-const  horizontal_pack_zero_center = (objects, space_between=0.0) => 
+export const  horizontal_pack_zero_center = (objects, space_between=0.0) => 
 {
     const center = objects_center(objects);
     if(!center) return;
     horizontal_pack(objects, new Vector2d(0.0, center.y), space_between);
 }
 
-const  horizontal_pack_common_center = (objects, space_between=0.0) => 
+export const  horizontal_pack_common_center = (objects, space_between=0.0) => 
 {
     horizontal_pack(objects,  objects_center(objects), space_between);
 }
 
-const  vertical_pack_common_center = (objects, space_between=0.0) => 
+export const  vertical_pack_common_center = (objects, space_between=0.0) => 
 {
     vertical_pack(objects, objects_center(objects), space_between);
 }
 
-export {objects_center, vertical_pack, vertical_pack_zero_center, horizontal_pack,
-        horizontal_pack_zero_center, horizontal_pack_common_center, vertical_pack_common_center};
+// export {objects_center, vertical_pack, vertical_pack_zero_center, horizontal_pack,
+//         horizontal_pack_zero_center, horizontal_pack_common_center, vertical_pack_common_center};

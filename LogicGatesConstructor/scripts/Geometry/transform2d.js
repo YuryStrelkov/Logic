@@ -1,9 +1,19 @@
-import { Vector2d, Matrix3d } from "./geometry.js";
-import { is_bit_set, clear_bit, DEG_TO_RAD, RAD_TO_DEG, set_bit } from "../VisualObjects/common.js";
+import { Vector2d } from "./vector2d.js";
+import { Matrix3d } from "./matrix3d.js";
+import { DEG_TO_RAD, RAD_TO_DEG} from "./constants.js";
+import { is_bit_set, clear_bit, set_bit } from "../VisualObjects/common.js";
 
 const RAW_TRANSFORM_BIT = 0;
 const SYNC_TRANSFORM_BIT = 1;
 const FREEZE_TRANSFORM_BIT = 2;
+//| layer #                                                                      |    
+//| 0   :                                  [root]                                |    
+//|     :  			                          |	                                 |    
+//| 1   :   		  [child - 1]<---------- ... --------->[child - n]           |        
+//|                        |                                    |                |      
+//| ... :                 ...                                  ...               |   
+//|                        |                                    |                |    
+//| n   :  [child - 1]<-- ... -->[child - n]    [child - 1]<-- ... -->[child - n]|              
 class Transform2d {
 	static #transforms_layers = null;
 	static #root = null;

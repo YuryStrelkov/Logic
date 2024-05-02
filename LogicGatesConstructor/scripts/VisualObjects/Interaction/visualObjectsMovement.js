@@ -5,8 +5,8 @@ import { Transform2d } from "../../Geometry/transform2d.js";
 import { Vector2d } from "../../Geometry/geometry.js";
 import { VisualObject } from "../visualObject.js";
 import { MouseInfo } from "../inputs.js";
-
-class VisualObjectMovementSystem
+console.log("0");
+export class VisualObjectMovementSystem
 {
 	static #delta_positions  = [];
 	static #moveable_objects = new Set();
@@ -88,4 +88,4 @@ class VisualObjectMovementSystem
 	}
 }
 
-export {VisualObjectMovementSystem};
+// export {VisualObjectMovementSystem};

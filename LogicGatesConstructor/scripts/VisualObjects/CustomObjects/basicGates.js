@@ -7,7 +7,7 @@ import { ONE_T_ONE_GATE_SIZE } from "../visualSettings.js";
 import { TEXT_VISUAL_SETTINGS } from "../visualSettings.js";
 import { Vector2d } from "../../Geometry/geometry.js";
 import { TextObject } from "../visualObject.js";
-class NotGate extends TextObject
+export class NotGate extends TextObject
 {
     on_move()
     {
@@ -36,7 +36,7 @@ class NotGate extends TextObject
     }
 }
 
-class TwoInSingleOutGate extends TextObject
+export class TwoInSingleOutGate extends TextObject
 {
     on_move()
     {
@@ -68,7 +68,7 @@ class TwoInSingleOutGate extends TextObject
     }
 }
 
-class OrGate extends TwoInSingleOutGate
+export class OrGate extends TwoInSingleOutGate
 {
     constructor(position)
     {
@@ -77,7 +77,7 @@ class OrGate extends TwoInSingleOutGate
     update(){ this.output.is_toggle = this.input_a.is_toggle || this.input_b.is_toggle;}
 }
 
-class AndGate extends TwoInSingleOutGate
+export class AndGate extends TwoInSingleOutGate
 {
     constructor(position)
     {
@@ -86,7 +86,7 @@ class AndGate extends TwoInSingleOutGate
     update(){ this.output.is_toggle = this.input_a.is_toggle && this.input_b.is_toggle;}
 }
 
-class XorGate extends TwoInSingleOutGate
+export class XorGate extends TwoInSingleOutGate
 {
     constructor(position)
     {
@@ -95,7 +95,7 @@ class XorGate extends TwoInSingleOutGate
     update(){ this.output.is_toggle = this.input_a.is_toggle ^ this.input_b.is_toggle;}
 }
 
-class NandGate extends TwoInSingleOutGate
+export class NandGate extends TwoInSingleOutGate
 {
     constructor(position)
     {
@@ -104,7 +104,7 @@ class NandGate extends TwoInSingleOutGate
     update(){ this.output.is_toggle = !(this.input_a.is_toggle && this.input_b.is_toggle);}
 }
 
-class NorGate extends TwoInSingleOutGate
+export class NorGate extends TwoInSingleOutGate
 {
     constructor(position)
     {
@@ -113,4 +113,4 @@ class NorGate extends TwoInSingleOutGate
     update(){ this.output.is_toggle = !(this.input_a.is_toggle || this.input_b.is_toggle);}
 }
 
-export {NotGate, AndGate, NandGate, NorGate, XorGate, OrGate, TwoInSingleOutGate};
+// export {NotGate, AndGate, NandGate, NorGate, XorGate, OrGate, TwoInSingleOutGate};

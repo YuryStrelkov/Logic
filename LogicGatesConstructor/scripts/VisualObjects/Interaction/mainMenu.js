@@ -71,7 +71,7 @@ export const  init_ui_styles = () => {
     MAIN_MENU_BUTTON_VISUAL_DOWN_SETTINGS.stroke_width    = 2;
 }
 
-class MainMenu extends VisualObject
+export class MainMenu extends VisualObject
 {
     constructor(button_size, labels=null)
     {
@@ -134,4 +134,4 @@ class MainMenu extends VisualObject
 
 }
 
-export {MainMenu};
+// export {MainMenu};

@@ -3,7 +3,7 @@ import { MAIN_MENU_VISUAL_SETTINGS, MAIN_MENU_BUTTON_VISUAL_SETTINGS } from "./m
 import { TextObject, FIRST_UI_OBJECTS_LAYER } from "../visualObject.js";
 import { Vector2d } from "../../Geometry/geometry.js";
 
-class DropDownMenu extends TextObject
+export class DropDownMenu extends TextObject
 {
     static #content_obj = null;
     static #drop_down_item_press_any(source)
@@ -69,4 +69,4 @@ class DropDownMenu extends TextObject
     }
 }
 
-export {DropDownMenu};
+// export {DropDownMenu};

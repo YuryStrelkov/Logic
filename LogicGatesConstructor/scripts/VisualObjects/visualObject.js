@@ -2,16 +2,16 @@
 
 import { ON_PRESS_BEGIN_STATE, ON_FOCUS_BEGIN_STATE, ON_FOCUS_END_STATE, ON_FOCUS_STATE,
 	     ON_PRESS_END_STATE_1, ON_PRESS_END_STATE_2, ON_PRESS_STATE_3,ON_PRESS_STATE_2, ON_PRESS_STATE_1} from "./common.js";
-import { VisualObjectState, VisualSettings, BEZIER_VISUAL_SETTINGS} from "./visualSettings.js";
+import { VisualObjectState, VisualSettings, BEZIER_VISUAL_SETTINGS, SELECTION_PREVIEW_VISUAL_OBJECT_STYLE} from "./visualSettings.js";
 import { cubic_bezier, is_close_to_bezier, cubic_bezier_bounds } from "../Geometry/bezier.js";
 import { Vector2d, RectBounds } from "../Geometry/geometry.js";
 import { RenderCanvas } from "../Rendering/renderCanvas.js";
 import { Transform2d } from "../Geometry/transform2d.js";
 import { MouseInfo } from "./inputs.js";
 		 
-const FIRST_OBJECTS_LAYER = 1;
-const FIRST_UI_OBJECTS_LAYER = 32;
-class VisualObject {
+export const FIRST_OBJECTS_LAYER = 1;
+export const FIRST_UI_OBJECTS_LAYER = 32;
+export class VisualObject {
 	static #draw_queue = new Map();
 	static #delete_request = [];
 	static #visual_objects = new Set();
@@ -361,7 +361,7 @@ static visual_objects_bounds = (objects) =>
 	}
 }
 
-class RectangleObject extends VisualObject
+export class RectangleObject extends VisualObject
 {
 	static from_center_and_size(center, size)
 	{
@@ -370,7 +370,7 @@ class RectangleObject extends VisualObject
 	}
 }
 
-class TextObject extends VisualObject
+export class TextObject extends VisualObject
 {
     #_text;
     constructor( min, max, text="text")
@@ -418,7 +418,7 @@ const  param_t =
   0.95,
   1.0]
 
-class BezierObject extends VisualObject
+export class BezierObject extends VisualObject
 {
 	static #bezier_preview_curve = null;
     static get preview_curve()
@@ -510,4 +510,42 @@ class BezierObject extends VisualObject
 	}
 }
 
-export {VisualObject, RectangleObject, TextObject, BezierObject, FIRST_UI_OBJECTS_LAYER, FIRST_OBJECTS_LAYER}
+export class SelectionRectangle extends VisualObject
+{
+    #dash_length;
+    #swap;
+    constructor()
+    {
+       super(new Vector2d(0, 0), new Vector2d(0, 0));
+       this.state.is_focusable  = false;
+       this.state.is_shown      = false;
+       this.state.viewport_cast = false;
+       this.layer               = 10;
+       this.#dash_length        = 3.0;
+       this.#swap               = false;
+       this.visual = SELECTION_PREVIEW_VISUAL_OBJECT_STYLE;
+    }
+    _render_object(ctx) {
+		this.transform.apply_to_context(ctx);
+		this.visual.apply_to_context(ctx);
+		const width = this.bounds.width;
+		const height = this.bounds.height;
+		const x0 = this.bounds.min.x;
+		const y0 = this.bounds.min.y;
+        ctx.setLineDash([2.5, 2.5]);
+        // const t = current_time() % 1.0;
+        // const w  = this.#dash_length;
+        // if(t > 0.95) this.#swap = !this.#swap; 
+        // if(this.#swap)
+        // {
+        //     ctx.setLineDash([t * w, 0, (1.0 - t) * w, t * w, (1.0 - t) * w, 0]);
+        // }
+        // else
+        // {
+        //     ctx.setLineDash([0, t * w, (1.0 - t) * w, 0, t * w, (1.0 - t) * w]);
+        // }
+        ctx.roundRect(x0, y0, width, height, this.visual.corners_radiuses);
+		ctx.stroke();
+		ctx.setLineDash([]);
+	}
+}

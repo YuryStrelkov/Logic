@@ -2,17 +2,17 @@
 import { Vector2d } from "../Geometry/geometry.js";
 import { RenderCanvas } from "../Rendering/renderCanvas.js";
 
-const MOUSE_MOVE   = 0;
-const MOUSE_DRAG   = 1;
-const MOUSE_SCROLL = 2;
+export const MOUSE_MOVE   = 0;
+export const MOUSE_DRAG   = 1;
+export const MOUSE_SCROLL = 2;
 
-const NO_BUTTON          = 0;
-const LEFT_BUTTON_BIT    = 0;
-const RIGHT_BUTTON_BIT   = 1;
-const MIDDLE_BUTTON_BIT  = 2;
-const BACK_BUTTON_BIT    = 3;
-const FORWARD_BUTTON_BIT = 4;
-const MAX_KEYS_COUNT = 256;
+export const NO_BUTTON          = 0;
+export const LEFT_BUTTON_BIT    = 0;
+export const RIGHT_BUTTON_BIT   = 1;
+export const MIDDLE_BUTTON_BIT  = 2;
+export const BACK_BUTTON_BIT    = 3;
+export const FORWARD_BUTTON_BIT = 4;
+export const MAX_KEYS_COUNT = 256;
 
 /**
  * Состояния:
@@ -26,11 +26,11 @@ const MAX_KEYS_COUNT = 256;
  *|   1   |   0   |   1   | on_end_press
  *________________________
  */
-const KEY_IDLE = 0;
-const KEY_BEGIN_PRESS = 2;
-const KEY_PRESS = 3;
-const KEY_END_PRESS = 1;
-class KeyState
+export const KEY_IDLE = 0;
+export const KEY_BEGIN_PRESS = 2;
+export const KEY_PRESS = 3;
+export const KEY_END_PRESS = 1;
+export class KeyState
 {
     #state;
     constructor() {}
@@ -46,7 +46,7 @@ class KeyState
 	get on_idle       (){return this.#state === KEY_IDLE;}
 }
 
-class KeyboardInfo
+export class KeyboardInfo
 {
     static _instance = new KeyboardInfo();
     static get instance() { return KeyboardInfo._instance;}
@@ -95,7 +95,7 @@ class KeyboardInfo
 
 const canvas_clique_coord = (evt) => { return new Vector2d(evt.clientX - RenderCanvas.instance.canvas.offsetLeft,
                                                            evt.clientY - RenderCanvas.instance.canvas.offsetTop);}
-class MouseInfo
+export class MouseInfo
 {
     static _instance = new MouseInfo();
     static get instance() { return MouseInfo._instance;}
@@ -136,4 +136,4 @@ class MouseInfo
     get is_middle_up  (){return !this.is_middle_down;}
 }
 
-export {KeyState, KeyboardInfo, MouseInfo}
+// export {KeyState, KeyboardInfo, MouseInfo}
